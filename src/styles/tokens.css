@@ -1,0 +1,74 @@
+:root {
+  /* Brand & Action Colors (from Figma Variables) */
+  --color-action-background: #e40032;
+  --color-action-foreground: #ffffff;
+  --color-action-text: #e40032;
+  --color-action-border: #e40032;
+  --color-action-icon: #e40032;
+  --color-action-selected-background: #fff6f5;
+  --color-brand-accent: #ffcf00;
+  --color-brand-on-accent: #1a1a1a;
+  --color-semantic-red: #cc2b1e;
+
+  /* Surface & Border */
+  --color-surface-page: #f7f7f7;
+  --color-surface-card: #ffffff;
+  --color-surface-subtle: #f7f7f7;
+  --color-surface-disabled: #eeeeee;
+  --color-border-subtle: #e0e0e0;
+  --color-border-default: #c7c7c7;
+  --color-border-disabled: #e0e0e0;
+  --color-border-inverse: #ffffff;
+  --color-overlay-scrim: rgba(0, 0, 0, 0.4);
+
+  /* Text & Icon */
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #3d3d3d;
+  --color-text-muted: #666666;
+  --color-text-placeholder: #858585;
+  --color-text-inverse: #ffffff;
+  --color-icon-primary: #1a1a1a;
+  --color-icon-default: #3d3d3d;
+  --color-icon-secondary: #666666;
+  --color-icon-placeholder: #858585;
+  --color-icon-inverse: #ffffff;
+
+  /* Price & Promo */
+  --color-price-current: #e40032;
+  --color-price-original: #666666;
+  --color-price-unit: #666666;
+  --color-price-savings: #e40032;
+  --color-promo-background: #ffec99;
+  --color-promo-foreground: #3d3d3d;
+  --color-banner-yellow: #fff5cc;
+  --color-status-success: #2c8232;
+  --color-status-warning-bg: #fffcf4;
+
+  /* AddMore / Threshold Bar */
+  --color-addmore-bg: #fff2eb;
+  --color-addmore-icon: #ff5800;
+  --color-addmore-detail: #fbd802;
+  --color-addmore-message: #444444;
+  --color-addmore-track: rgba(0, 0, 0, 0.12);
+  --color-addmore-bar: #ff5800;
+
+  /* TabBar */
+  --color-tabbar-selected: #e40032;
+  --color-tabbar-default: #858585;
+  --color-tabbar-bg: #ffffff;
+
+  /* Typography */
+  --font-sans: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+
+  /* Radii */
+  --radius-2: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-16: 16px;
+  --radius-full: 999px;
+
+  /* Shadows */
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-footer: 0 -2px 6px rgba(0, 0, 0, 0.08);
+}

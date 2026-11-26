@@ -1,0 +1,10 @@
+{
+  "name": "Wellcome App",
+  "short_name": "Wellcome",
+  "description": "Wellcome App Mobile Prototype (Home, PDP, Cart)",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F7F7",
+  "theme_color": "#E40032",
+  "orientation": "portrait"
+}

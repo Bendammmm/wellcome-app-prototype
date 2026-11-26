@@ -1,0 +1,114 @@
+@import "tailwindcss";
+@import "./styles/tokens.css";
+
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    color: var(--color-text-primary);
+    background-color: #e8e8ec;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/* Hide scrollbars cleanly for horizontal carousels & mobile viewport */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Desktop phone bezel vs Real Mobile Fullscreen */
+.app-viewport-outer {
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: #e5e7eb;
+}
+
+.app-viewport-shell {
+  width: 100%;
+  max-width: 393px;
+  min-height: 100dvh;
+  background: var(--color-surface-page);
+  position: relative;
+  overflow-x: hidden;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.14);
+}
+
+.app-fixed-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 393px;
+}
+
+@media (max-width: 480px) {
+  .app-viewport-outer {
+    background: var(--color-surface-page);
+  }
+  .app-viewport-shell {
+    max-width: 100%;
+    box-shadow: none;
+  }
+  .app-fixed-bar {
+    left: 0;
+    right: 0;
+    transform: none;
+    max-width: 100%;
+  }
+}
+
+@keyframes slideUpDrawer {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-drawer-up {
+  animation: slideUpDrawer 0.24s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes cardSwapIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-card-swap {
+  animation: cardSwapIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.18s ease-out forwards;
+}
