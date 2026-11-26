@@ -307,7 +307,7 @@ export const CategoriesPage: React.FC = () => {
                     onClick={() => handleSelectTopCat(item.id)}
                     className="flex flex-col items-center gap-[4px]"
                   >
-                    <div className="w-[50px] h-[50px] rounded-[12px] bg-[#F7F7F7] flex items-center justify-center overflow-hidden p-1">
+                    <div className="w-[52px] h-[52px] rounded-full bg-[#F7F7F7] flex items-center justify-center overflow-hidden p-1">
                       <img src={item.image} alt={item.label} className="w-full h-full object-contain" />
                     </div>
                     <span
@@ -437,7 +437,7 @@ export const CategoriesPage: React.FC = () => {
                   )}
                 </button>
 
-                <div className="flex-1 min-w-0 flex flex-col justify-between">
+                <div className="flex-1 min-w-0 flex flex-col gap-[4px]">
                   <div>
                     <button
                       type="button"
@@ -458,7 +458,7 @@ export const CategoriesPage: React.FC = () => {
                     )}
                   </div>
 
-                  <div className="mt-[8px] flex items-end justify-between gap-[4px]">
+                  <div className="mt-[2px] flex items-end justify-between gap-[4px]">
                     <PriceBlock
                       price={item.price}
                       originalPrice={item.originalPrice}

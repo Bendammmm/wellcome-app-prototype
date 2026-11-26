@@ -216,7 +216,6 @@ export const CartPage: React.FC = () => {
                 onChange={(next) => setCartItemQty(item.key, next)}
                 min={0}
                 size="sm"
-                showTrashOnOne
               />
             </div>
           </div>
@@ -255,12 +254,22 @@ export const CartPage: React.FC = () => {
         <button
           type="button"
           onClick={openFulfillmentSheet}
-          className="flex items-center gap-1 text-[14px] leading-[20px] text-[#1A1A1A] min-w-0 flex-1 justify-center"
+          className="flex items-center gap-[4px] text-[14px] leading-[20px] text-[#1A1A1A] min-w-0 flex-1 justify-start"
         >
-          <img
-            src={isDelivery ? ICONS.truck : ICONS.cncBag}
-            alt=""
-            className="w-[16px] h-[16px] object-contain shrink-0"
+          <span
+            aria-hidden="true"
+            className="block w-[16px] h-[16px] shrink-0"
+            style={{
+              backgroundColor: '#1A1A1A',
+              WebkitMaskImage: `url(${isDelivery ? ICONS.truck : ICONS.cncBag})`,
+              maskImage: `url(${isDelivery ? ICONS.truck : ICONS.cncBag})`,
+              WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+              WebkitMaskPosition: 'center',
+              maskPosition: 'center',
+              WebkitMaskSize: 'contain',
+              maskSize: 'contain',
+            }}
           />
           <span className="font-semibold shrink-0">
             {isDelivery ? 'Delivery' : 'Click & Collect'}
@@ -404,22 +413,24 @@ export const CartPage: React.FC = () => {
               </section>
             )}
 
-            {/* Unavailable items */}
-            <section className="bg-white rounded-[12px] p-3">
-              <h3 className="text-[14px] font-bold text-[#1A1A1A] mb-2.5">Unavailable items</h3>
-              <div className="flex items-center gap-3">
-                <div className="relative w-14 h-14 rounded-[8px] bg-[#F7F7F7] flex items-center justify-center shrink-0 overflow-hidden opacity-75">
-                  <img src={ASSETS.fujiApple} alt="" className="w-11 h-11 object-contain" />
-                  <span className="absolute inset-x-0.5 bottom-1 bg-black/65 text-white text-[9px] text-center py-[1px] rounded-full">
+            {/* Unavailable items (Figma 8585:131831) */}
+            <section className="bg-white rounded-[12px] p-[12px]">
+              <h3 className="text-[14px] leading-[20px] font-bold text-[#1A1A1A] mb-[12px]">
+                Unavailable items
+              </h3>
+              <div className="flex items-center gap-[8px]">
+                <div className="relative w-[76px] h-[76px] rounded-[4px] bg-[#F7F7F7] flex items-center justify-center shrink-0 overflow-hidden opacity-80">
+                  <img src={ASSETS.fujiApple} alt="" className="w-[64px] h-[64px] object-contain" />
+                  <span className="absolute inset-x-1 bottom-1 bg-black/65 text-white text-[9px] text-center py-[1px] rounded-full">
                     Out of stock
                   </span>
                 </div>
-                <div className="flex-1 bg-[#F7F7F7] rounded-[8px] p-2">
-                  <div className="flex items-center justify-between text-[11px] text-[#3D3D3D] mb-1.5">
+                <div className="flex-1 min-w-0 bg-[#F7F7F7] rounded-[8px] p-[8px]">
+                  <div className="flex items-center justify-between text-[12px] leading-[16px] text-[#3D3D3D] mb-[8px]">
                     <span className="font-medium">Related Products</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-[#858585]" />
+                    <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain" />
                   </div>
-                  <div className="grid grid-cols-3 gap-1.5">
+                  <div className="flex items-center gap-[8px]">
                     {['jumbo-blueberry', 'zespri-kiwi', 'fuji-apple'].map((id) => {
                       const prod = PRODUCTS.find((p) => p.id === id)!;
                       return (
@@ -427,7 +438,7 @@ export const CartPage: React.FC = () => {
                           key={id}
                           type="button"
                           onClick={() => navigate('pdp', id)}
-                          className="h-10 rounded-[6px] bg-white p-1 flex items-center justify-center"
+                          className="w-[56px] h-[56px] rounded-[6px] bg-white p-1 flex items-center justify-center shrink-0"
                         >
                           <img src={prod.image} alt="" className="w-full h-full object-contain" />
                         </button>
@@ -438,23 +449,27 @@ export const CartPage: React.FC = () => {
               </div>
             </section>
 
-            {/* Promo code */}
-            <section className="bg-white rounded-[12px] p-3">
-              <h3 className="text-[14px] font-bold text-[#1A1A1A] mb-2">Promo code</h3>
-              <div className="flex items-center gap-2">
+            {/* Promo code (Figma 4119:170794 & 4119:170800) */}
+            <section className="bg-white rounded-[12px] p-[12px]">
+              <div className="flex items-center justify-between mb-[8px]">
+                <h3 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Promo code</h3>
+              </div>
+              <div className="h-[40px] rounded-[8px] bg-white border border-[#E0E0E0] px-[12px] flex items-center justify-between gap-[8px] focus-within:border-[#E40032]">
                 <input
                   type="text"
                   value={promoInput}
                   onChange={(e) => setPromoInput(e.target.value)}
-                  placeholder="Enter promo code (e.g. WELLCOME10)"
-                  className="flex-1 h-[38px] px-3 rounded-[8px] bg-[#F7F7F7] border border-[#E8E8E8] text-[12px] text-[#1A1A1A] placeholder:text-[#858585] outline-none focus:border-[#E40032]"
+                  placeholder="Enter payment promo code"
+                  className="flex-1 min-w-0 text-[12px] leading-[16px] text-[#1A1A1A] placeholder:text-[#666666] bg-transparent outline-none"
                 />
                 <button
                   type="button"
                   onClick={() => {
                     if (applyPromoCode(promoInput || 'WELLCOME10')) setPromoInput('');
                   }}
-                  className="h-[38px] px-4 rounded-[8px] bg-[#F2F2F2] text-[#1A1A1A] text-[12px] font-bold active:bg-[#E5E5E5]"
+                  className={`text-[12px] leading-[16px] font-medium shrink-0 transition-colors ${
+                    promoInput.trim() ? 'text-[#E40032]' : 'text-[#C4C4C4]'
+                  }`}
                 >
                   Apply
                 </button>
@@ -466,14 +481,22 @@ export const CartPage: React.FC = () => {
               )}
             </section>
 
-            {/* Pre-order section */}
+            {/* Pre-order section (Figma 7939:425539) */}
             {preorderItems.length > 0 && (
-              <section className="bg-white rounded-[12px] p-3">
-                <div className="flex items-center justify-between pb-1">
-                  <span className="inline-flex items-center gap-1 text-[15px] font-bold text-[#1A1A1A]">
-                    Pre-order <ChevronRight className="w-4 h-4 text-[#E40032]" />
+              <section className="bg-white rounded-[12px] p-[12px]">
+                <div className="flex items-center justify-between border-b border-[#E0E0E0] pb-[12px]">
+                  <span className="inline-flex items-center gap-[2px] text-[16px] leading-[24px] font-bold text-[#1A1A1A]">
+                    <span>Pre-order</span>
+                    <img src={ICONS.chevronRightRed} alt="" className="w-[16px] h-[16px] object-contain" />
                   </span>
-                  <span className="text-[11px] text-[#666666]">Earliest 15 Jun 18:00</span>
+                  <div className="inline-flex items-center gap-[2px] shrink-0">
+                    <span className="px-[4px] py-[2px] rounded-[4px] bg-[#F7F7F7] text-[10px] leading-[14px] text-[#3D3D3D] font-normal">
+                      Earliest
+                    </span>
+                    <span className="text-[12px] leading-[16px] font-normal text-[#3D3D3D]">
+                      15 Jun 18:00
+                    </span>
+                  </div>
                 </div>
                 {preorderItems.map(renderCartRow)}
               </section>
