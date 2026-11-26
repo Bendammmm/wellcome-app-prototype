@@ -17,6 +17,8 @@ import { ShoppingListPage } from './pages/InStore/ShoppingListPage';
 import { RefundRequestPage } from './pages/Refund/RefundRequestPage';
 import { RefundSuccessPage } from './pages/Refund/RefundSuccessPage';
 import { FeedbackPage } from './pages/Feedback/FeedbackPage';
+import { SplashPage } from './pages/Auth/SplashPage';
+import { LoginPage } from './pages/Auth/LoginPage';
 import { FulfillmentSheet } from './components/shared/FulfillmentSheet';
 import { ToastBanner } from './components/shared/ToastBanner';
 import { getTotalCartCount, useAppStore } from './store/useAppStore';
@@ -32,7 +34,7 @@ export const App: React.FC = () => {
   return (
     <div className="app-viewport-outer">
       {/* Desktop-only preview helper sidebar (hidden on mobile phones <= 440px) */}
-      <aside className="hidden lg:flex fixed left-6 top-6 flex-col gap-3 w-[230px] bg-white/95 backdrop-blur rounded-[16px] p-4 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-black/5 z-40">
+      <aside className="hidden lg:flex fixed left-6 top-6 max-h-[calc(100vh-48px)] overflow-y-auto flex-col gap-3 w-[230px] bg-white/95 backdrop-blur rounded-[16px] p-4 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-black/5 z-40">
         <div>
           <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-[#E40032] bg-[#FFF0F2] px-2 py-0.5 rounded-full">
             Wellcome Prototype
@@ -49,6 +51,8 @@ export const App: React.FC = () => {
           <p className="text-[11px] font-semibold text-[#858585]">Quick Jump</p>
           {(
             [
+              { id: 'splash', label: 'Splash Screen' },
+              { id: 'login', label: 'Login / Sign up' },
               { id: 'home', label: 'Home (Immersive)' },
               { id: 'categories', label: 'Categories (分类)' },
               { id: 'search', label: 'Search Entry' },
@@ -107,6 +111,8 @@ export const App: React.FC = () => {
 
       {/* Main 393px Mobile App Shell */}
       <main className="app-viewport-shell">
+        {activePage === 'splash' && <SplashPage />}
+        {activePage === 'login' && <LoginPage />}
         {activePage === 'home' && <HomePage />}
         {activePage === 'categories' && <CategoriesPage />}
         {activePage === 'search' && <SearchPage />}

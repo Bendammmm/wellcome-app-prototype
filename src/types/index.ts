@@ -1,4 +1,6 @@
 export type RoutePage =
+  | 'splash'
+  | 'login'
   | 'home'
   | 'pdp'
   | 'cart'
@@ -17,6 +19,15 @@ export type RoutePage =
   | 'refund'
   | 'refund-success'
   | 'feedback';
+
+export interface AuthUser {
+  method: 'phone' | 'google' | 'apple';
+  name: string;
+  phone?: string;
+  email?: string;
+  marketingOptIn: boolean;
+  signedInAt: string;
+}
 
 export type FulfillmentMode = 'delivery' | 'click_and_collect';
 

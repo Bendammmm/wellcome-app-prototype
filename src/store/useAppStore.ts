@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type {
+  AuthUser,
   CartItem,
   Coupon,
   FulfillmentMode,
@@ -97,6 +98,9 @@ interface AppState {
   searchQuery: string;
   searchHistory: string[];
 
+  // Auth
+  authUser: AuthUser | null;
+
   // Navigation actions
   navigate: (page: RoutePage, productId?: string) => void;
   goBack: () => void;
@@ -140,6 +144,10 @@ interface AppState {
   setSearchQuery: (query: string) => void;
   submitSearch: (query: string) => void;
   clearSearchHistory: () => void;
+
+  // Auth actions
+  signIn: (user: Omit<AuthUser, 'signedInAt'>) => void;
+  signOut: () => void;
 }
 
 export function computePricingSummary(
@@ -275,6 +283,7 @@ export const useAppStore = create<AppState>()(
       toast: null,
       searchQuery: 'Milk',
       searchHistory: ['Vitamins', 'Collagen peptides', 'Cocoa powder', 'Protein bars', 'Curcumin'],
+      authUser: null,
 
       navigate: (page, productId) => {
         const state = get();
@@ -546,6 +555,20 @@ export const useAppStore = create<AppState>()(
         set({ searchHistory: [] });
         get().showToast('Search history cleared');
       },
+
+      signIn: (user) => {
+        set({
+          authUser: {
+            ...user,
+            signedInAt: new Date().toISOString(),
+          },
+        });
+      },
+
+      signOut: () => {
+        set({ authUser: null });
+        get().showToast('Signed out');
+      },
     }),
     {
       name: 'wellcome-prototype-v1',
@@ -559,6 +582,7 @@ export const useAppStore = create<AppState>()(
         redeemVisible: state.redeemVisible,
         orders: state.orders,
         searchHistory: state.searchHistory,
+        authUser: state.authUser,
       }),
     }
   )

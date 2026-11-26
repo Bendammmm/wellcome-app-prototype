@@ -43,7 +43,7 @@ export const MePage: React.FC = () => {
         <h1 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Me</h1>
         <button
           type="button"
-          onClick={() => showToast('Account settings')}
+          onClick={() => navigate('login')}
           aria-label="Settings"
           className="w-[32px] h-[32px] flex items-center justify-center active:opacity-70"
         >
@@ -131,16 +131,16 @@ export const MePage: React.FC = () => {
 
           <div className="grid grid-cols-5 gap-[4px]">
             {[
-              { label: 'To Pay', icon: ME_ASSETS.wallet },
-              { label: 'To Ship', icon: ME_ASSETS.truck },
-              { label: 'To Receive', icon: ME_ASSETS.package },
-              { label: 'To Review', icon: null },
-              { label: 'Refund', icon: ME_ASSETS.refund },
+              { label: 'To Pay', icon: ME_ASSETS.wallet, target: 'order-list' as const },
+              { label: 'To Ship', icon: ME_ASSETS.truck, target: 'order-list' as const },
+              { label: 'To Receive', icon: ME_ASSETS.package, target: 'order-list' as const },
+              { label: 'To Review', icon: null, target: 'feedback' as const },
+              { label: 'Refund', icon: ME_ASSETS.refund, target: 'refund' as const },
             ].map((item) => (
               <button
                 key={item.label}
                 type="button"
-                onClick={() => navigate('order-list')}
+                onClick={() => navigate(item.target)}
                 className="flex flex-col items-center gap-[6px] py-[4px] active:opacity-75"
               >
                 {item.icon ? (
@@ -165,17 +165,17 @@ export const MePage: React.FC = () => {
                 label: 'My list',
                 icon: ME_ASSETS.heart,
                 badge: wishlistIds.length,
-                onClick: () => showToast(`My list (${wishlistIds.length} saved items)`),
+                onClick: () => navigate('shopping-list'),
               },
               {
                 label: 'Help Center',
                 icon: ME_ASSETS.helpAgent,
-                onClick: () => showToast('Help Center · 24/7 Support'),
+                onClick: () => navigate('in-store'),
               },
               {
                 label: 'Survey',
                 icon: ME_ASSETS.survey,
-                onClick: () => showToast('Thank you for your feedback!'),
+                onClick: () => navigate('feedback'),
               },
             ].map((srv) => (
               <button
