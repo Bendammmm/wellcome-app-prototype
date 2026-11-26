@@ -70,6 +70,7 @@ export const PdpPage: React.FC = () => {
         }
       }
     };
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);

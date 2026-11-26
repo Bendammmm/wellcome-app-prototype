@@ -403,8 +403,13 @@ export const CartPage: React.FC = () => {
                       className="rounded-[8px] border border-[#EFEFEF] p-2 flex items-center gap-2"
                     >
                       <img src={p.image} alt={p.name} className="w-10 h-10 object-contain shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <PriceBlock price={p.price} originalPrice={p.originalPrice} size="xs" />
+                      <div className="flex-1 min-w-0 flex flex-col items-start">
+                        {p.originalPrice && (
+                          <span className="text-[11px] leading-[14px] text-[#858585] line-through">
+                            &#36;{p.originalPrice.toFixed(2)}
+                          </span>
+                        )}
+                        <PriceBlock price={p.price} size="xs" />
                       </div>
                       <ProductAddControl productId={p.id} size="sm" />
                     </div>
