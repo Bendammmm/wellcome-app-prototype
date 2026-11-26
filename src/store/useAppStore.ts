@@ -93,6 +93,10 @@ interface AppState {
   // Transient UI
   toast: ToastMessage | null;
 
+  // Search
+  searchQuery: string;
+  searchHistory: string[];
+
   // Navigation actions
   navigate: (page: RoutePage, productId?: string) => void;
   goBack: () => void;
@@ -125,6 +129,11 @@ interface AppState {
   // Toast
   showToast: (text: string, undoLabel?: string, onUndo?: () => void) => void;
   dismissToast: () => void;
+
+  // Search actions
+  setSearchQuery: (query: string) => void;
+  submitSearch: (query: string) => void;
+  clearSearchHistory: () => void;
 }
 
 export function computePricingSummary(
@@ -258,6 +267,8 @@ export const useAppStore = create<AppState>()(
       redeemVisible: true,
       orders: [],
       toast: null,
+      searchQuery: 'Milk',
+      searchHistory: ['Vitamins', 'Collagen peptides', 'Cocoa powder', 'Protein bars', 'Curcumin'],
 
       navigate: (page, productId) => {
         const state = get();
@@ -488,6 +499,34 @@ export const useAppStore = create<AppState>()(
         if (toastTimer) clearTimeout(toastTimer);
         set({ toast: null });
       },
+
+      setSearchQuery: (query) => set({ searchQuery: query }),
+
+      submitSearch: (query) => {
+        const cleaned = query.trim();
+        if (!cleaned) return;
+        const state = get();
+        const deduped = [
+          cleaned,
+          ...state.searchHistory.filter((item) => item.toLowerCase() !== cleaned.toLowerCase()),
+        ].slice(0, 12);
+        const nextHistory = [
+          ...state.history.slice(-15),
+          { page: state.activePage, productId: state.activeProductId },
+        ];
+        set({
+          searchQuery: cleaned,
+          searchHistory: deduped,
+          activePage: 'search-results',
+          history: nextHistory,
+        });
+        window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+      },
+
+      clearSearchHistory: () => {
+        set({ searchHistory: [] });
+        get().showToast('Search history cleared');
+      },
     }),
     {
       name: 'wellcome-prototype-v1',
@@ -500,6 +539,7 @@ export const useAppStore = create<AppState>()(
         wishlistIds: state.wishlistIds,
         redeemVisible: state.redeemVisible,
         orders: state.orders,
+        searchHistory: state.searchHistory,
       }),
     }
   )

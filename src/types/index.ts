@@ -1,4 +1,4 @@
-export type RoutePage = 'home' | 'pdp' | 'cart' | 'smart-tips';
+export type RoutePage = 'home' | 'pdp' | 'cart' | 'smart-tips' | 'search' | 'search-results';
 
 export type FulfillmentMode = 'delivery' | 'click_and_collect';
 
@@ -70,6 +70,8 @@ export interface Product {
     grape?: string;
   };
   detailImages?: string[];
+  searchTags?: string[];
+  soldCount?: number;
 }
 
 export interface CartItem {

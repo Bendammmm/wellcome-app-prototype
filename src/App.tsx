@@ -3,6 +3,8 @@ import { HomePage } from './pages/Home/HomePage';
 import { PdpPage } from './pages/PDP/PdpPage';
 import { CartPage } from './pages/Cart/CartPage';
 import { SmartTipsPage } from './pages/Cart/SmartTipsPage';
+import { SearchPage } from './pages/Search/SearchPage';
+import { SearchResultsPage } from './pages/Search/SearchResultsPage';
 import { FulfillmentSheet } from './components/shared/FulfillmentSheet';
 import { ToastBanner } from './components/shared/ToastBanner';
 import { getTotalCartCount, useAppStore } from './store/useAppStore';
@@ -36,6 +38,8 @@ export const App: React.FC = () => {
           {(
             [
               { id: 'home', label: 'Home (Immersive)' },
+              { id: 'search', label: 'Search Entry' },
+              { id: 'search-results', label: 'Search Results (Milk)' },
               { id: 'pdp', label: 'PDP (Case Deal Wine)' },
               { id: 'cart', label: `Cart (${cartCount})` },
               { id: 'smart-tips', label: 'Smart Tips (凑单页)' },
@@ -80,6 +84,8 @@ export const App: React.FC = () => {
       {/* Main 393px Mobile App Shell */}
       <main className="app-viewport-shell">
         {activePage === 'home' && <HomePage />}
+        {activePage === 'search' && <SearchPage />}
+        {activePage === 'search-results' && <SearchResultsPage />}
         {activePage === 'pdp' && <PdpPage />}
         {activePage === 'cart' && <CartPage />}
         {activePage === 'smart-tips' && <SmartTipsPage />}

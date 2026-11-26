@@ -210,7 +210,7 @@ export const HomePage: React.FC = () => {
 
           <button
             type="button"
-            onClick={() => showToast('Search is coming in the next phase')}
+            onClick={() => navigate('search')}
             className="flex-1 h-[36px] bg-white rounded-full pl-3 pr-1 flex items-center gap-1.5 text-left"
           >
             <img src={ICONS.search} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
@@ -312,7 +312,7 @@ export const HomePage: React.FC = () => {
 
           <button
             type="button"
-            onClick={() => showToast('Search is coming in the next phase')}
+            onClick={() => navigate('search')}
             className="w-full h-[40px] bg-white rounded-[10px] pl-3 pr-1 flex items-center gap-2 shadow-sm"
           >
             <img src={ICONS.search} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
