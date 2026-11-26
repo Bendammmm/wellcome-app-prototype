@@ -10,11 +10,11 @@ export const AppTabBar: React.FC = () => {
 
   const tabs = [
     { id: 'home', label: 'Home', icon: ICONS.tabHome, active: activePage === 'home' },
-    { id: 'categories', label: 'Categories', icon: ICONS.tabCategories, active: false },
-    { id: 'yuuid', label: 'yuuID', icon: ICONS.tabYuuId, active: false },
+    { id: 'categories', label: 'Categories', icon: ICONS.tabCategories, active: activePage === 'categories' },
+    { id: 'yuuid', label: 'yuuID', icon: ICONS.tabYuuId, active: activePage === 'yuu-id' },
     { id: 'ai', label: 'AI', icon: ICONS.tabAi, active: false },
     { id: 'cart', label: 'Cart', icon: ICONS.tabCart, active: activePage === 'cart', badge: cartCount },
-    { id: 'me', label: 'Me', icon: ICONS.tabMe, active: false },
+    { id: 'me', label: 'Me', icon: ICONS.tabMe, active: activePage === 'me' || activePage === 'order-list' || activePage === 'order-detail' },
   ] as const;
 
   return (
@@ -26,8 +26,11 @@ export const AppTabBar: React.FC = () => {
             type="button"
             onClick={() => {
               if (tab.id === 'home') navigate('home');
+              else if (tab.id === 'categories') navigate('categories');
+              else if (tab.id === 'yuuid') navigate('yuu-id');
               else if (tab.id === 'cart') navigate('cart');
-              else showToast(`${tab.label} is coming in the next phase`);
+              else if (tab.id === 'me') navigate('me');
+              else showToast(`${tab.label} assistant coming soon`);
             }}
             className="flex flex-col items-center justify-center gap-0.5 py-0.5 relative active:opacity-75"
           >
@@ -35,7 +38,9 @@ export const AppTabBar: React.FC = () => {
               <img
                 src={tab.icon}
                 alt={tab.label}
-                className="w-[28px] h-[28px] object-contain"
+                className={`w-[28px] h-[28px] object-contain transition-all ${
+                  tab.id === 'home' && !tab.active ? 'grayscale opacity-55' : ''
+                }`}
               />
               {'badge' in tab && tab.badge > 0 && (
                 <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E40032] text-white text-[10px] font-bold flex items-center justify-center leading-none border border-white tabular-nums">

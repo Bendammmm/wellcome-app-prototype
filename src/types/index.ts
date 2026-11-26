@@ -1,4 +1,13 @@
-export type RoutePage = 'home' | 'pdp' | 'cart' | 'smart-tips';
+export type RoutePage =
+  | 'home'
+  | 'pdp'
+  | 'cart'
+  | 'smart-tips'
+  | 'categories'
+  | 'me'
+  | 'yuu-id'
+  | 'order-list'
+  | 'order-detail';
 
 export type FulfillmentMode = 'delivery' | 'click_and_collect';
 
