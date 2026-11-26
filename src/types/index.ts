@@ -1,4 +1,4 @@
-export type RoutePage = 'home' | 'pdp' | 'cart' | 'smart-tips';
+export type RoutePage = 'home' | 'pdp' | 'cart' | 'smart-tips' | 'search' | 'search-results' | 'checkout' | 'payment-success';
 
 export type FulfillmentMode = 'delivery' | 'click_and_collect';
 
@@ -70,6 +70,8 @@ export interface Product {
     grape?: string;
   };
   detailImages?: string[];
+  searchTags?: string[];
+  soldCount?: number;
 }
 
 export interface CartItem {
@@ -118,4 +120,10 @@ export interface OrderRecord {
   itemCount: number;
   total: number;
   saved: number;
+  deliverySlot?: string;
+  paymentMethod?: string;
+  remarks?: string;
+  outOfStockPreference?: string;
+  yuuPoints?: number;
+  stamps?: number;
 }
