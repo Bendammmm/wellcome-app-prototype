@@ -115,92 +115,96 @@ export const CartPage: React.FC = () => {
     const promoId = meta.product.promoGroupId;
 
     return (
-      <div key={item.key} className="py-3 border-b border-[#F3F3F3] last:border-b-0">
-        {/* Optional Promo Group Header matching Figma 8585:131773 */}
+      <div key={item.key} className="py-[8px] border-b border-[#E0E0E0] last:border-b-0">
+        {/* Optional Promo Group Header matching Figma 8585:131791 (_Cart Promo Bar) */}
         {promoId === '10-off' && (
-          <div className="flex items-center justify-between mb-2 pl-7">
-            <div className="flex items-center gap-1.5">
+          <div className="flex items-center justify-between gap-[8px] mb-[8px]">
+            <div className="flex items-center gap-[8px] min-w-0">
               <PromoTag label="10% off" applied />
-              <span className="text-[11px] text-[#3D3D3D]">
+              <span className="text-[12px] leading-[16px] text-[#3D3D3D] truncate">
                 Saved: &#36;{(meta.price * item.qty * 0.1).toFixed(2)}
               </span>
             </div>
-            <ChevronRight className="w-3.5 h-3.5 text-[#858585]" />
+            <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
           </div>
         )}
         {promoId === 'buy2-30' && (
-          <div className="flex items-center justify-between mb-2 pl-7">
-            <div className="flex items-center gap-1.5">
+          <div className="flex items-center justify-between gap-[8px] mb-[8px]">
+            <div className="flex items-center gap-[8px] min-w-0">
               <PromoTag label="Buy 2 for $30" applied={item.qty >= 2} />
-              <span className="text-[11px] text-[#3D3D3D]">
+              <span className="text-[12px] leading-[16px] text-[#3D3D3D] truncate">
                 {item.qty >= 2
                   ? `Offer applied, Saved: $${(Math.floor(item.qty / 2) * (meta.price * 2 - 30)).toFixed(2)}`
                   : 'Add 1 more to get 2 for $30'}
               </span>
             </div>
-            <ChevronRight className="w-3.5 h-3.5 text-[#858585]" />
+            <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
           </div>
         )}
         {promoId === '2-for-20-off' && (
-          <div className="flex items-center justify-between mb-2 pl-7">
-            <div className="flex items-center gap-1.5">
+          <div className="flex items-center justify-between gap-[8px] mb-[8px]">
+            <div className="flex items-center gap-[8px] min-w-0">
               <PromoTag label="2 for 20% off" applied={item.qty >= 2} />
-              <span className="text-[11px] text-[#3D3D3D]">
+              <span className="text-[12px] leading-[16px] text-[#3D3D3D] truncate">
                 {item.qty >= 2
                   ? `Offer applied, Saved: $${(meta.price * item.qty * 0.2).toFixed(2)}`
                   : 'Add 1 more item to get 20% off'}
               </span>
             </div>
-            <ChevronRight className="w-3.5 h-3.5 text-[#858585]" />
+            <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
           </div>
         )}
 
-        <div className="flex items-center gap-2.5">
-          {/* Checkbox (Figma 173: 24x24px) */}
+        <div className="flex items-center gap-[8px] py-[8px]">
+          {/* Checkbox (Figma 8461:107347: 24x24px) */}
           <button
             type="button"
             aria-label={item.selected ? 'Deselect item' : 'Select item'}
             onClick={() => toggleItemSelected(item.key)}
-            className={`w-[24px] h-[24px] rounded-full flex items-center justify-center shrink-0 transition-colors ${
-              item.selected
-                ? 'bg-[#E40032] text-white'
-                : 'border-[1.8px] border-[#BDBDBD] bg-white'
-            }`}
+            className="w-[24px] h-[24px] flex items-center justify-center shrink-0"
           >
-            {item.selected && <Check className="w-3.5 h-3.5" strokeWidth={3} />}
+            <img
+              src={item.selected ? ICONS.radioChecked : ICONS.radioBlank}
+              alt=""
+              className="w-[24px] h-[24px] object-contain"
+            />
           </button>
 
-          {/* Product Thumbnail (Figma 173: 76x76px) */}
+          {/* Product Thumbnail (Figma 8585:131791: 76x76px, radius 4px) */}
           <button
             type="button"
             onClick={() => navigate('pdp', item.productId)}
-            className="w-[76px] h-[76px] rounded-[8px] bg-white border border-[#F2F2F2] p-1 flex items-center justify-center shrink-0"
+            className="w-[76px] h-[76px] rounded-[4px] bg-white p-1 flex items-center justify-center shrink-0 overflow-hidden"
           >
             <img src={meta.image} alt={meta.title} className="w-full h-full object-contain" />
           </button>
 
           {/* Info + Stepper */}
-          <div className="flex-1 min-w-0">
-            <button
-              type="button"
-              onClick={() => navigate('pdp', item.productId)}
-              className="text-left block w-full"
-            >
-              <p className="text-[14px] leading-[20px] font-medium text-[#1A1A1A] line-clamp-2">
-                {meta.title}
-              </p>
-            </button>
+          <div className="flex-1 min-w-0 min-h-[76px] flex flex-col justify-between">
+            <div>
+              <button
+                type="button"
+                onClick={() => navigate('pdp', item.productId)}
+                className="text-left block w-full"
+              >
+                <p className="text-[14px] leading-[20px] font-normal text-[#1A1A1A] line-clamp-2">
+                  {meta.title}
+                </p>
+              </button>
 
-            <div className="flex flex-wrap items-center gap-1 mt-1">
-              {meta.product.shortSpec && (
-                <span className="text-[11px] text-[#858585]">{meta.product.shortSpec}</span>
-              )}
-              {meta.isExtraLeadTime && (
-                <PromoTag label="Extra lead time" variant="leadtime" />
-              )}
+              <div className="flex flex-wrap items-center gap-[4px] mt-[2px]">
+                {meta.product.shortSpec && (
+                  <span className="text-[12px] leading-[16px] text-[#666666]">
+                    {meta.product.shortSpec}
+                  </span>
+                )}
+                {meta.isExtraLeadTime && (
+                  <PromoTag label="Extra lead time" variant="leadtime" />
+                )}
+              </div>
             </div>
 
-            <div className="mt-2 flex items-center justify-between gap-2">
+            <div className="mt-[8px] flex items-end justify-between gap-[8px]">
               <PriceBlock
                 price={meta.price}
                 originalPrice={meta.originalPrice}
@@ -279,13 +283,13 @@ export const CartPage: React.FC = () => {
         </button>
       </header>
 
-      <div className="px-2 pt-2.5 space-y-2.5">
-        {/* Promo Notice Strip */}
-        <div className="bg-white rounded-[12px] px-3 py-2.5 flex items-center gap-2.5">
-          <span className="w-6 h-6 rounded-full bg-[#E40032] text-white flex items-center justify-center shrink-0">
-            <BadgePercent className="w-3.5 h-3.5" />
+      <div className="px-[8px] pt-[8px] space-y-[8px]">
+        {/* Promo Notice Strip (Figma 8585:131776) */}
+        <div className="bg-gradient-to-t from-white to-[#FFF6F5] border-2 border-white rounded-[12px] p-[12px] flex items-center gap-[8px]">
+          <span className="w-[24px] h-[24px] rounded-full bg-[#E40032] flex items-center justify-center shrink-0">
+            <img src={ICONS.promoOutline} alt="" className="w-[14px] h-[14px] object-contain" />
           </span>
-          <p className="text-[12px] text-[#1A1A1A] font-medium truncate">
+          <p className="text-[12px] leading-[16px] text-[#3D3D3D] font-normal truncate">
             Hang Seng enJoy Card Day, Spend over &#36;600 get 8% off
           </p>
         </div>
@@ -319,44 +323,46 @@ export const CartPage: React.FC = () => {
           </section>
         ) : (
           <>
-            {/* Main Fulfillment Cart Card */}
+            {/* Main Fulfillment Cart Card (Figma 8585:131777) */}
             {mainItems.length > 0 && (
-              <section className="bg-white rounded-[12px] p-3">
-                <div className="flex items-center justify-between pb-2.5">
-                  <button
-                    type="button"
-                    onClick={openFulfillmentSheet}
-                    className="inline-flex items-center gap-1 text-[16px] font-bold text-[#1A1A1A]"
-                  >
-                    <span>{isDelivery ? 'Home Delivery' : 'Click & Collect'}</span>
-                    <ChevronRight className="w-4 h-4 text-[#E40032]" />
-                  </button>
-                  <div className="inline-flex items-center gap-1.5 text-[11px]">
-                    <span className="px-1.5 py-0.5 rounded-[4px] bg-[#F2F2F2] text-[#666666] font-medium">
-                      Earliest
-                    </span>
-                    <span className="font-medium text-[#3D3D3D]">
-                      {pricing.earliestDateLabel}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Extra Lead Time Banner -> opens 6514:77679 drawer */}
-                {pricing.hasExtraLeadTimeSelected && (
-                  <button
-                    type="button"
-                    onClick={() => setLeadTimeDrawerOpen(true)}
-                    className="w-full mb-2 bg-[#FFF5CC] rounded-[8px] px-3 py-2 flex items-center justify-between text-left active:opacity-90"
-                  >
-                    <span className="inline-flex items-center gap-1.5 text-[12px] text-[#3D3D3D]">
-                      <Clock className="w-3.5 h-3.5 text-[#3D3D3D] shrink-0" />
-                      <span>
-                        Get it by <strong>12 Jun</strong> without case items
+              <section className="bg-white rounded-[12px] p-[12px]">
+                <div className="border-b border-[#E0E0E0] pb-[12px] space-y-[12px]">
+                  <div className="flex items-center justify-between gap-[4px]">
+                    <button
+                      type="button"
+                      onClick={openFulfillmentSheet}
+                      className="inline-flex items-center gap-[2px] text-[16px] leading-[24px] font-bold text-[#1A1A1A]"
+                    >
+                      <span>{isDelivery ? 'Home Delivery' : 'Click & Collect'}</span>
+                      <img src={ICONS.chevronRightRed} alt="" className="w-[16px] h-[16px] object-contain" />
+                    </button>
+                    <div className="inline-flex items-center gap-[2px] shrink-0">
+                      <span className="px-[4px] py-[2px] rounded-[4px] bg-[#F7F7F7] text-[10px] leading-[14px] text-[#3D3D3D] font-normal">
+                        Earliest
                       </span>
-                    </span>
-                    <ChevronRight className="w-4 h-4 text-[#666666] shrink-0" />
-                  </button>
-                )}
+                      <span className="text-[12px] leading-[16px] font-normal text-[#3D3D3D]">
+                        {pricing.earliestDateLabel}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Extra Lead Time Banner (Figma 8585:131788) -> opens 6514:77679 drawer */}
+                  {pricing.hasExtraLeadTimeSelected && (
+                    <button
+                      type="button"
+                      onClick={() => setLeadTimeDrawerOpen(true)}
+                      className="w-full h-[32px] bg-[#FFF5CC] rounded-[8px] px-[12px] py-[4px] flex items-center justify-between gap-[4px] text-left active:opacity-90"
+                    >
+                      <span className="inline-flex items-center gap-[4px] text-[12px] leading-[16px] text-[#3D3D3D] min-w-0">
+                        <img src={ICONS.timeOutline} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
+                        <span className="truncate">
+                          Get it by <strong className="font-bold">12 Jun</strong> without case items
+                        </span>
+                      </span>
+                      <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
+                    </button>
+                  )}
+                </div>
 
                 <div>{mainItems.map(renderCartRow)}</div>
               </section>
@@ -518,21 +524,17 @@ export const CartPage: React.FC = () => {
         />
 
         {isEditMode ? (
-          <div className="px-4 pt-3 pb-[max(14px,env(safe-area-inset-bottom))] flex items-center justify-between">
+          <div className="px-[12px] pt-[12px] pb-[max(14px,env(safe-area-inset-bottom))] flex items-center justify-between">
             <button
               type="button"
               onClick={toggleSelectAll}
-              className="inline-flex items-center gap-2 text-[14px] text-[#3D3D3D]"
+              className="inline-flex items-center gap-[4px] text-[14px] leading-[20px] text-[#3D3D3D]"
             >
-              <span
-                className={`w-[20px] h-[20px] rounded-full flex items-center justify-center ${
-                  allSelected
-                    ? 'bg-[#E40032] text-white'
-                    : 'border-[1.8px] border-[#858585]'
-                }`}
-              >
-                {allSelected && <Check className="w-3 h-3" strokeWidth={3} />}
-              </span>
+              <img
+                src={allSelected ? ICONS.radioChecked : ICONS.radioBlank}
+                alt=""
+                className="w-[24px] h-[24px] object-contain"
+              />
               <span>All</span>
             </button>
             <button
@@ -542,28 +544,24 @@ export const CartPage: React.FC = () => {
                 removeSelectedItems();
                 setIsEditMode(false);
               }}
-              className="h-[40px] px-7 rounded-[10px] bg-[#E40032] text-white text-[14px] font-bold disabled:opacity-40"
+              className="h-[40px] px-7 rounded-[8px] bg-[#E40032] text-white text-[14px] font-bold disabled:opacity-40"
             >
               Delete ({pricing.selectedCount})
             </button>
           </div>
         ) : (
-          <div className="px-4 pt-2.5 pb-[max(14px,env(safe-area-inset-bottom))] space-y-2.5">
+          <div className="px-[12px] pt-[10px] pb-[max(14px,env(safe-area-inset-bottom))] space-y-[10px]">
             <div className="flex items-center justify-between">
               <button
                 type="button"
                 onClick={toggleSelectAll}
-                className="inline-flex items-center gap-2 text-[14px] text-[#3D3D3D]"
+                className="inline-flex items-center gap-[4px] text-[14px] leading-[20px] text-[#3D3D3D]"
               >
-                <span
-                  className={`w-[20px] h-[20px] rounded-full flex items-center justify-center ${
-                    allSelected
-                      ? 'bg-[#E40032] text-white'
-                      : 'border-[1.8px] border-[#858585]'
-                  }`}
-                >
-                  {allSelected && <Check className="w-3 h-3" strokeWidth={3} />}
-                </span>
+                <img
+                  src={allSelected ? ICONS.radioChecked : ICONS.radioBlank}
+                  alt=""
+                  className="w-[24px] h-[24px] object-contain"
+                />
                 <span>All</span>
               </button>
 
@@ -583,7 +581,7 @@ export const CartPage: React.FC = () => {
                     }
                     size="md"
                   />
-                  <ChevronDown className="w-4 h-4 text-[#666666]" />
+                  <img src={ICONS.chevronDown} alt="" className="w-[16px] h-[16px] object-contain" />
                 </div>
                 {pricing.subtotalAfterPromo > 0 && (
                   <p className="text-[11px] text-[#666666]">

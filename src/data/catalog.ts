@@ -39,6 +39,12 @@ export const ICONS = {
   share: '/assets/figma/icons/share.svg',
   heartOutline: '/assets/figma/icons/heart-outline.svg',
   edit: '/assets/figma/icons/edit.svg',
+  stampRewardBg: '/assets/figma/icons/stamp-reward-bg.svg',
+  truckRed: '/assets/figma/icons/truck-red.svg',
+  plusDark: '/assets/figma/icons/plus-dark.svg',
+  promoOutline: '/assets/figma/icons/promo-outline.svg',
+  chevronRightRed: '/assets/figma/icons/chevron-right-red.svg',
+  priceSort: '/assets/figma/icons/price-sort.svg',
 };
 
 export const ASSETS = {

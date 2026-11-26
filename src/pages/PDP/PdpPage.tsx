@@ -11,7 +11,6 @@ import { CountdownTimer } from '../../components/shared/CountdownTimer';
 import { PriceBlock } from '../../components/shared/PriceBlock';
 import { ProductCard } from '../../components/shared/ProductCard';
 import { PromoTag } from '../../components/shared/PromoTag';
-import { QuantityStepper } from '../../components/shared/QuantityStepper';
 
 const ANCHOR_TABS = [
   { id: 'pdp-overview', label: 'Overview' },
@@ -60,7 +59,17 @@ export const PdpPage: React.FC = () => {
   }, [activeProductId, defaultVariantId]);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 220);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 220);
+      const ids = ['pdp-recommend', 'pdp-details', 'pdp-reviews', 'pdp-offers', 'pdp-overview'];
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= 140) {
+          setActiveAnchor(id);
+          break;
+        }
+      }
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -222,43 +231,50 @@ export const PdpPage: React.FC = () => {
         </div>
       </header>
 
-      {/* 1. Product Gallery (Overview) */}
-      <section id="pdp-overview" className="relative bg-white w-full h-[350px] flex items-center justify-center overflow-hidden">
+      {/* 1. Product Gallery (Overview — Figma 7668:107967, 393x393) */}
+      <section id="pdp-overview" className="relative bg-white w-full aspect-square flex items-center justify-center overflow-hidden">
         <img
           src={galleryImages[slideIndex]}
           alt={activeTitle}
           onClick={() => setSlideIndex((i) => (i + 1) % galleryImages.length)}
           className="w-full h-full object-contain p-4 cursor-pointer"
         />
-        <span className="absolute bottom-3 right-3 bg-black/45 text-white text-[11px] font-medium px-2.5 py-0.5 rounded-full">
+        <span className="absolute bottom-[13px] right-[10px] h-[22px] px-[8px] rounded-full bg-black/45 text-white text-[11px] leading-[14px] font-medium inline-flex items-center justify-center">
           {slideIndex + 1}/{galleryImages.length}
         </span>
       </section>
 
-      {/* 2. Horizontal Option Chips (Case Deal SKU selector) with pinned right "3 options" */}
+      {/* 2. Horizontal Option Chips (Case Deal SKU selector — Figma 1630:132500) */}
       {product.variants && product.variants.length > 0 && (
-        <section className="relative bg-white border-t border-[#F2F2F2]">
-          <div className="px-3 py-2.5 pr-[76px] flex items-center gap-2 overflow-x-auto no-scrollbar">
+        <section className="relative bg-white border-t border-[#E0E0E0] h-[80px] flex items-center">
+          <div className="w-full h-full px-[16px] pr-[80px] flex items-center gap-[8px] overflow-x-auto no-scrollbar">
             {product.variants.map((v) => {
               const active = v.id === activeVariant?.id;
+              const [intPart, decPart] = v.price.toFixed(2).split('.');
               return (
                 <button
                   key={v.id}
                   type="button"
                   onClick={() => setSelectedVariantId(v.id)}
-                  className={`shrink-0 rounded-[8px] px-3 py-2 text-left border transition-colors ${
+                  className={`shrink-0 min-w-[80px] h-[56px] rounded-[8px] px-[12px] py-[8px] text-left flex flex-col justify-center gap-[4px] transition-colors ${
                     active
-                      ? 'border-[#E40032] bg-[#FFF6F5]'
-                      : 'border-[#EAEAEA] bg-[#F7F7F7]'
+                      ? 'border border-[#E40032] bg-[#FFF6F5]'
+                      : 'border border-transparent bg-[#F7F7F7]'
                   }`}
                 >
-                  <p className="text-[12px] font-semibold text-[#1A1A1A]">{v.label}</p>
-                  <div className="flex items-baseline gap-1 mt-0.5">
-                    <span className="text-[13px] font-bold text-[#1A1A1A]">
-                      &#36;{v.price.toFixed(2)}
+                  <p className="text-[12px] leading-[16px] font-normal text-[#3D3D3D] whitespace-nowrap">
+                    {v.label}
+                  </p>
+                  <div className="flex items-end gap-[4px] whitespace-nowrap">
+                    <span className="inline-flex items-start font-bold text-[#1A1A1A]">
+                      <span className="text-[10px] leading-[16px]">&#36;</span>
+                      <span className="text-[16px] leading-[20px]">{intPart}</span>
+                      <span className="text-[10px] leading-[16px]">.{decPart}</span>
                     </span>
                     {v.unitPriceText && (
-                      <span className="text-[10px] text-[#666666]">{v.unitPriceText}</span>
+                      <span className="text-[10px] leading-[14px] font-medium text-[#666666]">
+                        {v.unitPriceText}
+                      </span>
                     )}
                   </div>
                 </button>
@@ -268,21 +284,21 @@ export const PdpPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setOptionDrawerOpen(true)}
-            className="absolute right-0 inset-y-0 w-[68px] bg-white shadow-[-10px_0_12px_-4px_rgba(255,255,255,0.98)] border-l border-[#F5F5F5] flex flex-col items-center justify-center text-[11px] font-medium text-[#3D3D3D]"
+            className="absolute right-0 inset-y-0 w-[69px] bg-white shadow-[-8px_0_14px_-2px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center gap-[2px] text-[10px] leading-[14px] font-medium text-[#666666]"
           >
-            <img src={ICONS.chevronRight} alt="" className="w-4 h-4 object-contain mb-0.5" />
+            <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain" />
             <span>{product.variants.length} options</span>
           </button>
         </section>
       )}
 
       {/* Main PDP Cards */}
-      <div className="px-2 pt-2 space-y-2">
-        {/* 3. Price Banner + Product Info Card */}
+      <div className="px-[8px] pt-[8px] space-y-[8px]">
+        {/* 3. Price Banner + Product Info Card (Figma 7650:77009) */}
         <section className="bg-white rounded-[12px] overflow-hidden">
           {/* Dynamic Price Banner matching Figma 7656:81124 */}
           {fulfillmentMode === 'click_and_collect' ? (
-            <div className="bg-gradient-to-r from-[#E40032] to-[#FF2449] px-3.5 py-3 flex items-center justify-between text-white">
+            <div className="bg-gradient-to-r from-[#E40032] to-[#FF2449] px-[12px] py-[12px] flex items-center justify-between text-white">
               <PriceBlock
                 price={activePrice}
                 originalPrice={activeOriginalPrice}
@@ -296,7 +312,7 @@ export const PdpPage: React.FC = () => {
               </div>
             </div>
           ) : product.priceBannerType === 'flash_deal' ? (
-            <div className="bg-gradient-to-r from-[#FF5500] to-[#FF951C] px-3.5 py-3 flex items-center justify-between text-white">
+            <div className="bg-gradient-to-r from-[#FF5500] to-[#FF951C] px-[12px] py-[12px] flex items-center justify-between text-white">
               <PriceBlock
                 price={activePrice}
                 originalPrice={activeOriginalPrice}
@@ -309,241 +325,337 @@ export const PdpPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="px-3.5 pt-3.5">
-              {/* Sticky note 8510:328317: Case deal shows average price ($100/Bottle) instead of strikethrough */}
-              <PriceBlock
-                price={activePrice}
-                originalPrice={activeOriginalPrice}
-                unitPriceText={activeUnitPrice}
-                size="hero"
-              />
+            <div className="px-[12px] pt-[12px]">
+              {/* Figma 7650:77009: 28px/36px bold price + 14px/20px unit price */}
+              <div className="flex items-baseline gap-[4px] whitespace-nowrap">
+                <span className="inline-flex items-start font-bold text-[#E40032] text-[28px] leading-[36px]">
+                  &#36;{activePrice.toFixed(2)}
+                </span>
+                {activeUnitPrice ? (
+                  <span className="text-[14px] leading-[20px] font-normal text-[#666666]">
+                    {activeUnitPrice}
+                  </span>
+                ) : activeOriginalPrice ? (
+                  <span className="text-[14px] leading-[20px] font-normal text-[#666666] line-through">
+                    &#36;{activeOriginalPrice.toFixed(2)}
+                  </span>
+                ) : null}
+              </div>
             </div>
           )}
 
-          <div className="p-3.5 space-y-2.5">
+          <div className="p-[12px] pt-[4px] space-y-[12px]">
             {product.promoTags && product.promoTags.length > 0 && (
-              <div className="flex items-center justify-between">
-                <div className="flex flex-wrap gap-1.5">
+              <div className="flex items-center justify-between gap-[8px]">
+                <div className="flex flex-wrap gap-[4px]">
                   {product.promoTags.map((tag) => (
-                    <PromoTag key={tag} label={tag} />
+                    <span
+                      key={tag}
+                      className="h-[20px] px-[8px] rounded-[4px] bg-[#FFEC99] text-[#3D3D3D] text-[12px] leading-[16px] font-normal inline-flex items-center justify-center whitespace-nowrap"
+                    >
+                      {tag}
+                    </span>
                   ))}
                 </div>
-                <img src={ICONS.chevronRight} alt="" className="w-4 h-4 object-contain" />
+                <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
               </div>
             )}
 
-            <h1 className="text-[18px] leading-[24px] font-bold text-[#1A1A1A]">
-              {activeTitle}
-            </h1>
+            <div className="space-y-[4px]">
+              <h1 className="text-[18px] leading-[28px] font-bold text-[#1A1A1A]">
+                {activeTitle}
+              </h1>
 
-            {product.description && (
-              <p className="text-[13px] leading-[19px] text-[#666666]">
-                {product.description}
-              </p>
-            )}
+              {product.description && (
+                <p className="text-[14px] leading-[20px] font-normal text-[#666666]">
+                  {product.description}
+                </p>
+              )}
+            </div>
 
-            {/* Highlight Chips */}
-            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1">
-              <div className="px-2.5 py-1.5 rounded-[8px] bg-gradient-to-r from-[#FFF0B3] to-[#FFF7D6] text-[#1A1A1A] text-[12px] font-bold shrink-0">
-                {product.highlights?.rank ?? 'Top 10'}
-              </div>
-              <div className="px-2.5 py-1.5 rounded-[8px] bg-[#F7F7F7] text-[12px] text-[#1A1A1A] inline-flex items-center gap-1 shrink-0">
-                <img src={ICONS.star} alt="" className="w-3.5 h-3.5 object-contain" />
-                <span className="font-bold">{product.highlights?.rating ?? '4.8'}</span>
-                <span className="text-[#858585]">
-                  ({product.highlights?.reviewCount ?? '1,932'})
+            {/* Highlight Sale Point 2-Line Tiles (Figma I7650:77009;7650:76131) */}
+            <div className="flex items-center gap-[4px] overflow-x-auto no-scrollbar">
+              <div className="p-[8px] rounded-[4px] bg-gradient-to-r from-[#FFF4C9] to-[#F6DF85] border-b border-[#F3DAA0] flex flex-col gap-[2px] shrink-0 whitespace-nowrap">
+                <span className="text-[14px] leading-[20px] font-normal text-[#1A1A1A]">
+                  {product.highlights?.rank ?? 'Top 10'}
+                </span>
+                <span className="text-[12px] leading-[16px] font-normal text-[#666666]">
+                  Wine Hot List
                 </span>
               </div>
-              <div className="px-2.5 py-1.5 rounded-[8px] bg-[#F7F7F7] text-[12px] font-medium text-[#1A1A1A] shrink-0">
-                {product.highlights?.sold ?? product.soldText ?? '2k sold'}
+              <div className="p-[8px] rounded-[4px] bg-[#F7F7F7] flex flex-col gap-[2px] shrink-0 whitespace-nowrap">
+                <div className="inline-flex items-center gap-[2px]">
+                  <img src={ICONS.star} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
+                  <span className="text-[14px] leading-[20px] font-normal text-[#3D3D3D]">
+                    {product.highlights?.rating ?? '4.8'}
+                  </span>
+                  <span className="text-[12px] leading-[16px] font-normal text-[#666666]">
+                    ({product.highlights?.reviewCount ?? '1,932'})
+                  </span>
+                </div>
+                <span className="text-[12px] leading-[16px] font-normal text-[#666666]">
+                  Rating
+                </span>
               </div>
-              <div className="px-2.5 py-1.5 rounded-[8px] bg-[#F7F7F7] text-[12px] font-medium text-[#1A1A1A] shrink-0">
-                {product.highlights?.origin ?? 'Australia'}
+              <div className="p-[8px] rounded-[4px] bg-[#F7F7F7] flex flex-col gap-[2px] shrink-0 whitespace-nowrap">
+                <span className="text-[14px] leading-[20px] font-normal text-[#1A1A1A]">
+                  {product.highlights?.sold ?? product.soldText ?? '2k sold'}
+                </span>
+                <span className="text-[12px] leading-[16px] font-normal text-[#666666]">
+                  Sales volume
+                </span>
+              </div>
+              <div className="p-[8px] rounded-[4px] bg-[#F7F7F7] flex flex-col gap-[2px] shrink-0 whitespace-nowrap">
+                <span className="text-[14px] leading-[20px] font-normal text-[#1A1A1A]">
+                  {product.highlights?.origin ?? 'Australia'}
+                </span>
+                <span className="text-[12px] leading-[16px] font-normal text-[#666666]">
+                  Origin
+                </span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 4. Delivery & Click & Collect Info Card */}
-        <section className="bg-white rounded-[12px] p-3 space-y-2.5">
-          <div className="bg-[#FFF6F5] rounded-[8px] px-3 py-2 text-[12px] text-[#3D3D3D]">
-            Please place order for delivery between <strong>12 Jun</strong> to{' '}
-            <strong>15 Jun</strong>.
+        {/* 4. Delivery & Click & Collect Info Card (Figma 1630:129508) */}
+        <section className="bg-white rounded-[12px] p-[12px] space-y-[12px]">
+          <div className="bg-[#FFF6F5] rounded-[8px] p-[12px] text-[12px] leading-[16px] text-[#1A1A1A]">
+            Place an order now to get delivery between{' '}
+            <strong className="font-semibold">18:00-21:00 on 19 Nov</strong>
           </div>
           <button
             type="button"
             onClick={() => setDeliveryDrawerOpen(true)}
-            className="w-full flex items-center justify-between pt-0.5 text-left"
+            className="w-full flex items-center justify-between text-left"
           >
-            <div className="flex items-center gap-3 text-[12px] font-medium text-[#1A1A1A]">
-              <span className="inline-flex items-center gap-1">
-                <img src={ICONS.cncBag} alt="" className="w-3.5 h-3.5 object-contain" />
+            <div className="flex flex-wrap items-center gap-[8px]">
+              <span className="bg-[#F7F7F7] px-[8px] py-[4px] rounded-[4px] inline-flex items-center gap-[4px] text-[12px] leading-[16px] font-normal text-[#1A1A1A]">
+                <img src={ICONS.truckRed} alt="" className="w-[16px] h-[16px] object-contain" />
                 Click &amp; Collect
               </span>
-              <span className="inline-flex items-center gap-1">
-                <img src={ICONS.truck} alt="" className="w-3.5 h-3.5 object-contain" />
-                Home Delivery
+              <span className="bg-[#F7F7F7] px-[8px] py-[4px] rounded-[4px] inline-flex items-center gap-[4px] text-[12px] leading-[16px] font-normal text-[#1A1A1A]">
+                <img src={ICONS.truckRed} alt="" className="w-[16px] h-[16px] object-contain" />
+                Delivery
               </span>
             </div>
-            <img src={ICONS.chevronRight} alt="" className="w-4 h-4 object-contain" />
+            <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
           </button>
         </section>
 
         {/* 5. Offers + Stamp + Bundle Discount */}
-        <section id="pdp-offers" className="space-y-2">
-          <div className="bg-white rounded-[12px] p-3.5 space-y-3">
-            <h2 className="text-[15px] font-bold text-[#1A1A1A]">Offers</h2>
-            <div className="flex items-center gap-3">
-              <img
-                src={ASSETS.wineBottleClean}
-                alt=""
-                className="w-10 h-10 object-contain shrink-0"
-              />
-              <div className="flex-1 min-w-0">
-                <PromoTag label="50% Off" />
-                <p className="text-[12px] text-[#3D3D3D] mt-1 leading-[16px]">
-                  Selected brand items enjoy a 50% off discount, while stocks last.
-                </p>
-              </div>
-              <img src={ICONS.chevronRight} alt="" className="w-4 h-4 object-contain shrink-0" />
+        <section id="pdp-offers" className="space-y-[8px]">
+          {/* Offers Card (Figma 1696:147793) */}
+          <div className="bg-white rounded-[12px] overflow-hidden">
+            <div className="p-[12px]">
+              <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Offers</h2>
             </div>
-            <div className="h-[1px] bg-[#F2F2F2]" />
-            <div className="flex items-center gap-3">
-              <img
-                src={ASSETS.eminaCheese}
-                alt=""
-                className="w-10 h-10 object-contain shrink-0"
-              />
-              <div className="flex-1 min-w-0">
-                <PromoTag label="Free Gift" />
-                <p className="text-[12px] text-[#3D3D3D] mt-1 leading-[16px]">
-                  Purchase any Burge wine over &#36;100 and receive cheese.
-                </p>
+            <div className="px-[12px]">
+              <div className="flex items-center gap-[12px] pt-[4px] pb-[12px] border-b border-[#E0E0E0]">
+                <img
+                  src={ASSETS.wineBottleClean}
+                  alt=""
+                  className="w-[52px] h-[52px] object-contain shrink-0"
+                />
+                <div className="flex-1 min-w-0 flex flex-col gap-[4px]">
+                  <span className="self-start h-[20px] px-[8px] rounded-[4px] bg-[#FFEC99] text-[#3D3D3D] text-[12px] leading-[16px] inline-flex items-center">
+                    50% Off
+                  </span>
+                  <p className="text-[12px] leading-[16px] text-[#3D3D3D]">
+                    Selected brand items enjoy a 50% off discount, while stocks last.
+                  </p>
+                </div>
+                <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
               </div>
-              <img src={ICONS.chevronRight} alt="" className="w-4 h-4 object-contain shrink-0" />
+              <div className="flex items-center gap-[12px] py-[12px]">
+                <div className="w-[56px] h-[56px] rounded-[2px] bg-[#F7F7F7] flex items-center justify-center shrink-0 overflow-hidden">
+                  <img
+                    src={ASSETS.eminaCheese}
+                    alt=""
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="flex-1 min-w-0 flex flex-col gap-[4px]">
+                  <span className="self-start h-[20px] px-[8px] rounded-[4px] bg-[#FFEC99] text-[#3D3D3D] text-[12px] leading-[16px] inline-flex items-center">
+                    Free Gift
+                  </span>
+                  <p className="text-[12px] leading-[16px] text-[#3D3D3D]">
+                    Purchase any Burge wine over &#36;100 and receive cheese.
+                  </p>
+                </div>
+                <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
+              </div>
             </div>
           </div>
 
-          {/* Stamp Card */}
-          <div className="bg-white rounded-[12px] p-3 flex items-center gap-3">
-            <img src={ASSETS.mugStamp} alt="Stamp" className="w-10 h-10 object-contain shrink-0" />
-            <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-bold text-[#1A1A1A]">
+          {/* Stamp Card (Figma 2268:98492) */}
+          <div className="relative overflow-hidden bg-white rounded-[12px] px-[12px] py-[8px] flex items-center gap-[12px]">
+            <img
+              src={ICONS.stampRewardBg}
+              alt=""
+              className="w-[72px] h-[72px] absolute right-[-9px] top-[-13px] pointer-events-none select-none"
+            />
+            <div className="w-[40px] h-[40px] rounded-[8px] overflow-hidden relative shrink-0 z-10">
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[48px] h-[32.3px] overflow-hidden">
+                <img
+                  src={ASSETS.mugStamp}
+                  alt="Stamp"
+                  className="absolute max-w-none h-[350%] w-[673.08%] left-[-32.69%] top-[-125%]"
+                />
+              </div>
+            </div>
+            <div className="flex-1 min-w-0 relative z-10 flex flex-col gap-[2px]">
+              <p className="text-[12px] leading-[16px] font-semibold text-[#1A1A1A]">
                 Collect <span className="text-[#E40032]">1 more stamp</span> to redeem a mug.
               </p>
-              <p className="text-[11px] text-[#666666] mt-0.5">
+              <p className="text-[12px] leading-[16px] font-normal text-[#3D3D3D]">
                 Purchase this item to participate in stamp collecting.
               </p>
             </div>
           </div>
 
-          {/* Bundle Discount Card */}
-          <div className="bg-white rounded-[12px] p-3.5">
-            <h2 className="text-[15px] font-bold text-[#1A1A1A]">Bundle discount</h2>
-            <p className="text-[12px] text-[#666666] mt-0.5">
-              Buy together and enjoy a special discount!
-            </p>
-            <div className="mt-3 flex items-center justify-between gap-1">
-              {[
-                { img: ASSETS.wineBottleClean, name: 'Grant Burge GB51...', price: 128 },
-                { img: ASSETS.eminaCheese, name: 'Emina Vanilla De...', price: 67 },
-                { img: ASSETS.ferrariniHam, name: 'Ferrarini Italian Par...', price: 80 },
-              ].map((b, idx) => (
-                <React.Fragment key={b.name}>
-                  {idx > 0 && <span className="text-[16px] font-bold text-[#858585]">+</span>}
-                  <div className="flex-1 rounded-[8px] border border-[#EFEFEF] p-2 bg-white">
-                    <img src={b.img} alt={b.name} className="w-full h-[64px] object-contain" />
-                    <p className="text-[11px] text-[#1A1A1A] line-clamp-2 mt-1 leading-[14px]">
-                      {b.name}
-                    </p>
-                    <p className="text-[12px] font-bold text-[#E40032] mt-1">
-                      &#36;{b.price}.00
-                    </p>
-                  </div>
-                </React.Fragment>
-              ))}
+          {/* Bundle Discount Card (Figma 1630:129543) */}
+          <div className="bg-white rounded-[12px] overflow-hidden">
+            <div className="p-[12px] flex flex-col gap-[4px]">
+              <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Bundle discount</h2>
+              <p className="text-[12px] leading-[16px] font-normal text-[#666666]">
+                Buy together and enjoy a special discount!
+              </p>
             </div>
-            <div className="mt-3 pt-3 border-t border-[#F2F2F2] flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[13px] text-[#3D3D3D]">Total</span>
-                <span className="text-[16px] font-bold text-[#E40032]">&#36;200.00</span>
-                <span className="text-[10px] font-medium bg-[#FFF0F2] text-[#E40032] px-1.5 py-0.5 rounded-[4px]">
-                  Saved &#36;75.00
-                </span>
+            <div className="px-[12px] pb-[12px] space-y-[12px]">
+              <div className="pt-[4px] flex items-center gap-[8px]">
+                {[
+                  { img: ASSETS.wineBottleClean, name: 'Grant Burge GB51 Cabernet Shiraz 750ML', price: 135 },
+                  { img: ASSETS.eminaCheese, name: 'Emina Vanilla Dess Nuts 6PC', price: 68 },
+                  { img: ASSETS.ferrariniHam, name: 'Ferrarini Italian Parma Ham Slice 18 Mth 90GM', price: 80 },
+                ].map((b, idx) => (
+                  <React.Fragment key={b.name}>
+                    {idx > 0 && (
+                      <img
+                        src={ICONS.plusDark}
+                        alt="+"
+                        className="w-[16px] h-[16px] object-contain shrink-0 opacity-70"
+                      />
+                    )}
+                    <div className="flex-1 min-w-0 rounded-[8px] border border-[#E0E0E0] overflow-hidden bg-white flex flex-col">
+                      <div className="w-full h-[80px] flex items-center justify-center bg-white p-1">
+                        <img src={b.img} alt={b.name} className="w-[72px] h-[72px] object-contain" />
+                      </div>
+                      <div className="px-[4px] pt-[4px] pb-[8px] flex flex-col gap-[8px]">
+                        <p className="text-[12px] leading-[16px] font-semibold text-[#1A1A1A] line-clamp-2 min-h-[32px]">
+                          {b.name}
+                        </p>
+                        <span className="inline-flex items-start font-bold text-[#E40032]">
+                          <span className="text-[10px] leading-[16px]">&#36;</span>
+                          <span className="text-[16px] leading-[20px]">{b.price}</span>
+                          <span className="text-[10px] leading-[16px]">.00</span>
+                        </span>
+                      </div>
+                    </div>
+                  </React.Fragment>
+                ))}
               </div>
-              <button
-                type="button"
-                onClick={handleAddBundle}
-                className="h-[34px] px-4 rounded-[8px] bg-[#E40032] text-white text-[13px] font-bold active:opacity-90"
-              >
-                Add to cart
-              </button>
+              <div className="pt-[12px] border-t border-[#E0E0E0] flex items-center justify-between gap-[12px]">
+                <div className="flex items-baseline gap-[4px] min-w-0">
+                  <span className="text-[14px] leading-[20px] font-normal text-[#1A1A1A]">Total</span>
+                  <span className="text-[16px] leading-[20px] font-bold text-[#E40032]">&#36;200.00</span>
+                  <span className="bg-[#FFF6F5] text-[#E40032] text-[10px] leading-[14px] font-medium px-[2px] rounded-[2px] whitespace-nowrap">
+                    Saved &#36;83.00
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAddBundle}
+                  className="h-[32px] px-[12px] rounded-[4px] bg-[#E40032] text-white text-[12px] leading-[16px] font-semibold shrink-0 active:opacity-90"
+                >
+                  Add to cart
+                </button>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* 6. Reviews */}
-        <section id="pdp-reviews" className="bg-white rounded-[12px] p-3.5 space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-[15px] font-bold text-[#1A1A1A]">
-              Reviews <span className="text-[12px] font-normal text-[#858585]">(1.2k+)</span>
-            </h2>
-            <div className="inline-flex items-center gap-1 text-[14px] font-bold text-[#1A1A1A]">
-              <span>4.9</span>
-              <img src={ICONS.star} alt="" className="w-4 h-4 object-contain" />
-              <img src={ICONS.chevronRight} alt="" className="w-4 h-4 object-contain" />
+        {/* 6. Reviews (Figma 1630:129586) */}
+        <section id="pdp-reviews" className="bg-white rounded-[12px] overflow-hidden">
+          <div className="p-[12px] flex items-center gap-[8px]">
+            <div className="flex-1 flex items-center gap-[4px] min-w-0">
+              <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Reviews</h2>
+              <span className="text-[14px] leading-[20px] font-normal text-[#666666]">(1.2k+)</span>
             </div>
+            <div className="inline-flex items-center gap-[4px] shrink-0">
+              <span className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">4.9</span>
+              <img src={ICONS.star} alt="" className="w-[20px] h-[20px] object-contain" />
+            </div>
+            <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
           </div>
 
-          <div className="flex flex-wrap gap-1.5">
-            {['Beautifully packaged (100+)', 'Tastes great (100+)', 'Price is reasonable (100+)'].map(
-              (tag) => (
+          <div className="px-[12px] pt-[4px] pb-[8px] space-y-[8px]">
+            <div className="flex flex-wrap gap-[8px]">
+              {[
+                { label: 'Beautifully packaged', count: '(500+)' },
+                { label: 'Tastes good', count: '(100+)' },
+                { label: 'Price is reasonable', count: '(100+)' },
+                { label: 'Stunning', count: '(100+)' },
+              ].map((tag) => (
                 <span
-                  key={tag}
-                  className="px-2.5 py-1 rounded-full bg-[#F7F7F7] text-[11px] text-[#3D3D3D]"
+                  key={tag.label}
+                  className="h-[28px] px-[12px] rounded-full bg-[#F7F7F7] text-[12px] leading-[16px] inline-flex items-center gap-[4px]"
                 >
-                  {tag}
+                  <span className="text-[#1A1A1A]">{tag.label}</span>
+                  <span className="text-[#666666]">{tag.count}</span>
                 </span>
-              )
-            )}
-          </div>
+              ))}
+            </div>
 
-          <div className="space-y-3 pt-1">
-            <div className="flex gap-2.5">
-              <div className="flex-1">
+            <div>
+              <div className="py-[12px] border-b border-[#E0E0E0] space-y-[8px]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[12px] font-bold text-[#1A1A1A]">Lady · ★★★★★</span>
-                  <span className="text-[11px] text-[#858585]">09 Sep 2026</span>
+                  <div className="inline-flex items-center gap-[8px]">
+                    <span className="text-[12px] leading-[16px] font-semibold text-[#1A1A1A]">Lucy</span>
+                    <span className="inline-flex items-center gap-[2px]">
+                      {[0, 1, 2, 3, 4].map((i) => (
+                        <img key={i} src={ICONS.star} alt="" className="w-[14px] h-[14px] object-contain" />
+                      ))}
+                    </span>
+                  </div>
+                  <span className="text-[12px] leading-[16px] text-[#666666]">20 Sep 2026</span>
                 </div>
-                <p className="text-[12px] text-[#3D3D3D] mt-1 leading-[17px]">
-                  This bottle of wine is very delicious, and the packaging is also very exquisite.
+                <div className="flex items-start gap-[12px]">
+                  <p className="flex-1 text-[14px] leading-[20px] text-[#3D3D3D] line-clamp-3">
+                    This bottle of liquor is very delicious, and the packaging is also very exquisite. When I got it, I thought it was a work of art and couldn&apos;t bear to open it.
+                  </p>
+                  <img
+                    src={ASSETS.wineBottleClean}
+                    alt=""
+                    className="w-[60px] h-[60px] rounded-[8px] bg-[#F7F7F7] object-contain p-1 shrink-0"
+                  />
+                </div>
+              </div>
+              <div className="py-[12px] space-y-[8px]">
+                <div className="flex items-center justify-between">
+                  <div className="inline-flex items-center gap-[8px]">
+                    <span className="text-[12px] leading-[16px] font-semibold text-[#1A1A1A]">An</span>
+                    <span className="inline-flex items-center gap-[2px]">
+                      {[0, 1, 2, 3, 4].map((i) => (
+                        <img key={i} src={ICONS.star} alt="" className="w-[14px] h-[14px] object-contain" />
+                      ))}
+                    </span>
+                  </div>
+                  <span className="text-[12px] leading-[16px] text-[#666666]">19 Sep 2026</span>
+                </div>
+                <p className="text-[14px] leading-[20px] text-[#3D3D3D]">
+                  I&apos;ve repurchased it many times, and it&apos;s still great.
                 </p>
               </div>
-              <img
-                src={ASSETS.wineBottleClean}
-                alt=""
-                className="w-12 h-12 rounded-[6px] bg-[#F7F7F7] object-contain p-1 shrink-0"
-              />
-            </div>
-            <div className="h-[1px] bg-[#F2F2F2]" />
-            <div>
-              <div className="flex items-center justify-between">
-                <span className="text-[12px] font-bold text-[#1A1A1A]">Ao · ★★★★★</span>
-                <span className="text-[11px] text-[#858585]">15 Sep 2026</span>
-              </div>
-              <p className="text-[12px] text-[#3D3D3D] mt-1">
-                I&apos;ve repurchased it many times, and it&apos;s still great.
-              </p>
             </div>
           </div>
         </section>
 
         {/* 7. Related Products — edge-bleed horizontal scroll */}
-        <section className="bg-white rounded-[12px] py-3.5 overflow-hidden">
-          <h2 className="px-3.5 text-[16px] leading-[24px] font-bold text-[#1A1A1A] mb-2.5">
+        <section className="bg-white rounded-[12px] py-[12px] overflow-hidden">
+          <h2 className="px-[12px] text-[16px] leading-[24px] font-bold text-[#1A1A1A] mb-[8px]">
             Related Products
           </h2>
-          <div className="flex gap-2 overflow-x-auto no-scrollbar px-3.5">
+          <div className="flex gap-[8px] overflow-x-auto no-scrollbar px-[12px]">
             {relatedProducts.map((p) => (
               <ProductCard
                 key={p.id}
@@ -555,14 +667,14 @@ export const PdpPage: React.FC = () => {
           </div>
         </section>
 
-        {/* 8. Product Details */}
-        <section id="pdp-details" className="bg-white rounded-[12px] p-3.5">
+        {/* 8. Product Details (Figma 1630:129647 / 1630:129650) */}
+        <section id="pdp-details" className="bg-white rounded-[12px] overflow-hidden">
           <button
             type="button"
             onClick={() => setDetailsOpen((o) => !o)}
-            className="w-full flex items-center justify-between"
+            className="w-full p-[12px] flex items-center justify-between"
           >
-            <h2 className="text-[15px] font-bold text-[#1A1A1A]">Product details</h2>
+            <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Product details</h2>
             {detailsOpen ? (
               <ChevronUp className="w-4 h-4 text-[#666666]" />
             ) : (
@@ -571,33 +683,34 @@ export const PdpPage: React.FC = () => {
           </button>
 
           {detailsOpen && (
-            <div className="mt-3 space-y-3">
-              <div className="grid grid-cols-2 gap-2.5 text-[12px]">
-                <div>
-                  <p className="text-[#858585]">Size</p>
-                  <p className="font-medium text-[#1A1A1A] mt-0.5">
-                    {product.specs?.size ?? product.shortSpec ?? 'Standard'}
+            <div className="px-[12px] pb-[16px] space-y-[16px]">
+              {/* Stacked 1-column grey attribute card (Figma 1630:129651) */}
+              <div className="bg-[#F7F7F7] rounded-[12px] p-[12px] space-y-[16px]">
+                <div className="space-y-[8px]">
+                  <p className="text-[12px] leading-[16px] text-[#666666]">Size</p>
+                  <p className="text-[14px] leading-[20px] text-[#1A1A1A]">
+                    {product.specs?.size ?? product.shortSpec ?? '750ML/pc'}
                   </p>
                 </div>
-                <div>
-                  <p className="text-[#858585]">Storage</p>
-                  <p className="font-medium text-[#1A1A1A] mt-0.5">
+                <div className="space-y-[8px]">
+                  <p className="text-[12px] leading-[16px] text-[#666666]">Storage</p>
+                  <p className="text-[14px] leading-[20px] text-[#1A1A1A]">
                     {product.specs?.storage ?? 'Ambient'}
                   </p>
                 </div>
-                <div>
-                  <p className="text-[#858585]">Origin</p>
-                  <p className="font-medium text-[#1A1A1A] mt-0.5">
-                    {product.specs?.origin ?? 'Imported'}
+                <div className="space-y-[8px]">
+                  <p className="text-[12px] leading-[16px] text-[#666666]">Origins</p>
+                  <p className="text-[14px] leading-[20px] text-[#1A1A1A]">
+                    {product.specs?.origin ?? 'Australia'}
                   </p>
                 </div>
-                <div>
-                  <p className="text-[#858585]">Brand/Category</p>
-                  <div className="flex flex-wrap gap-1 mt-0.5">
-                    {(product.specs?.brandCategories ?? ['Wellcome']).map((c) => (
+                <div className="space-y-[8px]">
+                  <p className="text-[12px] leading-[16px] text-[#666666]">Brand / Category</p>
+                  <div className="flex flex-wrap gap-[8px]">
+                    {(product.specs?.brandCategories ?? ['Grant Burge', 'Red wine']).map((c) => (
                       <span
                         key={c}
-                        className="px-2 py-0.5 rounded-full border border-[#E0E0E0] text-[11px] text-[#3D3D3D]"
+                        className="h-[32px] min-w-[64px] px-[13px] rounded-full border border-[#858585] text-[14px] leading-[20px] text-[#1A1A1A] inline-flex items-center justify-center"
                       >
                         {c}
                       </span>
@@ -606,8 +719,14 @@ export const PdpPage: React.FC = () => {
                 </div>
               </div>
 
+              {/* Product description text (Figma 1630:129664) */}
+              <div className="text-[14px] leading-[20px] text-[#3D3D3D] space-y-[12px]">
+                {product.specs?.grape && <p>Grape: {product.specs.grape}</p>}
+                {product.description && <p>{product.description}</p>}
+              </div>
+
               {product.detailImages && product.detailImages.length > 0 && (
-                <div className="space-y-2 pt-2">
+                <div className="space-y-[8px]">
                   {product.detailImages.map((img, i) => (
                     <img
                       key={i}
@@ -620,17 +739,20 @@ export const PdpPage: React.FC = () => {
                 </div>
               )}
 
-              <div className="mt-3 pt-3 border-t border-[#F2F2F2] flex items-center gap-3">
+              {/* Brand Message (Figma 2451:75524) */}
+              <div className="pt-[16px] border-t border-[#F2F2F2] flex items-center gap-[12px]">
                 <img
                   src={ASSETS.trusted80Logo}
                   alt="Wellcome 80+ Years"
-                  className="w-11 h-11 object-contain shrink-0"
+                  className="w-[58px] h-[56px] object-contain shrink-0"
                 />
-                <div>
-                  <p className="text-[13px] font-bold text-[#1A1A1A]">
+                <div className="space-y-[4px]">
+                  <p className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">
                     Wellcome · Trusted for 80+ Years
                   </p>
-                  <p className="text-[11px] text-[#666666]">Fresh · Quality · Value</p>
+                  <p className="text-[14px] leading-[20px] text-[#666666]">
+                    Fresh · Quality · Value
+                  </p>
                 </div>
               </div>
             </div>
@@ -639,8 +761,10 @@ export const PdpPage: React.FC = () => {
 
         {/* 9. You May Like */}
         <section id="pdp-recommend" className="pt-1">
-          <h2 className="text-[15px] font-bold text-[#1A1A1A] px-1 mb-2">You May Like</h2>
-          <div className="grid grid-cols-2 gap-2">
+          <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A] px-[4px] mb-[8px]">
+            You May Like
+          </h2>
+          <div className="grid grid-cols-2 gap-[8px]">
             {youMayLike.map((p) => (
               <ProductCard key={p.id} product={p} variant="grid" />
             ))}
@@ -648,31 +772,54 @@ export const PdpPage: React.FC = () => {
         </section>
       </div>
 
-      {/* Sticky Footer */}
-      <footer className="app-fixed-bar bottom-0 z-30 bg-white border-t border-[#EFEFEF] px-3.5 pt-2.5 pb-[max(14px,env(safe-area-inset-bottom))] flex items-center gap-3 shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
+      {/* Sticky Footer (Figma 7589:82698) */}
+      <footer className="app-fixed-bar bottom-0 z-30 bg-white border-t border-[#EFEFEF] px-[12px] pt-[12px] pb-[max(14px,env(safe-area-inset-bottom))] flex items-center justify-between shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
         <button
           type="button"
           onClick={() => navigate('cart')}
           aria-label="Open Cart"
-          className="relative w-10 h-10 flex items-center justify-center shrink-0"
+          className="relative w-[36px] h-[40px] flex items-center justify-center shrink-0"
         >
-          <img src={ICONS.tabCart} alt="Cart" className="w-6 h-6 object-contain" />
+          <img src={ICONS.tabCart} alt="Cart" className="w-[28px] h-[28px] object-contain" />
           {totalCartCount > 0 && (
-            <span className="absolute top-0.5 right-0 min-w-[18px] h-[18px] px-1 rounded-full bg-[#FFCF00] text-[#1A1A1A] text-[10px] font-extrabold flex items-center justify-center border border-white">
+            <span className="absolute top-[2px] right-0 min-w-[14px] h-[14px] px-[3px] rounded-full bg-[#FFCF00] text-[#1A1A1A] text-[10px] leading-[12px] font-normal flex items-center justify-center border border-white">
               {totalCartCount}
             </span>
           )}
         </button>
 
-        <QuantityStepper value={pendingQty} onChange={setPendingQty} min={1} size="md" />
+        <div className="flex items-center gap-[16px]">
+          {/* Figma Add Quantity Counter (40x40 #F7F7F7 square buttons) */}
+          <div className="flex items-center gap-[4px]">
+            <button
+              type="button"
+              onClick={() => setPendingQty((q) => Math.max(1, q - 1))}
+              aria-label="Decrease quantity"
+              className="w-[40px] h-[40px] rounded-[8px] bg-[#F7F7F7] flex items-center justify-center active:bg-[#EAEAEA]"
+            >
+              <img src={ICONS.minus} alt="" className="w-[24px] h-[24px] object-contain" />
+            </button>
+            <span className="w-[40px] text-center text-[16px] leading-[24px] font-bold text-[#1A1A1A]">
+              {pendingQty}
+            </span>
+            <button
+              type="button"
+              onClick={() => setPendingQty((q) => q + 1)}
+              aria-label="Increase quantity"
+              className="w-[40px] h-[40px] rounded-[8px] bg-[#F7F7F7] flex items-center justify-center active:bg-[#EAEAEA]"
+            >
+              <img src={ICONS.plusDark} alt="" className="w-[24px] h-[24px] object-contain" />
+            </button>
+          </div>
 
-        <button
-          type="button"
-          onClick={handlePrimaryAddToCart}
-          className="flex-1 h-[42px] rounded-[10px] bg-[#E40032] text-white text-[15px] font-bold active:opacity-90 transition-opacity"
-        >
-          Add to Cart
-        </button>
+          <button
+            type="button"
+            onClick={handlePrimaryAddToCart}
+            className="h-[40px] px-[16px] rounded-[8px] bg-[#E40032] text-white text-[14px] leading-[20px] font-semibold active:opacity-90 transition-opacity whitespace-nowrap"
+          >
+            Add to Cart
+          </button>
+        </div>
       </footer>
 
       {/* Drawer 1: Select Option (Figma 8510:336378) */}
@@ -681,30 +828,50 @@ export const PdpPage: React.FC = () => {
         onClose={() => setOptionDrawerOpen(false)}
         title="Select Option"
         footer={
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between">
             <button
               type="button"
               onClick={() => {
                 setOptionDrawerOpen(false);
                 navigate('cart');
               }}
-              className="relative w-10 h-10 flex items-center justify-center shrink-0"
+              className="relative w-[36px] h-[40px] flex items-center justify-center shrink-0"
             >
-              <img src={ICONS.tabCart} alt="Cart" className="w-6 h-6 object-contain" />
+              <img src={ICONS.tabCart} alt="Cart" className="w-[28px] h-[28px] object-contain" />
               {totalCartCount > 0 && (
-                <span className="absolute top-0.5 right-0 min-w-[18px] h-[18px] px-1 rounded-full bg-[#FFCF00] text-[#1A1A1A] text-[10px] font-extrabold flex items-center justify-center">
+                <span className="absolute top-[2px] right-0 min-w-[14px] h-[14px] px-[3px] rounded-full bg-[#FFCF00] text-[#1A1A1A] text-[10px] leading-[12px] flex items-center justify-center border border-white">
                   {totalCartCount}
                 </span>
               )}
             </button>
-            <QuantityStepper value={pendingQty} onChange={setPendingQty} min={1} size="md" />
-            <button
-              type="button"
-              onClick={handlePrimaryAddToCart}
-              className="flex-1 h-[42px] rounded-[10px] bg-[#E40032] text-white text-[15px] font-bold"
-            >
-              Add to Cart
-            </button>
+            <div className="flex items-center gap-[16px]">
+              <div className="flex items-center gap-[4px]">
+                <button
+                  type="button"
+                  onClick={() => setPendingQty((q) => Math.max(1, q - 1))}
+                  className="w-[40px] h-[40px] rounded-[8px] bg-[#F7F7F7] flex items-center justify-center active:bg-[#EAEAEA]"
+                >
+                  <img src={ICONS.minus} alt="" className="w-[24px] h-[24px] object-contain" />
+                </button>
+                <span className="w-[40px] text-center text-[16px] leading-[24px] font-bold text-[#1A1A1A]">
+                  {pendingQty}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setPendingQty((q) => q + 1)}
+                  className="w-[40px] h-[40px] rounded-[8px] bg-[#F7F7F7] flex items-center justify-center active:bg-[#EAEAEA]"
+                >
+                  <img src={ICONS.plusDark} alt="" className="w-[24px] h-[24px] object-contain" />
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={handlePrimaryAddToCart}
+                className="h-[40px] px-[16px] rounded-[8px] bg-[#E40032] text-white text-[14px] leading-[20px] font-semibold whitespace-nowrap"
+              >
+                Add to Cart
+              </button>
+            </div>
           </div>
         }
       >

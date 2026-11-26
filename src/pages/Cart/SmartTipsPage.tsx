@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowUpDown } from 'lucide-react';
 import { ICONS, PRODUCTS } from '../../data/catalog';
 import { getTotalCartCount, useAppStore } from '../../store/useAppStore';
 import { ProductCard } from '../../components/shared/ProductCard';
@@ -70,69 +69,65 @@ export const SmartTipsPage: React.FC = () => {
       </header>
 
       {/* Expanded 3-Milestone Progress Card */}
-      <div className="bg-white px-3 pt-3 pb-2">
+      <div className="bg-white px-[12px] pt-[12px] pb-[12px]">
         <ThresholdProgressBar variant="expanded" />
+      </div>
 
-        {/* Price range filter pills */}
-        <div className="flex gap-1.5 overflow-x-auto no-scrollbar pt-3 pb-1">
-          {RANGE_OPTIONS.map((opt) => {
-            const active = range === opt.id;
-            return (
-              <button
-                key={opt.id}
-                type="button"
-                onClick={() => setRange(opt.id)}
-                className={`h-[28px] px-2.5 rounded-full text-[11px] font-medium shrink-0 border transition-colors ${
-                  active
-                    ? 'border-[#E40032] text-[#E40032] bg-[#FFF6F5]'
-                    : 'border-transparent text-[#3D3D3D] bg-[#F5F5F5]'
-                }`}
-              >
-                {opt.label}
-              </button>
-            );
-          })}
-        </div>
+      {/* Quick Filter Bar (Figma 7406:228238) */}
+      <div className="bg-white px-[12px] py-[8px] flex gap-[8px] overflow-x-auto no-scrollbar">
+        {RANGE_OPTIONS.map((opt) => {
+          const active = range === opt.id;
+          return (
+            <button
+              key={opt.id}
+              type="button"
+              onClick={() => setRange(opt.id)}
+              className={`h-[32px] min-w-[64px] px-[12px] rounded-full text-[12px] leading-[16px] shrink-0 transition-colors ${
+                active
+                  ? 'border border-[#E40032] text-[#E40032] bg-white font-bold'
+                  : 'border border-transparent text-[#1A1A1A] bg-[#F7F7F7] font-normal'
+              }`}
+            >
+              {opt.label}
+            </button>
+          );
+        })}
+      </div>
 
-        {/* Sort tabs */}
-        <div className="flex items-center gap-6 pt-2.5 pb-1 text-[13px]">
-          <button
-            type="button"
-            onClick={() => setSort('relevance')}
-            className={
-              sort === 'relevance'
-                ? 'text-[#E40032] font-bold'
-                : 'text-[#3D3D3D] font-medium'
-            }
-          >
-            Relevance
-          </button>
-          <button
-            type="button"
-            onClick={() => setSort('sales')}
-            className={
-              sort === 'sales'
-                ? 'text-[#E40032] font-bold'
-                : 'text-[#3D3D3D] font-medium'
-            }
-          >
-            Sales
-          </button>
-          <button
-            type="button"
-            onClick={() =>
-              setSort((s) => (s === 'price_asc' ? 'price_desc' : 'price_asc'))
-            }
-            className={`inline-flex items-center gap-1 ${
-              sort === 'price_asc' || sort === 'price_desc'
-                ? 'text-[#E40032] font-bold'
-                : 'text-[#3D3D3D] font-medium'
+      {/* Sort Bar (Figma 7406:228244) */}
+      <div className="bg-white h-[40px] px-[16px] flex items-center gap-[24px] text-[14px] leading-[20px]">
+        <button
+          type="button"
+          onClick={() => setSort('relevance')}
+          className={sort === 'relevance' ? 'text-[#E40032] font-normal' : 'text-[#1A1A1A] font-normal'}
+        >
+          Relevance
+        </button>
+        <button
+          type="button"
+          onClick={() => setSort('sales')}
+          className={sort === 'sales' ? 'text-[#E40032] font-normal' : 'text-[#1A1A1A] font-normal'}
+        >
+          Sales
+        </button>
+        <button
+          type="button"
+          onClick={() => setSort((s) => (s === 'price_asc' ? 'price_desc' : 'price_asc'))}
+          className={`inline-flex items-center gap-[2px] ${
+            sort === 'price_asc' || sort === 'price_desc'
+              ? 'text-[#E40032] font-normal'
+              : 'text-[#1A1A1A] font-normal'
+          }`}
+        >
+          <span>Price</span>
+          <img
+            src={ICONS.priceSort}
+            alt=""
+            className={`w-[14px] h-[14px] object-contain transition-transform ${
+              sort === 'price_desc' ? 'rotate-180' : ''
             }`}
-          >
-            <span>Price</span>
-            <ArrowUpDown className="w-3.5 h-3.5" />
-          </button>
-        </div>
+          />
+        </button>
       </div>
 
       {/* 2-Column Add-on Product Grid */}
