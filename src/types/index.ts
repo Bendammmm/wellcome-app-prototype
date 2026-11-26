@@ -11,7 +11,12 @@ export type RoutePage =
   | 'me'
   | 'yuu-id'
   | 'order-list'
-  | 'order-detail';
+  | 'order-detail'
+  | 'in-store'
+  | 'shopping-list'
+  | 'refund'
+  | 'refund-success'
+  | 'feedback';
 
 export type FulfillmentMode = 'delivery' | 'click_and_collect';
 

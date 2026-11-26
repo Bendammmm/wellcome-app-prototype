@@ -12,6 +12,11 @@ import { MePage } from './pages/Me/MePage';
 import { YuuIdPage } from './pages/Me/YuuIdPage';
 import { OrderListPage } from './pages/Orders/OrderListPage';
 import { OrderDetailPage } from './pages/Orders/OrderDetailPage';
+import { InStorePage } from './pages/InStore/InStorePage';
+import { ShoppingListPage } from './pages/InStore/ShoppingListPage';
+import { RefundRequestPage } from './pages/Refund/RefundRequestPage';
+import { RefundSuccessPage } from './pages/Refund/RefundSuccessPage';
+import { FeedbackPage } from './pages/Feedback/FeedbackPage';
 import { FulfillmentSheet } from './components/shared/FulfillmentSheet';
 import { ToastBanner } from './components/shared/ToastBanner';
 import { getTotalCartCount, useAppStore } from './store/useAppStore';
@@ -57,6 +62,11 @@ export const App: React.FC = () => {
               { id: 'yuu-id', label: 'yuu ID (会员码)' },
               { id: 'order-list', label: 'Order List (订单列表)' },
               { id: 'order-detail', label: 'Order Detail (订单详情)' },
+              { id: 'in-store', label: 'In-Store (WESTWOOD)' },
+              { id: 'shopping-list', label: 'Shopping List' },
+              { id: 'refund', label: 'Request Refund' },
+              { id: 'refund-success', label: 'Refund Details' },
+              { id: 'feedback', label: 'Order Feedback' },
             ] as const
           ).map((item) => (
             <button
@@ -110,6 +120,11 @@ export const App: React.FC = () => {
         {activePage === 'yuu-id' && <YuuIdPage />}
         {activePage === 'order-list' && <OrderListPage />}
         {activePage === 'order-detail' && <OrderDetailPage />}
+        {activePage === 'in-store' && <InStorePage />}
+        {activePage === 'shopping-list' && <ShoppingListPage />}
+        {activePage === 'refund' && <RefundRequestPage />}
+        {activePage === 'refund-success' && <RefundSuccessPage />}
+        {activePage === 'feedback' && <FeedbackPage />}
 
         <FulfillmentSheet />
         <ToastBanner />
