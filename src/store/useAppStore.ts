@@ -120,7 +120,13 @@ interface AppState {
   setRedeemVisible: (visible: boolean) => void;
 
   // Mock Checkout
-  submitMockOrder: () => OrderRecord;
+  submitMockOrder: (options?: {
+    deliverySlot?: string;
+    paymentMethod?: string;
+    remarks?: string;
+    outOfStockPreference?: string;
+    extraDiscount?: number;
+  }) => OrderRecord;
 
   // Toast
   showToast: (text: string, undoLabel?: string, onUndo?: () => void) => void;
@@ -440,7 +446,7 @@ export const useAppStore = create<AppState>()(
 
       setRedeemVisible: (visible) => set({ redeemVisible: visible }),
 
-      submitMockOrder: () => {
+      submitMockOrder: (options) => {
         const state = get();
         const pricing = computePricingSummary(
           state.cartItems,
@@ -453,14 +459,27 @@ export const useAppStore = create<AppState>()(
               'Laguna Verde Tower 3 18/F'
             : PICKUP_STORES.find((s) => s.id === state.selectedStoreId)?.name ?? 'Lok Ma Chau';
 
+        const extraDiscount = options?.extraDiscount ?? 0;
+        const adjustedTotal = Math.max(
+          0,
+          Number((pricing.finalTotal + pricing.packagingFee - extraDiscount).toFixed(2))
+        );
+        const adjustedSaved = Number((pricing.totalSaved + extraDiscount).toFixed(2));
+
         const order: OrderRecord = {
           id: `WE${Date.now().toString().slice(-8)}`,
           createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           fulfillmentMode: state.fulfillmentMode,
           destination: dest,
           itemCount: pricing.totalUnits,
-          total: pricing.finalTotal,
-          saved: pricing.totalSaved,
+          total: adjustedTotal,
+          saved: adjustedSaved,
+          deliverySlot: options?.deliverySlot,
+          paymentMethod: options?.paymentMethod,
+          remarks: options?.remarks,
+          outOfStockPreference: options?.outOfStockPreference,
+          yuuPoints: pricing.yuuPoints,
+          stamps: pricing.stamps,
         };
 
         set((s) => ({

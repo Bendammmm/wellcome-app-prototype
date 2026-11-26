@@ -3,6 +3,8 @@ import { HomePage } from './pages/Home/HomePage';
 import { PdpPage } from './pages/PDP/PdpPage';
 import { CartPage } from './pages/Cart/CartPage';
 import { SmartTipsPage } from './pages/Cart/SmartTipsPage';
+import { CheckoutPage } from './pages/Checkout/CheckoutPage';
+import { PaymentSuccessPage } from './pages/Checkout/PaymentSuccessPage';
 import { FulfillmentSheet } from './components/shared/FulfillmentSheet';
 import { ToastBanner } from './components/shared/ToastBanner';
 import { getTotalCartCount, useAppStore } from './store/useAppStore';
@@ -39,6 +41,8 @@ export const App: React.FC = () => {
               { id: 'pdp', label: 'PDP (Case Deal Wine)' },
               { id: 'cart', label: `Cart (${cartCount})` },
               { id: 'smart-tips', label: 'Smart Tips (凑单页)' },
+              { id: 'checkout', label: 'Checkout' },
+              { id: 'payment-success', label: 'Payment Result' },
             ] as const
           ).map((item) => (
             <button
@@ -83,6 +87,8 @@ export const App: React.FC = () => {
         {activePage === 'pdp' && <PdpPage />}
         {activePage === 'cart' && <CartPage />}
         {activePage === 'smart-tips' && <SmartTipsPage />}
+        {activePage === 'checkout' && <CheckoutPage />}
+        {activePage === 'payment-success' && <PaymentSuccessPage />}
 
         <FulfillmentSheet />
         <ToastBanner />

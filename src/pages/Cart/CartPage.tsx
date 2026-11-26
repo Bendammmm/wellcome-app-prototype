@@ -100,8 +100,7 @@ export const CartPage: React.FC = () => {
     if (!pricing.meetsMinimum) {
       setMinOrderWarnOpen(true);
     } else {
-      setConfirmedOrder(null);
-      setCheckoutDrawerOpen(true);
+      navigate('checkout');
     }
   };
 
