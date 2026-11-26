@@ -1,4 +1,13 @@
-export type RoutePage = 'home' | 'pdp' | 'cart' | 'smart-tips' | 'search' | 'search-results' | 'checkout' | 'payment-success';
+export type RoutePage = 'home' | 'pdp' | 'cart' | 'smart-tips' | 'search' | 'search-results' | 'checkout' | 'payment-success' | 'splash' | 'login';
+
+export interface AuthUser {
+  method: 'phone' | 'google' | 'apple';
+  name: string;
+  phone?: string;
+  email?: string;
+  marketingOptIn: boolean;
+  signedInAt: string;
+}
 
 export type FulfillmentMode = 'delivery' | 'click_and_collect';
 

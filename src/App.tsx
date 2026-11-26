@@ -7,6 +7,8 @@ import { CheckoutPage } from './pages/Checkout/CheckoutPage';
 import { PaymentSuccessPage } from './pages/Checkout/PaymentSuccessPage';
 import { SearchPage } from './pages/Search/SearchPage';
 import { SearchResultsPage } from './pages/Search/SearchResultsPage';
+import { SplashPage } from './pages/Auth/SplashPage';
+import { LoginPage } from './pages/Auth/LoginPage';
 import { FulfillmentSheet } from './components/shared/FulfillmentSheet';
 import { ToastBanner } from './components/shared/ToastBanner';
 import { getTotalCartCount, useAppStore } from './store/useAppStore';
@@ -39,6 +41,8 @@ export const App: React.FC = () => {
           <p className="text-[11px] font-semibold text-[#858585]">Quick Jump</p>
           {(
             [
+              { id: 'splash', label: 'Splash Screen' },
+              { id: 'login', label: 'Login / Sign up' },
               { id: 'home', label: 'Home (Immersive)' },
               { id: 'search', label: 'Search Entry' },
               { id: 'search-results', label: 'Search Results (Milk)' },
@@ -87,6 +91,8 @@ export const App: React.FC = () => {
 
       {/* Main 393px Mobile App Shell */}
       <main className="app-viewport-shell">
+        {activePage === 'splash' && <SplashPage />}
+        {activePage === 'login' && <LoginPage />}
         {activePage === 'home' && <HomePage />}
         {activePage === 'search' && <SearchPage />}
         {activePage === 'search-results' && <SearchResultsPage />}
