@@ -7,6 +7,11 @@ import { CheckoutPage } from './pages/Checkout/CheckoutPage';
 import { PaymentSuccessPage } from './pages/Checkout/PaymentSuccessPage';
 import { SearchPage } from './pages/Search/SearchPage';
 import { SearchResultsPage } from './pages/Search/SearchResultsPage';
+import { CategoriesPage } from './pages/Categories/CategoriesPage';
+import { MePage } from './pages/Me/MePage';
+import { YuuIdPage } from './pages/Me/YuuIdPage';
+import { OrderListPage } from './pages/Orders/OrderListPage';
+import { OrderDetailPage } from './pages/Orders/OrderDetailPage';
 import { FulfillmentSheet } from './components/shared/FulfillmentSheet';
 import { ToastBanner } from './components/shared/ToastBanner';
 import { getTotalCartCount, useAppStore } from './store/useAppStore';
@@ -40,6 +45,7 @@ export const App: React.FC = () => {
           {(
             [
               { id: 'home', label: 'Home (Immersive)' },
+              { id: 'categories', label: 'Categories (分类)' },
               { id: 'search', label: 'Search Entry' },
               { id: 'search-results', label: 'Search Results (Milk)' },
               { id: 'pdp', label: 'PDP (Case Deal Wine)' },
@@ -47,6 +53,10 @@ export const App: React.FC = () => {
               { id: 'smart-tips', label: 'Smart Tips (凑单页)' },
               { id: 'checkout', label: 'Checkout' },
               { id: 'payment-success', label: 'Payment Result' },
+              { id: 'me', label: 'Me (个人中心)' },
+              { id: 'yuu-id', label: 'yuu ID (会员码)' },
+              { id: 'order-list', label: 'Order List (订单列表)' },
+              { id: 'order-detail', label: 'Order Detail (订单详情)' },
             ] as const
           ).map((item) => (
             <button
@@ -88,6 +98,7 @@ export const App: React.FC = () => {
       {/* Main 393px Mobile App Shell */}
       <main className="app-viewport-shell">
         {activePage === 'home' && <HomePage />}
+        {activePage === 'categories' && <CategoriesPage />}
         {activePage === 'search' && <SearchPage />}
         {activePage === 'search-results' && <SearchResultsPage />}
         {activePage === 'pdp' && <PdpPage />}
@@ -95,6 +106,10 @@ export const App: React.FC = () => {
         {activePage === 'smart-tips' && <SmartTipsPage />}
         {activePage === 'checkout' && <CheckoutPage />}
         {activePage === 'payment-success' && <PaymentSuccessPage />}
+        {activePage === 'me' && <MePage />}
+        {activePage === 'yuu-id' && <YuuIdPage />}
+        {activePage === 'order-list' && <OrderListPage />}
+        {activePage === 'order-detail' && <OrderDetailPage />}
 
         <FulfillmentSheet />
         <ToastBanner />

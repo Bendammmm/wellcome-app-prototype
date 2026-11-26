@@ -95,25 +95,6 @@ export const FulfillmentSheet: React.FC = () => {
         </button>
       </div>
 
-      {/* Threshold quick hint pill */}
-      <div className="px-4 pt-3">
-        <div className="bg-[#FFF6F5] border border-[#FFD6DE] rounded-[8px] px-3 py-1.5 text-[11px] text-[#3D3D3D] flex items-center justify-between">
-          {tab === 'delivery' ? (
-            <span>
-              Min order <strong className="text-[#E40032]">&#36;200</strong> · Free delivery at{' '}
-              <strong className="text-[#E40032]">&#36;500</strong> · 12% off at{' '}
-              <strong className="text-[#E40032]">&#36;800</strong>
-            </span>
-          ) : (
-            <span>
-              Min order <strong className="text-[#E40032]">&#36;50</strong> · Free pick-up at{' '}
-              <strong className="text-[#E40032]">&#36;200</strong> · 12% off at{' '}
-              <strong className="text-[#E40032]">&#36;800</strong>
-            </span>
-          )}
-        </div>
-      </div>
-
       {tab === 'delivery' ? (
         <div className="p-4 space-y-3 min-h-[380px]">
           <div className="flex items-center justify-between">
