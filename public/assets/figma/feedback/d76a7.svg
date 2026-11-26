@@ -1,0 +1,14 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Tertiary Rounded Button - Small">
+<g id="Ellipse 5" opacity="0.8">
+<circle cx="10" cy="10" r="10" fill="#FDF389"/>
+<circle cx="10" cy="10" r="10" fill="#D0E1F8"/>
+<circle cx="10" cy="10" r="10" fill="#1C418A"/>
+<circle cx="10" cy="10" r="10" fill="#444444"/>
+</g>
+<g id=".Close">
+<path id="Path 7 (Stroke)" d="M13.581 6.13051C13.8063 6.35581 13.8063 6.7211 13.581 6.9464L6.9466 13.581C6.7213 13.8063 6.35601 13.8063 6.1307 13.581C5.9054 13.3557 5.90539 12.9904 6.13069 12.7651L12.7651 6.13052C12.9904 5.90522 13.3557 5.90521 13.581 6.13051Z" fill-rule="evenodd" clip-rule="evenodd" fill="white"/>
+<path id="Path 7 (Stroke)_2" d="M6.13054 6.13049C6.35585 5.9052 6.72114 5.90522 6.94643 6.13054L13.5174 12.7021C13.7427 12.9274 13.7426 13.2927 13.5173 13.518C13.292 13.7433 12.9267 13.7433 12.7014 13.518L6.13049 6.94639C5.9052 6.72107 5.90522 6.35579 6.13054 6.13049Z" fill-rule="evenodd" clip-rule="evenodd" fill="white"/>
+</g>
+</g>
+</svg>

@@ -1,0 +1,16 @@
+export const FEEDBACK_ASSETS = {
+  chevronLeft: '/assets/figma/feedback/fd56d.svg',
+  chevronRight: '/assets/figma/feedback/f82c8.svg',
+  fulfillmentBag: '/assets/figma/feedback/78abc.svg',
+  yuuBannerArtwork: '/assets/figma/feedback/59444.png',
+  starFilled: '/assets/figma/feedback/6a289.svg',
+  starEmpty: '/assets/figma/feedback/70272.svg',
+  removePhotoBtn: '/assets/figma/feedback/d76a7.svg',
+  addImagePlus: '/assets/figma/feedback/e4720.svg',
+  radioBlank: '/assets/figma/feedback/1eeb9.svg',
+  radioChecked: '/assets/figma/icons/radio-checked.svg',
+  prodKiwi: '/assets/figma/feedback/977d1.png',
+  prodBeef: '/assets/figma/feedback/be5b3.png',
+  prodBin180: '/assets/figma/feedback/df94e.png',
+  prodNissinBowl: '/assets/figma/feedback/df830.png',
+} as const;

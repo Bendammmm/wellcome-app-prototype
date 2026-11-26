@@ -7,6 +7,11 @@ import { CheckoutPage } from './pages/Checkout/CheckoutPage';
 import { PaymentSuccessPage } from './pages/Checkout/PaymentSuccessPage';
 import { SearchPage } from './pages/Search/SearchPage';
 import { SearchResultsPage } from './pages/Search/SearchResultsPage';
+import { InStorePage } from './pages/InStore/InStorePage';
+import { ShoppingListPage } from './pages/InStore/ShoppingListPage';
+import { RefundRequestPage } from './pages/Refund/RefundRequestPage';
+import { RefundSuccessPage } from './pages/Refund/RefundSuccessPage';
+import { FeedbackPage } from './pages/Feedback/FeedbackPage';
 import { FulfillmentSheet } from './components/shared/FulfillmentSheet';
 import { ToastBanner } from './components/shared/ToastBanner';
 import { getTotalCartCount, useAppStore } from './store/useAppStore';
@@ -47,6 +52,11 @@ export const App: React.FC = () => {
               { id: 'smart-tips', label: 'Smart Tips (凑单页)' },
               { id: 'checkout', label: 'Checkout' },
               { id: 'payment-success', label: 'Payment Result' },
+              { id: 'in-store', label: 'In-Store (WESTWOOD)' },
+              { id: 'shopping-list', label: 'Shopping List' },
+              { id: 'refund', label: 'Request Refund' },
+              { id: 'refund-success', label: 'Refund Details' },
+              { id: 'feedback', label: 'Order Feedback' },
             ] as const
           ).map((item) => (
             <button
@@ -95,6 +105,11 @@ export const App: React.FC = () => {
         {activePage === 'smart-tips' && <SmartTipsPage />}
         {activePage === 'checkout' && <CheckoutPage />}
         {activePage === 'payment-success' && <PaymentSuccessPage />}
+        {activePage === 'in-store' && <InStorePage />}
+        {activePage === 'shopping-list' && <ShoppingListPage />}
+        {activePage === 'refund' && <RefundRequestPage />}
+        {activePage === 'refund-success' && <RefundSuccessPage />}
+        {activePage === 'feedback' && <FeedbackPage />}
 
         <FulfillmentSheet />
         <ToastBanner />
