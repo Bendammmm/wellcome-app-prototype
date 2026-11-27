@@ -79,7 +79,7 @@
 [data-theme='mp-before'] {
   --mp-primary: #155d2d;
   --mp-primary-soft: #ebf3ed;
-  --mp-canvas: #f7f7f7;
+  --mp-canvas: #f7f5f0;
 }
 
 [data-theme='mp-opt1'] {
@@ -118,7 +118,9 @@
   color: var(--mp-primary) !important;
 }
 
-/* Warm heritage canvas background in MP Option 1 */
+/* Warm heritage canvas background in MP themes */
+[data-theme='mp-before'] .bg-\[\#F7F7F7\],
+[data-theme='mp-before'] .bg-\[\#F7F7F7\]\/95,
 [data-theme='mp-opt1'] .bg-\[\#F7F7F7\],
 [data-theme='mp-opt1'] .bg-\[\#F7F7F7\]\/95 {
   background-color: #f7f5f0 !important;

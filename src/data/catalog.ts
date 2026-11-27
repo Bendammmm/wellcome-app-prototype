@@ -142,7 +142,11 @@ export const PRODUCTS: Product[] = [
     category: 'Wine & Spirits',
     isExtraLeadTime: true,
     priceBannerType: 'default',
-    promoGroupId: '2-for-20-off',
+    giftItem: {
+      name: 'Jumbo Blueberry Tube 200GM (Sample)',
+      image: ASSETS.blueberry,
+      qty: 1,
+    },
     wineRatings: {
       rp: '92-94',
       ws: '88-90',
@@ -261,11 +265,6 @@ export const PRODUCTS: Product[] = [
     promoTags: ['Special price'],
     promoGroupId: 'buy2-30',
     category: 'Fruit & Vegetable',
-    giftItem: {
-      name: 'Jumbo Blueberry Tube 200GM (Sample)',
-      image: ASSETS.blueberry,
-      qty: 1,
-    },
     highlights: { rank: 'Top 2', rating: '4.9', reviewCount: '1,620', sold: '2k sold', origin: 'Peru' },
     specs: {
       size: '200GM / Tub',

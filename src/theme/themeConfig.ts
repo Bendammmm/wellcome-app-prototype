@@ -77,7 +77,7 @@ export function getThemeTokens(theme: AppTheme): BrandThemeTokens {
       thresholdAccent: '#FF5800',
       tabBarBg: '#000000',
       tabBarActive: '#FFFFFF',
-      tabBarInactive: 'rgba(255, 255, 255, 0.58)',
+      tabBarInactive: 'rgba(255, 255, 255, 0.6)',
       ctaRadius: '0px',
       icons: {
         tabHome: '/assets/figma/icons-mp-before/tab-home.svg',

@@ -569,14 +569,14 @@ export const CartPage: React.FC = () => {
                     <X className="w-4 h-4" />
                   </button>
                 </div>
-                <div className={t.isMp ? 'grid grid-cols-2 gap-2 px-[8px]' : 'grid grid-cols-2 gap-2'}>
+                <div className="grid grid-cols-2 gap-2">
                   {[
                     PRODUCTS.find((p) => p.id === 'flash-apple')!,
                     PRODUCTS.find((p) => p.id === 'redeem-oil')!,
                   ].map((p) => (
                     <div
                       key={p.id}
-                      className="rounded-[8px] border border-[#EFEFEF] p-2 flex items-center gap-2"
+                      className="rounded-[8px] bg-[#FFF8DC] p-2 flex items-center gap-2"
                     >
                       <img src={p.image} alt={p.name} className="w-10 h-10 object-contain shrink-0" />
                       <div className="flex-1 min-w-0 flex flex-col items-start">
@@ -606,7 +606,10 @@ export const CartPage: React.FC = () => {
                     Out of stock
                   </span>
                 </div>
-                <div className="flex-1 min-w-0 bg-[#F7F7F7] rounded-[8px] p-[8px]">
+                <div
+                  className="flex-1 min-w-0 rounded-[8px] p-[8px]"
+                  style={{ backgroundColor: t.isMp ? t.canvasBg : '#F7F7F7' }}
+                >
                   <div className="flex items-center justify-between text-[12px] leading-[16px] text-[#3D3D3D] mb-[8px]">
                     <span className="font-medium">Related Products</span>
                     <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain" />

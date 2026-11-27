@@ -82,10 +82,18 @@ export const MpHomePage: React.FC = () => {
   const [qualityCat, setQualityCat] = useState<(typeof QUALITY_CATS)[number]>('All');
   const [preorderSlide, setPreorderSlide] = useState(0);
   const [activeBrandIdx, setActiveBrandIdx] = useState(0);
+  const [brandDeckTick, setBrandDeckTick] = useState(0);
   const [feedTab, setFeedTab] = useState<'recommend' | 'dinner' | 'healthy'>('recommend');
 
   const catTrackRef = useRef<HTMLDivElement>(null);
   const preorderTrackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setBrandDeckTick((prev) => prev + 1);
+    }, 3200);
+    return () => window.clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 160);
@@ -391,18 +399,32 @@ export const MpHomePage: React.FC = () => {
             </span>
           </button>
 
-          <button
-            type="button"
-            onClick={() => navigate('in-store')}
-            className="flex flex-col items-center text-white shrink-0"
-          >
-            <img
-              src={t.icons.store}
-              alt="Store"
-              className="w-[22px] h-[22px] object-contain"
-            />
-            <span className="text-[10px] leading-[12px] font-medium">Store</span>
-          </button>
+          <div className="flex items-center gap-2.5 shrink-0 text-white">
+            <button
+              type="button"
+              onClick={() => showToast('No new notifications')}
+              className="flex flex-col items-center shrink-0"
+            >
+              <img
+                src={t.icons.bellNotice}
+                alt="Notice"
+                className="w-[20px] h-[20px] object-contain"
+              />
+              <span className="text-[10px] leading-[12px] font-medium">Notice</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('in-store')}
+              className="flex flex-col items-center shrink-0"
+            >
+              <img
+                src={t.icons.store}
+                alt="Store"
+                className="w-[20px] h-[20px] object-contain"
+              />
+              <span className="text-[10px] leading-[12px] font-medium">Store</span>
+            </button>
+          </div>
         </header>
       )}
 
@@ -634,32 +656,32 @@ export const MpHomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* 4. Quality Picks — Upper-Right Product Framed, 3 Swipeable Ranked Groups (1-3, 4-6, 7-9), Floating Stepper */}
+        {/* 4. Quality Picks — Compact Editorial Header, 3 Swipeable Ranked Groups (16px gap, fixed 124px card height) */}
         <section className="relative overflow-hidden pb-2">
-          {/* Editorial background framed so upper-right wine bottle, grapes, cheese & honey sit visibly above pills */}
-          <div className="absolute inset-x-0 top-0 h-[440px] pointer-events-none overflow-hidden">
+          {/* Editorial background framed tightly behind title & pills */}
+          <div className="absolute inset-x-0 top-0 h-[360px] pointer-events-none overflow-hidden">
             <img
               src={MP_ASSETS.qualityBg}
               alt=""
-              className="w-full h-full object-cover object-[center_28%]"
+              className="w-full h-full object-cover object-[center_20%]"
             />
             <div
-              className="absolute inset-x-0 bottom-0 h-[170px]"
+              className="absolute inset-x-0 bottom-0 h-[150px]"
               style={{
                 background: `linear-gradient(180deg, rgba(247,245,240,0) 0%, ${t.canvasBg} 85%)`,
               }}
             />
           </div>
 
-          {/* Title Block — generous height so upper-right wine bottle & fruit pedestal are fully revealed */}
-          <div className="relative z-10 h-[142px] pt-7 pl-6">
-            <p className="text-[10px] tracking-[0.06em] uppercase text-[#724300] font-normal mb-1">
+          {/* Title Block — tightened top/bottom height matching Figma */}
+          <div className="relative z-10 pt-4 pb-2 pl-4">
+            <p className="text-[10px] tracking-[0.06em] uppercase text-[#724300] font-normal mb-0.5">
               CURATED FOR YOU
             </p>
             <img
               src={MP_ASSETS.qualityTitle}
               alt="Quality Picks"
-              className="h-[46px] w-auto object-contain"
+              className="h-[44px] w-auto object-contain"
             />
           </div>
 
@@ -685,8 +707,8 @@ export const MpHomePage: React.FC = () => {
             })}
           </div>
 
-          {/* Horizontal Swipeable Ranked Groups: 1-3, 4-6, 7-9 (peeks next group on right like Figma) */}
-          <div className="relative z-10 flex gap-2.5 overflow-x-auto snap-x snap-mandatory no-scrollbar px-4 pb-1">
+          {/* Horizontal Swipeable Ranked Groups: 1-3, 4-6, 7-9 (16px right gap between groups) */}
+          <div className="relative z-10 flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar px-4 pb-1">
             {qualityGroups.map((group, groupIdx) => (
               <div
                 key={`qgroup-${groupIdx}`}
@@ -696,7 +718,7 @@ export const MpHomePage: React.FC = () => {
                   <div
                     key={`${groupIdx}-${p.rank}-${p.id}`}
                     onClick={() => navigate('pdp', p.id)}
-                    className="flex items-center gap-2.5 px-3 py-3 cursor-pointer active:bg-[#FAF9F6]"
+                    className="h-[124px] flex items-center gap-2.5 px-3 py-2.5 cursor-pointer active:bg-[#FAF9F6]"
                   >
                     {/* Rank 1-3 metallic SVG circles; Rank 4-9 neutral circles */}
                     <div className="relative w-[24px] h-[24px] shrink-0 flex items-center justify-center">
@@ -724,23 +746,25 @@ export const MpHomePage: React.FC = () => {
                       )}
                     </div>
 
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[13px] leading-[18px] font-normal text-[#1A1A1A] line-clamp-2">
-                        {p.name}
-                      </p>
-                      {'promo' in p && p.promo && <PromoTag label={p.promo} className="mt-1" />}
-                      <div className="flex items-end justify-between gap-2 mt-1.5">
+                    <div className="flex-1 min-w-0 h-full flex flex-col justify-between py-0.5">
+                      <div>
+                        <p className="text-[13px] leading-[18px] font-normal text-[#1A1A1A] line-clamp-2">
+                          {p.name}
+                        </p>
+                        <div className="h-[20px] flex items-center mt-0.5">
+                          {'promo' in p && p.promo && <PromoTag label={p.promo} />}
+                        </div>
+                      </div>
+                      <div className="flex items-end justify-between gap-2">
                         <div className="min-w-0">
                           <PriceBlock
                             price={p.price}
                             originalPrice={p.originalPrice}
                             size="sm"
                           />
-                          {'saved' in p && p.saved && (
-                            <p className="text-[10px] leading-[12px] text-[#3D3D3D] font-medium mt-0.5">
-                              {p.saved}
-                            </p>
-                          )}
+                          <p className="text-[10px] leading-[12px] text-[#3D3D3D] font-medium mt-0.5 h-[12px]">
+                            {'saved' in p && p.saved ? p.saved : ''}
+                          </p>
                         </div>
 
                         {/* Fixed 32×32 slot so expanded 92px stepper floats OVER content without squeezing text */}
@@ -941,8 +965,8 @@ export const MpHomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* 6. Our Brands (3hreesixty & OLIVER'S) */}
-        <section className="px-4 space-y-2">
+        {/* 6. Our Brands (3hreesixty & OLIVER'S) — Interactive 3-Card Stacked Carousel */}
+        <section className="px-4 space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-[16px] leading-[22px] font-semibold" style={headingStyle}>
               Our Brands
@@ -950,74 +974,120 @@ export const MpHomePage: React.FC = () => {
             <ChevronRight className="w-4 h-4 text-[#666666]" />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {[
               {
                 name: '3hreesixty',
                 tagline: 'Healthy, natural & organic living',
                 bgImg: MP_ASSETS.brand360Bg,
                 logoSvg: MP_ASSETS.brand360Logo,
-                prodImg: MP_ASSETS.brand360Prod,
-                price: 688.0,
-                productId: 'us-beef-blade',
+                deck: [
+                  { img: MP_ASSETS.brand360Prod, price: 688.0, productId: 'us-beef-blade' },
+                  { img: MP_ASSETS.qualitySalmon, price: 168.0, productId: 'us-beef-blade' },
+                  { img: MP_ASSETS.qualityOrange, price: 78.0, productId: 'flash-orange' },
+                ],
               },
               {
                 name: "OLIVER'S",
                 tagline: "The world's finest gourmet",
                 bgImg: MP_ASSETS.brandOliversBg,
                 logoSvg: MP_ASSETS.brandOliversLogo,
-                prodImg: MP_ASSETS.brandOliversProd,
-                price: 1288.0,
-                productId: 'belena-shiraz',
+                deck: [
+                  { img: MP_ASSETS.brandOliversProd, price: 1288.0, productId: 'belena-shiraz' },
+                  { img: MP_ASSETS.preorderChampagne1, price: 730.0, productId: 'bin-180-wine' },
+                  { img: MP_ASSETS.qualityRose, price: 178.0, productId: 'belena-shiraz' },
+                ],
               },
-            ].map((b) => (
-              <div
-                key={b.name}
-                onClick={() => navigate('pdp', b.productId)}
-                className="relative h-[152px] overflow-hidden p-3.5 flex items-center justify-between gap-3 text-white cursor-pointer active:opacity-95"
-              >
-                <img
-                  src={b.bgImg}
-                  alt={b.name}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black/45" />
+            ].map((b, bIdx) => {
+              const activeIdx = (brandDeckTick + bIdx) % b.deck.length;
+              const frontCard = b.deck[activeIdx];
+              const midCard = b.deck[(activeIdx + 1) % b.deck.length];
+              const backCard = b.deck[(activeIdx + 2) % b.deck.length];
 
-                <div className="relative z-10 flex-1 min-w-0">
+              return (
+                <div
+                  key={b.name}
+                  onClick={() => navigate('pdp', frontCard.productId)}
+                  className="relative h-[152px] overflow-hidden p-3.5 flex items-center justify-between gap-3 text-white cursor-pointer active:opacity-95"
+                >
                   <img
-                    src={b.logoSvg}
+                    src={b.bgImg}
                     alt={b.name}
-                    className="h-[22px] w-auto object-contain brightness-0 invert"
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
-                  <p className="text-[12px] text-white/90 mt-1.5">{b.tagline}</p>
-                  <span className="inline-flex items-center justify-center w-7 h-5 mt-3 border border-white/70 text-[11px]">
-                    →
-                  </span>
-                </div>
+                  <div className="absolute inset-0 bg-black/45" />
 
-                {/* 3-card stacked product deck matching Figma Our Brands */}
-                <div className="relative z-10 w-[124px] h-[132px] shrink-0">
-                  {/* Card 3 (back-most peeking card) */}
-                  <div className="absolute right-0 top-2 bottom-2 w-[108px] bg-white/80 shadow-xs" />
-                  {/* Card 2 (middle peeking card) */}
-                  <div className="absolute right-[7px] top-1 bottom-1 w-[108px] bg-white/95 shadow-sm" />
-                  {/* Card 1 (front active product card) */}
-                  <div className="relative w-[110px] h-full bg-white flex flex-col items-center justify-between shadow-md overflow-hidden pb-1.5">
+                  <div className="relative z-10 flex-1 min-w-0">
                     <img
-                      src={b.prodImg}
+                      src={b.logoSvg}
                       alt={b.name}
-                      className="w-full h-[102px] object-cover"
+                      className="h-[22px] w-auto object-contain brightness-0 invert"
                     />
-                    <PriceBlock price={b.price} size="sm" />
+                    <p className="text-[12px] text-white/90 mt-1.5">{b.tagline}</p>
+                    <div className="flex items-center gap-2 mt-3">
+                      <span className="inline-flex items-center justify-center w-7 h-5 border border-white/70 text-[11px]">
+                        →
+                      </span>
+                      <div className="flex items-center gap-1">
+                        {b.deck.map((_, dIdx) => (
+                          <span
+                            key={dIdx}
+                            className="h-[3px] transition-all duration-300"
+                            style={{
+                              width: dIdx === activeIdx ? '12px' : '4px',
+                              backgroundColor:
+                                dIdx === activeIdx ? '#FFFFFF' : 'rgba(255,255,255,0.45)',
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Interactive 3-card stacked product carousel deck */}
+                  <div
+                    className="relative z-10 w-[124px] h-[132px] shrink-0"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setBrandDeckTick((prev) => prev + 1);
+                    }}
+                    title="Tap to cycle products"
+                  >
+                    {/* Card 3 (back-most peeking card) */}
+                    <div className="absolute right-0 top-2 bottom-2 w-[108px] bg-white/80 shadow-xs overflow-hidden transition-all duration-500">
+                      <img
+                        src={backCard.img}
+                        alt=""
+                        className="w-full h-[88px] object-cover opacity-50"
+                      />
+                    </div>
+                    {/* Card 2 (middle peeking card) */}
+                    <div className="absolute right-[7px] top-1 bottom-1 w-[108px] bg-white/95 shadow-sm overflow-hidden transition-all duration-500">
+                      <img
+                        src={midCard.img}
+                        alt=""
+                        className="w-full h-[94px] object-cover opacity-75"
+                      />
+                    </div>
+                    {/* Card 1 (front active product card) */}
+                    <div className="relative w-[110px] h-full bg-white flex flex-col items-center justify-between shadow-md overflow-hidden pb-1.5 transition-all duration-500">
+                      <img
+                        key={`${b.name}-${activeIdx}`}
+                        src={frontCard.img}
+                        alt={b.name}
+                        className="w-full h-[102px] object-cover"
+                      />
+                      <PriceBlock price={frontCard.price} size="sm" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
         {/* 7. Today's deal */}
-        <section className="space-y-2">
+        <section className="space-y-3">
           <div className="px-4 flex items-center justify-between">
             <h2 className="text-[16px] leading-[22px] font-semibold" style={headingStyle}>
               Today&apos;s deal
