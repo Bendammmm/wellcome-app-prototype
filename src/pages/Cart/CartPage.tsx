@@ -61,6 +61,7 @@ export const CartPage: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [promoInput, setPromoInput] = useState('');
   const [recTab, setRecTab] = useState<'like' | 'usuals'>('like');
+  const [recPages, setRecPages] = useState(2);
 
   const [leadTimeDrawerOpen, setLeadTimeDrawerOpen] = useState(false);
   const [breakdownOpen, setBreakdownOpen] = useState(false);
@@ -71,6 +72,26 @@ export const CartPage: React.FC = () => {
 
   const mainBasketRef = useRef<HTMLElement | null>(null);
   const preorderBasketRef = useRef<HTMLElement | null>(null);
+  const recSentinelRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setRecPages(2);
+  }, [recTab]);
+
+  useEffect(() => {
+    const sentinel = recSentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setRecPages((prev) => Math.min(prev + 1, 20));
+        }
+      },
+      { rootMargin: '320px 0px' }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
 
   const mainItems = cartItems.filter((i) => i.section === 'main');
   const preorderItems = cartItems.filter((i) => i.section === 'preorder');
@@ -155,7 +176,13 @@ export const CartPage: React.FC = () => {
           ['fuji-apple', 'zespri-kiwi', 'us-beef-blade', 'emina-cheese'].includes(p.id)
         );
 
+  const showToast = useAppStore((s) => s.showToast);
+
   const handleCheckoutPress = () => {
+    if (t.isMp) {
+      showToast('当前 MP 演示版仅开放首页、分类、购物车与商品详情');
+      return;
+    }
     if (pricing.totalUnits === 0) return;
     if (!pricing.meetsMinimum) {
       setMinOrderWarnOpen(true);
@@ -533,7 +560,13 @@ export const CartPage: React.FC = () => {
                   {mainPricing.hasExtraLeadTimeSelected && (
                     <button
                       type="button"
-                      onClick={() => setLeadTimeDrawerOpen(true)}
+                      onClick={() => {
+                        if (t.isMp) {
+                          showToast('当前 MP 演示版暂不开放二级弹窗');
+                          return;
+                        }
+                        setLeadTimeDrawerOpen(true);
+                      }}
                       className={`w-full h-[32px] bg-[#FFF5CC] px-[12px] py-[4px] flex items-center justify-between gap-[4px] text-left active:opacity-90 ${
                         t.isMp ? 'rounded-none' : 'rounded-[8px]'
                       }`}
@@ -753,11 +786,35 @@ export const CartPage: React.FC = () => {
             </button>
           </div>
 
-          <div className={t.isMp ? 'grid grid-cols-2 gap-2 px-[8px]' : 'grid grid-cols-2 gap-2'}>
-            {recProducts.map((p) => (
-              <ProductCard key={p.id} product={p} variant="grid" />
-            ))}
-          </div>
+          {(() => {
+            const expanded = Array.from({ length: recPages }, (_, pageIdx) =>
+              recProducts.map((p, idx) => ({
+                product: p,
+                renderKey: `cart-rec-${recTab}-p${pageIdx}-i${idx}-${p.id}`,
+              }))
+            ).flat();
+            const left = expanded.filter((_, idx) => idx % 2 === 0);
+            const right = expanded.filter((_, idx) => idx % 2 === 1);
+            return (
+              <>
+                <div className={t.isMp ? 'flex gap-2 items-start px-[8px]' : 'flex gap-2 items-start'}>
+                  <div className="flex-1 min-w-0 flex flex-col gap-2">
+                    {left.map(({ product: item, renderKey }) => (
+                      <ProductCard key={renderKey} product={item} variant="waterfall" />
+                    ))}
+                  </div>
+                  <div className="flex-1 min-w-0 flex flex-col gap-2">
+                    {right.map(({ product: item, renderKey }) => (
+                      <ProductCard key={renderKey} product={item} variant="waterfall" />
+                    ))}
+                  </div>
+                </div>
+                <div ref={recSentinelRef} className="py-4 text-center text-[11px] text-[#858585]">
+                  {recPages < 20 ? 'Loading more picks…' : 'You have reached the end'}
+                </div>
+              </>
+            );
+          })()}
         </section>
       </div>
 
@@ -827,7 +884,13 @@ export const CartPage: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setBreakdownOpen(true)}
+                onClick={() => {
+                  if (t.isMp) {
+                    showToast('当前 MP 演示版暂不开放二级弹窗');
+                    return;
+                  }
+                  setBreakdownOpen(true);
+                }}
                 className="text-right"
               >
                 <div className="inline-flex items-center gap-1.5">

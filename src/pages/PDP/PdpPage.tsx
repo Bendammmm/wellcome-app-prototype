@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ChevronDown,
   ChevronUp,
@@ -55,6 +55,29 @@ export const PdpPage: React.FC = () => {
   const [optionDrawerOpen, setOptionDrawerOpen] = useState(false);
   const [deliveryDrawerOpen, setDeliveryDrawerOpen] = useState(false);
   const [afterAddedOpen, setAfterAddedOpen] = useState(false);
+  const [recPages, setRecPages] = useState(2);
+  const recSentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const sentinel = recSentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setRecPages((prev) => Math.min(prev + 1, 20));
+        }
+      },
+      { rootMargin: '320px 0px' }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
+
+  const mpHeadingStyle: React.CSSProperties | undefined = isMp
+    ? { fontFamily: t.headingFont, color: t.headingColor }
+    : undefined;
+  const padX = isMp ? 'px-[16px]' : 'px-[12px]';
+  const padAll = isMp ? 'p-[16px]' : 'p-[12px]';
 
   useEffect(() => {
     setSelectedVariantId(defaultVariantId);
@@ -100,9 +123,11 @@ export const PdpPage: React.FC = () => {
   };
 
   const handlePrimaryAddToCart = () => {
-    addToCart(product.id, pendingQty, activeVariant?.id, true);
+    addToCart(product.id, pendingQty, activeVariant?.id, !isMp);
     setOptionDrawerOpen(false);
-    setAfterAddedOpen(true);
+    if (!isMp) {
+      setAfterAddedOpen(true);
+    }
   };
 
   const handleAddBundle = () => {
@@ -128,7 +153,10 @@ export const PdpPage: React.FC = () => {
   );
 
   return (
-    <div className="min-h-dvh bg-[#F7F7F7] pb-[92px]">
+    <div
+      className="min-h-dvh pb-[92px]"
+      style={{ backgroundColor: isMp ? t.canvasBg : '#F7F7F7' }}
+    >
       {/* Floating Top Bar (visible when not scrolled) */}
       <div
         className={`app-fixed-bar top-0 z-30 px-3 pt-[max(12px,env(safe-area-inset-top))] pb-2 flex items-center justify-between transition-opacity duration-200 ${
@@ -288,7 +316,13 @@ export const PdpPage: React.FC = () => {
           </div>
           <button
             type="button"
-            onClick={() => setOptionDrawerOpen(true)}
+            onClick={() => {
+              if (isMp) {
+                showToast('当前 MP 演示版暂不开放二级弹窗');
+                return;
+              }
+              setOptionDrawerOpen(true);
+            }}
             className="absolute right-0 inset-y-0 w-[69px] bg-white shadow-[-8px_0_14px_-2px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center gap-[2px] text-[10px] leading-[14px] font-medium text-[#666666]"
           >
             <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain" />
@@ -330,7 +364,7 @@ export const PdpPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="px-[12px] pt-[12px]">
+            <div className={`${padX} pt-[12px]`}>
               {/* Figma 7650:77009: 28px/36px bold price + 14px/20px unit price */}
               <div className="flex items-baseline gap-[4px] whitespace-nowrap">
                 <span
@@ -352,7 +386,7 @@ export const PdpPage: React.FC = () => {
             </div>
           )}
 
-          <div className="p-[12px] pt-[4px] space-y-[12px]">
+          <div className={`${padX} pb-[12px] pt-[4px] space-y-[12px]`}>
             {product.promoTags && product.promoTags.length > 0 && (
               <div className="flex items-center justify-between gap-[8px]">
                 <div className="flex flex-wrap gap-[4px]">
@@ -370,7 +404,10 @@ export const PdpPage: React.FC = () => {
             )}
 
             <div className="space-y-[4px]">
-              <h1 className="text-[18px] leading-[28px] font-bold text-[#1A1A1A]">
+              <h1
+                className="text-[18px] leading-[28px] font-bold text-[#1A1A1A]"
+                style={mpHeadingStyle}
+              >
                 {activeTitle}
               </h1>
 
@@ -426,14 +463,20 @@ export const PdpPage: React.FC = () => {
         </section>
 
         {/* 4. Delivery & Click & Collect Info Card (Figma 1630:129508) */}
-        <section className="bg-white rounded-[12px] p-[12px] space-y-[12px]">
+        <section className={`bg-white rounded-[12px] ${padAll} space-y-[12px]`}>
           <div className="bg-[#FFF6F5] rounded-[8px] p-[12px] text-[12px] leading-[16px] text-[#1A1A1A]">
             Place an order now to get delivery between{' '}
             <strong className="font-semibold">18:00-21:00 on 19 Nov</strong>
           </div>
           <button
             type="button"
-            onClick={() => setDeliveryDrawerOpen(true)}
+            onClick={() => {
+              if (isMp) {
+                showToast('当前 MP 演示版暂不开放二级弹窗');
+                return;
+              }
+              setDeliveryDrawerOpen(true);
+            }}
             className="w-full flex items-center justify-between text-left"
           >
             <div className="flex flex-wrap items-center gap-[8px]">
@@ -454,10 +497,12 @@ export const PdpPage: React.FC = () => {
         <section id="pdp-offers" className="space-y-[8px]">
           {/* Offers Card (Figma 1696:147793) */}
           <div className="bg-white rounded-[12px] overflow-hidden">
-            <div className="p-[12px]">
-              <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Offers</h2>
+            <div className={padAll}>
+              <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]" style={mpHeadingStyle}>
+                Offers
+              </h2>
             </div>
-            <div className="px-[12px]">
+            <div className={padX}>
               <div className="flex items-center gap-[12px] pt-[4px] pb-[12px] border-b border-[#E0E0E0]">
                 <img
                   src={ASSETS.wineBottleClean}
@@ -475,7 +520,7 @@ export const PdpPage: React.FC = () => {
                 <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
               </div>
               <div className="flex items-center gap-[12px] py-[12px]">
-                <div className="w-[56px] h-[56px] rounded-[2px] bg-[#F7F7F7] flex items-center justify-center shrink-0 overflow-hidden">
+                <div className="w-[56px] h-[56px] bg-white flex items-center justify-center shrink-0 overflow-hidden">
                   <img
                     src={ASSETS.eminaCheese}
                     alt=""
@@ -496,7 +541,7 @@ export const PdpPage: React.FC = () => {
           </div>
 
           {/* Stamp Card (Figma 2268:98492) */}
-          <div className="relative overflow-hidden bg-white rounded-[12px] px-[12px] py-[8px] flex items-center gap-[12px]">
+          <div className={`relative overflow-hidden bg-white rounded-[12px] ${padX} py-[8px] flex items-center gap-[12px]`}>
             <img
               src={ICONS.stampRewardBg}
               alt=""
@@ -523,13 +568,15 @@ export const PdpPage: React.FC = () => {
 
           {/* Bundle Discount Card (Figma 1630:129543) */}
           <div className="bg-white rounded-[12px] overflow-hidden">
-            <div className="p-[12px] flex flex-col gap-[4px]">
-              <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Bundle discount</h2>
+            <div className={`${padAll} flex flex-col gap-[4px]`}>
+              <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]" style={mpHeadingStyle}>
+                Bundle discount
+              </h2>
               <p className="text-[12px] leading-[16px] font-normal text-[#666666]">
                 Buy together and enjoy a special discount!
               </p>
             </div>
-            <div className="px-[12px] pb-[12px] space-y-[12px]">
+            <div className={`${padX} pb-[12px] space-y-[12px]`}>
               <div className="pt-[4px] flex items-center gap-[8px]">
                 {[
                   { img: ASSETS.wineBottleClean, name: 'Grant Burge GB51 Cabernet Shiraz 750ML', price: 135 },
@@ -544,9 +591,13 @@ export const PdpPage: React.FC = () => {
                         className="w-[16px] h-[16px] object-contain shrink-0 opacity-70"
                       />
                     )}
-                    <div className="flex-1 min-w-0 rounded-[8px] border border-[#E0E0E0] overflow-hidden bg-white flex flex-col">
-                      <div className="w-full h-[80px] flex items-center justify-center bg-white p-1">
-                        <img src={b.img} alt={b.name} className="w-[72px] h-[72px] object-contain" />
+                    <div
+                      className={`flex-1 min-w-0 overflow-hidden bg-white flex flex-col ${
+                        isMp ? '' : 'rounded-[8px] border border-[#E0E0E0]'
+                      }`}
+                    >
+                      <div className="w-full h-[80px] flex items-center justify-center bg-white">
+                        <img src={b.img} alt={b.name} className="w-full h-full object-contain" />
                       </div>
                       <div className="px-[4px] pt-[4px] pb-[8px] flex flex-col gap-[8px]">
                         <p className="text-[12px] leading-[16px] font-semibold text-[#1A1A1A] line-clamp-2 min-h-[32px]">
@@ -584,9 +635,11 @@ export const PdpPage: React.FC = () => {
 
         {/* 6. Reviews (Figma 1630:129586) */}
         <section id="pdp-reviews" className="bg-white rounded-[12px] overflow-hidden">
-          <div className="p-[12px] flex items-center gap-[8px]">
+          <div className={`${padAll} flex items-center gap-[8px]`}>
             <div className="flex-1 flex items-center gap-[4px] min-w-0">
-              <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Reviews</h2>
+              <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]" style={mpHeadingStyle}>
+                Reviews
+              </h2>
               <span className="text-[14px] leading-[20px] font-normal text-[#666666]">(1.2k+)</span>
             </div>
             <div className="inline-flex items-center gap-[4px] shrink-0">
@@ -596,7 +649,7 @@ export const PdpPage: React.FC = () => {
             <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
           </div>
 
-          <div className="px-[12px] pt-[4px] pb-[8px] space-y-[8px]">
+          <div className={`${padX} pt-[4px] pb-[8px] space-y-[8px]`}>
             <div className="flex flex-wrap gap-[8px]">
               {[
                 { label: 'Beautifully packaged', count: '(500+)' },
@@ -634,7 +687,7 @@ export const PdpPage: React.FC = () => {
                   <img
                     src={ASSETS.wineBottleClean}
                     alt=""
-                    className="w-[60px] h-[60px] rounded-[8px] bg-[#F7F7F7] object-contain p-1 shrink-0"
+                    className="w-[60px] h-[60px] bg-white object-contain shrink-0"
                   />
                 </div>
               </div>
@@ -660,10 +713,13 @@ export const PdpPage: React.FC = () => {
 
         {/* 7. Related Products — edge-bleed horizontal scroll */}
         <section className="bg-white rounded-[12px] py-[12px] overflow-hidden">
-          <h2 className="px-[12px] text-[16px] leading-[24px] font-bold text-[#1A1A1A] mb-[8px]">
+          <h2
+            className={`${padX} text-[16px] leading-[24px] font-bold text-[#1A1A1A] mb-[8px]`}
+            style={mpHeadingStyle}
+          >
             Related Products
           </h2>
-          <div className="flex gap-[8px] overflow-x-auto no-scrollbar px-[12px]">
+          <div className={`flex gap-[8px] overflow-x-auto no-scrollbar ${padX}`}>
             {relatedProducts.map((p) => (
               <ProductCard
                 key={p.id}
@@ -680,9 +736,11 @@ export const PdpPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setDetailsOpen((o) => !o)}
-            className="w-full p-[12px] flex items-center justify-between"
+            className={`w-full ${padAll} flex items-center justify-between`}
           >
-            <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Product details</h2>
+            <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]" style={mpHeadingStyle}>
+              Product details
+            </h2>
             {detailsOpen ? (
               <ChevronUp className="w-4 h-4 text-[#666666]" />
             ) : (
@@ -691,97 +749,134 @@ export const PdpPage: React.FC = () => {
           </button>
 
           {detailsOpen && (
-            <div className="px-[12px] pb-[16px] space-y-[16px]">
-              {/* Stacked 1-column grey attribute card (Figma 1630:129651) */}
-              <div className="bg-[#F7F7F7] rounded-[12px] p-[12px] space-y-[16px]">
-                <div className="space-y-[8px]">
-                  <p className="text-[12px] leading-[16px] text-[#666666]">Size</p>
-                  <p className="text-[14px] leading-[20px] text-[#1A1A1A]">
-                    {product.specs?.size ?? product.shortSpec ?? '750ML/pc'}
-                  </p>
-                </div>
-                <div className="space-y-[8px]">
-                  <p className="text-[12px] leading-[16px] text-[#666666]">Storage</p>
-                  <p className="text-[14px] leading-[20px] text-[#1A1A1A]">
-                    {product.specs?.storage ?? 'Ambient'}
-                  </p>
-                </div>
-                <div className="space-y-[8px]">
-                  <p className="text-[12px] leading-[16px] text-[#666666]">Origins</p>
-                  <p className="text-[14px] leading-[20px] text-[#1A1A1A]">
-                    {product.specs?.origin ?? 'Australia'}
-                  </p>
-                </div>
-                <div className="space-y-[8px]">
-                  <p className="text-[12px] leading-[16px] text-[#666666]">Brand / Category</p>
-                  <div className="flex flex-wrap gap-[8px]">
-                    {(product.specs?.brandCategories ?? ['Grant Burge', 'Red wine']).map((c) => (
-                      <span
-                        key={c}
-                        className="h-[32px] min-w-[64px] px-[13px] rounded-full border border-[#858585] text-[14px] leading-[20px] text-[#1A1A1A] inline-flex items-center justify-center"
-                      >
-                        {c}
-                      </span>
-                    ))}
+            <div className="space-y-[16px]">
+              <div className={`${padX} space-y-[16px]`}>
+                {/* Stacked 1-column grey attribute card (Figma 1630:129651) */}
+                <div className="bg-[#F7F7F7] rounded-[12px] p-[12px] space-y-[16px]">
+                  <div className="space-y-[8px]">
+                    <p className="text-[12px] leading-[16px] text-[#666666]">Size</p>
+                    <p className="text-[14px] leading-[20px] text-[#1A1A1A]">
+                      {product.specs?.size ?? product.shortSpec ?? '750ML/pc'}
+                    </p>
+                  </div>
+                  <div className="space-y-[8px]">
+                    <p className="text-[12px] leading-[16px] text-[#666666]">Storage</p>
+                    <p className="text-[14px] leading-[20px] text-[#1A1A1A]">
+                      {product.specs?.storage ?? 'Ambient'}
+                    </p>
+                  </div>
+                  <div className="space-y-[8px]">
+                    <p className="text-[12px] leading-[16px] text-[#666666]">Origins</p>
+                    <p className="text-[14px] leading-[20px] text-[#1A1A1A]">
+                      {product.specs?.origin ?? 'Australia'}
+                    </p>
+                  </div>
+                  <div className="space-y-[8px]">
+                    <p className="text-[12px] leading-[16px] text-[#666666]">Brand / Category</p>
+                    <div className="flex flex-wrap gap-[8px]">
+                      {(product.specs?.brandCategories ?? ['Grant Burge', 'Red wine']).map((c) => (
+                        <span
+                          key={c}
+                          className="h-[32px] min-w-[64px] px-[13px] rounded-full border border-[#858585] text-[14px] leading-[20px] text-[#1A1A1A] inline-flex items-center justify-center"
+                        >
+                          {c}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
+
+                {/* Product description text (Figma 1630:129664) */}
+                <div className="text-[14px] leading-[20px] text-[#3D3D3D] space-y-[12px]">
+                  {product.specs?.grape && <p>Grape: {product.specs.grape}</p>}
+                  {product.description && <p>{product.description}</p>}
+                </div>
+
+                {product.detailImages && product.detailImages.length > 0 && (
+                  <div className="space-y-[8px]">
+                    {product.detailImages.map((img, i) => (
+                      <img
+                        key={i}
+                        src={img}
+                        alt=""
+                        className="w-full object-contain bg-white"
+                        loading="lazy"
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* Product description text (Figma 1630:129664) */}
-              <div className="text-[14px] leading-[20px] text-[#3D3D3D] space-y-[12px]">
-                {product.specs?.grape && <p>Grape: {product.specs.grape}</p>}
-                {product.description && <p>{product.description}</p>}
-              </div>
-
-              {product.detailImages && product.detailImages.length > 0 && (
-                <div className="space-y-[8px]">
-                  {product.detailImages.map((img, i) => (
-                    <img
-                      key={i}
-                      src={img}
-                      alt=""
-                      className="w-full rounded-[8px] object-contain bg-white"
-                      loading="lazy"
-                    />
-                  ))}
+              {/* Brand Message — authentic 3x MP Quality Commitment asset on MP, Wellcome 80+ on WE */}
+              {isMp ? (
+                <img
+                  src="/assets/figma/mp/pdp-brand-message.png"
+                  alt="Market Place Quality Commitment"
+                  className="w-full h-auto block"
+                />
+              ) : (
+                <div className="px-[12px] pb-[16px] pt-[16px] border-t border-[#F2F2F2] flex items-center gap-[12px]">
+                  <img
+                    src={ASSETS.trusted80Logo}
+                    alt="Wellcome 80+ Years"
+                    className="w-[58px] h-[56px] object-contain shrink-0"
+                  />
+                  <div className="space-y-[4px]">
+                    <p className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">
+                      Wellcome · Trusted for 80+ Years
+                    </p>
+                    <p className="text-[14px] leading-[20px] text-[#666666]">
+                      Fresh · Quality · Value
+                    </p>
+                  </div>
                 </div>
               )}
-
-              {/* Brand Message (Figma 2451:75524) */}
-              <div className="pt-[16px] border-t border-[#F2F2F2] flex items-center gap-[12px]">
-                <img
-                  src={ASSETS.trusted80Logo}
-                  alt="Wellcome 80+ Years"
-                  className="w-[58px] h-[56px] object-contain shrink-0"
-                />
-                <div className="space-y-[4px]">
-                  <p className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">
-                    {isMp ? 'Market Place · Curated Global Groceries' : 'Wellcome · Trusted for 80+ Years'}
-                  </p>
-                  <p className="text-[14px] leading-[20px] text-[#666666]">
-                    Fresh · Quality · Value
-                  </p>
-                </div>
-              </div>
             </div>
           )}
         </section>
 
-        {/* 9. You May Like */}
-        <section id="pdp-recommend" className={isMp ? 'pt-1 px-[12px]' : 'pt-1'}>
-          <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A] px-[4px] mb-[8px]">
+        {/* 9. You May Like — Content-Adaptive Infinite Masonry Waterfall */}
+        <section id="pdp-recommend" className={isMp ? 'pt-1 px-[16px]' : 'pt-1'}>
+          <h2
+            className="text-[16px] leading-[24px] font-bold text-[#1A1A1A] mb-[8px]"
+            style={mpHeadingStyle}
+          >
             You May Like
           </h2>
-          <div className="grid grid-cols-2 gap-[8px]">
-            {youMayLike.map((p) => (
-              <ProductCard key={p.id} product={p} variant="grid" />
-            ))}
-          </div>
+          {(() => {
+            const expanded = Array.from({ length: recPages }, (_, pageIdx) =>
+              youMayLike.map((p, idx) => ({
+                product: p,
+                renderKey: `pdp-rec-p${pageIdx}-i${idx}-${p.id}`,
+              }))
+            ).flat();
+            const left = expanded.filter((_, idx) => idx % 2 === 0);
+            const right = expanded.filter((_, idx) => idx % 2 === 1);
+            return (
+              <>
+                <div className="flex gap-[8px] items-start">
+                  <div className="flex-1 min-w-0 flex flex-col gap-[8px]">
+                    {left.map(({ product: item, renderKey }) => (
+                      <ProductCard key={renderKey} product={item} variant="waterfall" />
+                    ))}
+                  </div>
+                  <div className="flex-1 min-w-0 flex flex-col gap-[8px]">
+                    {right.map(({ product: item, renderKey }) => (
+                      <ProductCard key={renderKey} product={item} variant="waterfall" />
+                    ))}
+                  </div>
+                </div>
+                <div ref={recSentinelRef} className="py-4 text-center text-[11px] text-[#858585]">
+                  {recPages < 20 ? 'Loading more picks…' : 'You have reached the end'}
+                </div>
+              </>
+            );
+          })()}
         </section>
       </div>
 
       {/* Sticky Footer (Figma 7589:82698) */}
-      <footer className="app-fixed-bar bottom-0 z-30 bg-white border-t border-[#EFEFEF] px-[12px] pt-[12px] pb-[max(14px,env(safe-area-inset-bottom))] flex items-center justify-between shadow-[0_-2px_8px_rgba(0,0,0,0.06)]">
+      <footer className={`app-fixed-bar bottom-0 z-30 bg-white border-t border-[#EFEFEF] ${padX} pt-[12px] pb-[max(14px,env(safe-area-inset-bottom))] flex items-center justify-between shadow-[0_-2px_8px_rgba(0,0,0,0.06)]`}>
         <button
           type="button"
           onClick={() => navigate('cart')}

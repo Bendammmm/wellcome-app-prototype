@@ -364,7 +364,14 @@ export const useAppStore = create<AppState>()(
         window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
       },
 
-      openFulfillmentSheet: () => set({ fulfillmentSheetOpen: true }),
+      openFulfillmentSheet: () => {
+        const state = get();
+        if (state.appTheme !== 'we') {
+          state.showToast('当前 MP 演示版暂不开放二级弹窗');
+          return;
+        }
+        set({ fulfillmentSheetOpen: true });
+      },
       closeFulfillmentSheet: () => set({ fulfillmentSheetOpen: false }),
 
       setFulfillment: (mode, addressId, storeId) => {

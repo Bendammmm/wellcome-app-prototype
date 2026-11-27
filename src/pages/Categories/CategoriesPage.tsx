@@ -316,7 +316,13 @@ export const CategoriesPage: React.FC = () => {
         {/* Pinned View all button */}
         <button
           type="button"
-          onClick={() => setExpandOpen((o) => !o)}
+          onClick={() => {
+            if (t.isMp) {
+              useAppStore.getState().showToast('当前 MP 演示版暂不开放二级弹窗');
+              return;
+            }
+            setExpandOpen((o) => !o);
+          }}
           className="absolute right-0 inset-y-0 w-[62px] bg-white shadow-[-6px_0_10px_-2px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center gap-[2px] px-[6px]"
         >
           <span className="text-[12px] leading-[16px] font-semibold text-[#666666] whitespace-nowrap">
@@ -469,7 +475,13 @@ export const CategoriesPage: React.FC = () => {
             </div>
             <button
               type="button"
-              onClick={() => setFilterDrawerOpen(true)}
+              onClick={() => {
+                if (t.isMp) {
+                  useAppStore.getState().showToast('当前 MP 演示版暂不开放二级弹窗');
+                  return;
+                }
+                setFilterDrawerOpen(true);
+              }}
               className="inline-flex items-center gap-[4px] pl-[6px] bg-white text-[12px] leading-[16px] text-[#1A1A1A] font-medium shrink-0"
             >
               <span>Filter</span>
