@@ -193,7 +193,11 @@ export const HomePage: React.FC = () => {
   const newItem = NEW_SLOT[tick3s % NEW_SLOT.length];
   const sigItem = SIGNATURE_SLOT[tick3s % SIGNATURE_SLOT.length];
   const bogoItem = BOGO_ROTATION[tick3s % BOGO_ROTATION.length];
+  const bogoNext1 = BOGO_ROTATION[(tick3s + 1) % BOGO_ROTATION.length];
+  const bogoNext2 = BOGO_ROTATION[(tick3s + 2) % BOGO_ROTATION.length];
   const giftItem = FREE_GIFT_ROTATION[tick3s % FREE_GIFT_ROTATION.length];
+  const giftNext1 = FREE_GIFT_ROTATION[(tick3s + 1) % FREE_GIFT_ROTATION.length];
+  const giftNext2 = FREE_GIFT_ROTATION[(tick3s + 2) % FREE_GIFT_ROTATION.length];
 
   return (
     <div className="min-h-dvh bg-[#F7F7F7] pb-[136px]">
@@ -749,61 +753,79 @@ export const HomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* 8. Offers — Coded + 3s Stacked-Deck Rotating Product Carousel */}
-        <section className="bg-white rounded-[12px] py-3 overflow-hidden">
-          <div className="px-3 flex items-center justify-between mb-2">
+        {/* 8. Offers — Exact Figma 6634:77655 (206×96, #A0A7F3 / #F4E777, 80×80 badge + 3-layer shaded deck) */}
+        <section className="bg-white rounded-[12px] overflow-hidden">
+          <div className="p-[12px] flex items-center justify-between">
             <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Offers</h2>
             <button
               type="button"
               onClick={() => navigate('smart-tips')}
-              className="inline-flex items-center gap-1 text-[12px] leading-[16px] font-semibold text-[#666666]"
+              className="inline-flex items-center gap-1 h-[24px] text-[12px] leading-[16px] font-semibold text-[#666666]"
             >
               See all <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain" />
             </button>
           </div>
 
-          <div className="flex gap-[8px] overflow-x-auto no-scrollbar px-3">
-            {/* Promo 1: Buy 1 Get 1 Free */}
+          <div className="flex gap-[8px] overflow-x-auto no-scrollbar px-[12px] pb-[12px]">
+            {/* Promo 1: Buy 1 Get 1 Free (Figma I6634:77655;361:16782;6634:80175) */}
             <button
               type="button"
               onClick={() => navigate('pdp', bogoItem.id)}
-              className="w-[218px] h-[96px] shrink-0 rounded-[12px] bg-gradient-to-r from-[#8D8DF8] to-[#B7B6FF] px-3 py-2 flex items-center justify-between active:opacity-95"
+              className="w-[206px] h-[96px] shrink-0 rounded-[12px] bg-[#A0A7F3] flex items-center active:opacity-95"
             >
-              <img
-                src={ASSETS.bogoBadge}
-                alt="Buy 1 Get 1 Free"
-                className="h-[68px] w-auto object-contain"
-              />
-              {/* Stacked deck with 3s rotating product */}
-              <div className="relative w-[80px] h-[76px] mr-1">
-                <div className="absolute right-[-6px] top-[6px] bottom-[6px] w-[72px] rounded-[8px] bg-white/55" />
-                <div className="absolute right-[-3px] top-[3px] bottom-[3px] w-[74px] rounded-[8px] bg-white/80" />
+              <div className="w-[96px] h-full relative shrink-0 flex items-center justify-center">
+                <img
+                  src={ASSETS.bogoBadge}
+                  alt="Buy 1 Get 1 Free"
+                  className="w-[80px] h-[80px] object-contain"
+                />
+              </div>
+              <div className="w-[110px] h-[96px] relative shrink-0">
+                {/* Back layer (3rd): 64×64 @ left-38 top-16 with rgba(0,0,0,0.2) */}
+                <div className="absolute left-[38px] top-[16px] w-[64px] h-[64px] rounded-[8px] bg-white overflow-hidden">
+                  <img src={bogoNext2.img} alt="" className="w-full h-full object-contain p-1" />
+                  <div className="absolute inset-0 bg-black/20 rounded-[8px]" />
+                </div>
+                {/* Mid layer (2nd): 72×72 @ left-24 top-12 with rgba(0,0,0,0.1) */}
+                <div className="absolute left-[24px] top-[12px] w-[72px] h-[72px] rounded-[8px] bg-white overflow-hidden">
+                  <img src={bogoNext1.img} alt="" className="w-full h-full object-contain p-1" />
+                  <div className="absolute inset-0 bg-black/10 rounded-[8px]" />
+                </div>
+                {/* Front layer (1st): 80×80 @ left-8 top-8 */}
                 <div
                   key={`bogo-${tick3s}`}
-                  className="animate-card-swap relative z-10 w-[76px] h-[76px] rounded-[8px] bg-white p-1.5 flex items-center justify-center shadow-xs"
+                  className="animate-card-swap absolute left-[8px] top-[8px] w-[80px] h-[80px] rounded-[8px] bg-white overflow-hidden p-1 flex items-center justify-center"
                 >
                   <img src={bogoItem.img} alt="" className="w-full h-full object-contain" />
                 </div>
               </div>
             </button>
 
-            {/* Promo 2: Free Gift */}
+            {/* Promo 2: Free Gift (Figma I6634:77655;361:16782;6634:80182) */}
             <button
               type="button"
               onClick={() => navigate('pdp', giftItem.id)}
-              className="w-[218px] h-[96px] shrink-0 rounded-[12px] bg-gradient-to-r from-[#FFE066] to-[#FFF2B2] px-3 py-2 flex items-center justify-between active:opacity-95"
+              className="w-[206px] h-[96px] shrink-0 rounded-[12px] bg-[#F4E777] flex items-center active:opacity-95"
             >
-              <img
-                src={ASSETS.freeGiftBadge}
-                alt="Free Gift"
-                className="h-[68px] w-auto object-contain"
-              />
-              <div className="relative w-[80px] h-[76px] mr-1">
-                <div className="absolute right-[-6px] top-[6px] bottom-[6px] w-[72px] rounded-[8px] bg-white/55" />
-                <div className="absolute right-[-3px] top-[3px] bottom-[3px] w-[74px] rounded-[8px] bg-white/80" />
+              <div className="w-[96px] h-full relative shrink-0 flex items-center justify-center">
+                <img
+                  src={ASSETS.freeGiftBadge}
+                  alt="Free Gift"
+                  className="w-[80px] h-[80px] object-contain"
+                />
+              </div>
+              <div className="w-[110px] h-[96px] relative shrink-0">
+                <div className="absolute left-[38px] top-[16px] w-[64px] h-[64px] rounded-[8px] bg-white overflow-hidden">
+                  <img src={giftNext2.img} alt="" className="w-full h-full object-contain p-1" />
+                  <div className="absolute inset-0 bg-black/20 rounded-[8px]" />
+                </div>
+                <div className="absolute left-[24px] top-[12px] w-[72px] h-[72px] rounded-[8px] bg-white overflow-hidden">
+                  <img src={giftNext1.img} alt="" className="w-full h-full object-contain p-1" />
+                  <div className="absolute inset-0 bg-black/10 rounded-[8px]" />
+                </div>
                 <div
                   key={`gift-${tick3s}`}
-                  className="animate-card-swap relative z-10 w-[76px] h-[76px] rounded-[8px] bg-white p-1.5 flex items-center justify-center shadow-xs"
+                  className="animate-card-swap absolute left-[8px] top-[8px] w-[80px] h-[80px] rounded-[8px] bg-white overflow-hidden p-1 flex items-center justify-center"
                 >
                   <img src={giftItem.img} alt="" className="w-full h-full object-contain" />
                 </div>
@@ -852,59 +874,74 @@ export const HomePage: React.FC = () => {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            {feedProducts.map((p) => (
-              <ProductCard key={p.id} product={p} variant="grid" />
-            ))}
+          {/* True 2-column Masonry Waterfall: each card height adapts to its content */}
+          <div className="flex gap-2 items-start">
+            {/* Left Column */}
+            <div className="flex-1 min-w-0 flex flex-col gap-2">
+              {feedProducts
+                .filter((_, idx) => idx % 2 === 0)
+                .map((p) => (
+                  <ProductCard key={p.id} product={p} variant="waterfall" />
+                ))}
+            </div>
 
-            {/* Top Fruits Ranked Card (Figma 2329:171344) */}
-            <div
-              className="rounded-[8px] p-[10px] shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col gap-[10px]"
-              style={{
-                background: 'linear-gradient(180deg, #FFFCEB 0%, #FFFFFF 38%)',
-              }}
-            >
-              <div className="text-[14px] leading-[20px] font-bold text-[#1A1A1A]">Top Fruits</div>
-              <div className="space-y-[12px]">
-                {topFruits.map(({ rank, product, displayPrice }) => (
-                  <div
-                    key={product.id}
-                    onClick={() => navigate('pdp', product.id)}
-                    className="flex items-center gap-[8px] cursor-pointer"
-                  >
-                    <div className="relative w-[44px] h-[44px] shrink-0 flex items-center justify-center">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-contain"
-                      />
-                      <span
-                        className={`absolute -top-1 -left-1 w-[16px] h-[16px] rounded-[4px] text-[#1A1A1A] text-[10px] font-bold flex items-center justify-center ${
-                          rank === 1
-                            ? 'bg-[#FFCF00]'
-                            : rank === 2
-                              ? 'bg-[#D6E4F0]'
-                              : 'bg-[#F4D08A]'
-                        }`}
-                      >
-                        {rank}
-                      </span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[12px] leading-[16px] text-[#1A1A1A] line-clamp-2 font-normal">
-                        {product.name}
-                      </p>
-                      <div className="flex items-end justify-between mt-[4px]">
-                        <span className="inline-flex items-baseline font-bold text-[#E40032]">
-                          <span className="text-[10px]">&#36;</span>
-                          <span className="text-[14px] leading-[18px]">{displayPrice}</span>
-                          <span className="text-[10px]">.00</span>
+            {/* Right Column */}
+            <div className="flex-1 min-w-0 flex flex-col gap-2">
+              {feedProducts
+                .filter((_, idx) => idx % 2 === 1)
+                .map((p) => (
+                  <ProductCard key={p.id} product={p} variant="waterfall" />
+                ))}
+
+              {/* Top Fruits Ranked Card (Figma 2329:171344) */}
+              <div
+                className="rounded-[8px] p-[10px] shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col gap-[10px]"
+                style={{
+                  background: 'linear-gradient(180deg, #FFFCEB 0%, #FFFFFF 38%)',
+                }}
+              >
+                <div className="text-[14px] leading-[20px] font-bold text-[#1A1A1A]">Top Fruits</div>
+                <div className="space-y-[12px]">
+                  {topFruits.map(({ rank, product, displayPrice }) => (
+                    <div
+                      key={product.id}
+                      onClick={() => navigate('pdp', product.id)}
+                      className="flex items-center gap-[8px] cursor-pointer"
+                    >
+                      <div className="relative w-[44px] h-[44px] shrink-0 flex items-center justify-center">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-full object-contain"
+                        />
+                        <span
+                          className={`absolute -top-1 -left-1 w-[16px] h-[16px] rounded-[4px] text-[#1A1A1A] text-[10px] font-bold flex items-center justify-center ${
+                            rank === 1
+                              ? 'bg-[#FFCF00]'
+                              : rank === 2
+                                ? 'bg-[#D6E4F0]'
+                                : 'bg-[#F4D08A]'
+                          }`}
+                        >
+                          {rank}
                         </span>
-                        <ProductAddControl productId={product.id} size="sm" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[12px] leading-[16px] text-[#1A1A1A] line-clamp-2 font-normal">
+                          {product.name}
+                        </p>
+                        <div className="flex items-end justify-between mt-[4px]">
+                          <span className="inline-flex items-baseline font-bold text-[#E40032]">
+                            <span className="text-[10px]">&#36;</span>
+                            <span className="text-[14px] leading-[18px]">{displayPrice}</span>
+                            <span className="text-[10px]">.00</span>
+                          </span>
+                          <ProductAddControl productId={product.id} size="sm" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>

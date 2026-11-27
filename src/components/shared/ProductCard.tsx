@@ -7,17 +7,19 @@ import { ProductAddControl } from './ProductAddControl';
 
 interface ProductCardProps {
   product: Product;
-  variant?: 'grid' | 'compact' | 'row';
+  variant?: 'grid' | 'compact' | 'waterfall' | 'row';
   className?: string;
   onCardClick?: (product: Product) => void;
 }
 
 /**
  * 1:1 implementation of Wellcome Component Library `product card` (486:55467) & `price info` (490:55771):
- * - Fixed-height basic info block (`h-[86px]` on grid, `h-[76px]` on compact)
- * - Fixed-height price footer (`h-[46px] min-h-[46px] max-h-[46px]`, `items-end pb-[4px] pl-[8px] pr-[4px]`)
- * - AddButton pinned at `absolute bottom-[4px] right-[4px]` so adjacent cards ALWAYS bottom-align pixel-for-pixel,
- *   even when price wraps or AddButton expands to `92x32` active stepper.
+ * - Standard floor cards (`grid` / `compact`): width-driven square image (`aspect-square`) + FIXED-height
+ *   text/info block (`h-[88px]` grid / `h-[80px]` compact) + FIXED-height price footer (`h-[48px]` / `h-[50px]`),
+ *   so every card in a standard floor shares an exact uniform height.
+ * - Waterfall cards (`waterfall`): width-driven square image + CONTENT-ADAPTIVE text/info block (no fixed height),
+ *   so 2-column masonry feeds flow naturally without empty vertical voids.
+ * - AddButton pinned at `absolute bottom-[4px] right-[4px]`.
  */
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
@@ -67,6 +69,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   }
 
   const isCompact = variant === 'compact';
+  const isWaterfall = variant === 'waterfall';
 
   return (
     <div
@@ -75,7 +78,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         isCompact ? '' : 'shadow-[0_1px_3px_rgba(0,0,0,0.04)]'
       } active:scale-[0.99] transition-transform ${className}`}
     >
-      {/* Square Product Image + New Badge at top-[4px] right-[4px] (Figma 452:18860) */}
+      {/* Square Product Image (width determines image height) + New Badge at top-[4px] right-[4px] */}
       <div className="w-full aspect-square relative rounded-[4px] bg-white flex items-center justify-center overflow-hidden shrink-0">
         <img
           src={product.image}
@@ -92,10 +95,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       {/* Product Info Container (Figma 486:54670) */}
       <div className="flex flex-col flex-1 w-full">
-        {/* Basic Info: fixed height so all cards in a row align cleanly without overflowing into price */}
+        {/* Basic Info: content-adaptive on waterfall; strictly fixed height on standard floor cards */}
         <div
           className={`flex flex-col gap-[4px] px-[8px] pt-[4px] pb-[2px] w-full shrink-0 ${
-            isCompact ? 'min-h-[78px]' : 'min-h-[88px]'
+            isWaterfall
+              ? ''
+              : isCompact
+                ? 'h-[80px] overflow-hidden'
+                : 'h-[88px] overflow-hidden'
           }`}
         >
           <div className="flex flex-col gap-[2px] w-full">
@@ -124,8 +131,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </div>
 
-        {/* Price Footer with consistent 10px breathing room below promo tags (Figma 490:55879) */}
-        <div className="mt-auto relative flex items-end min-h-[46px] pt-[10px] pb-[6px] pl-[8px] pr-[4px] w-full shrink-0">
+        {/* Price Footer: content-adaptive on waterfall; fixed height on standard floor cards */}
+        <div
+          className={`relative flex items-end pt-[8px] pb-[6px] pl-[8px] pr-[4px] w-full shrink-0 ${
+            isWaterfall
+              ? 'min-h-[42px]'
+              : isCompact
+                ? 'mt-auto h-[50px]'
+                : 'mt-auto h-[48px]'
+          }`}
+        >
           <div className="flex flex-col items-start justify-end pr-[36px] min-w-0">
             <PriceBlock
               price={product.price}
