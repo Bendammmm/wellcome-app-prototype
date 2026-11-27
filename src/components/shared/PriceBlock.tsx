@@ -1,4 +1,6 @@
 import React from 'react';
+import { useAppStore } from '../../store/useAppStore';
+import { getThemeTokens } from '../../theme/themeConfig';
 
 interface PriceBlockProps {
   price: number;
@@ -19,6 +21,9 @@ export const PriceBlock: React.FC<PriceBlockProps> = ({
   inverse = false,
   className = '',
 }) => {
+  const appTheme = useAppStore((s) => s.appTheme);
+  const t = getThemeTokens(appTheme);
+
   const fixed = price.toFixed(2);
   const [intPart, decPart] = fixed.split('.');
 
@@ -30,13 +35,16 @@ export const PriceBlock: React.FC<PriceBlockProps> = ({
     hero: { sym: 'text-[16px]', main: 'text-[28px] leading-[34px]', dec: 'text-[16px]', sub: 'text-[13px]' },
   }[size];
 
-  const mainColor = inverse ? 'text-white' : 'text-[#E40032]';
+  const mainColor = inverse ? '#FFFFFF' : t.primary;
   const unitColor = inverse ? 'text-white/80' : 'text-[#666666]';
   const origColor = inverse ? 'text-white/75' : 'text-[#858585]';
 
   return (
     <div className={`inline-flex flex-wrap items-baseline gap-1 ${className}`}>
-      <span className={`inline-flex items-baseline font-bold tracking-tight ${mainColor}`}>
+      <span
+        className="inline-flex items-baseline font-bold tracking-tight"
+        style={{ color: mainColor }}
+      >
         <span className={`${sizeMap.sym} mr-[0.5px]`}>&#36;</span>
         <span className={sizeMap.main}>{intPart}</span>
         <span className={sizeMap.dec}>.{decPart}</span>
@@ -51,7 +59,13 @@ export const PriceBlock: React.FC<PriceBlockProps> = ({
       ) : null}
 
       {savedText && (
-        <span className="inline-flex items-center px-1.5 py-[1px] rounded-[4px] bg-[#FFF0F2] text-[#E40032] text-[10px] font-medium leading-[14px]">
+        <span
+          className="inline-flex items-center px-1.5 py-[1px] rounded-[4px] text-[10px] font-medium leading-[14px]"
+          style={{
+            backgroundColor: t.primarySoftBg,
+            color: t.primary,
+          }}
+        >
           {savedText}
         </span>
       )}

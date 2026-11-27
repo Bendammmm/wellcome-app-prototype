@@ -1,12 +1,15 @@
 import React from 'react';
 import { ICONS } from '../../data/catalog';
 import { getTotalCartCount, useAppStore } from '../../store/useAppStore';
+import { getThemeTokens } from '../../theme/themeConfig';
 
 export const AppTabBar: React.FC = () => {
   const activePage = useAppStore((s) => s.activePage);
   const navigate = useAppStore((s) => s.navigate);
   const showToast = useAppStore((s) => s.showToast);
   const cartCount = useAppStore((s) => getTotalCartCount(s.cartItems));
+  const appTheme = useAppStore((s) => s.appTheme);
+  const t = getThemeTokens(appTheme);
 
   const tabs = [
     { id: 'home', label: 'Home', icon: ICONS.tabHome, active: activePage === 'home' },
@@ -18,7 +21,13 @@ export const AppTabBar: React.FC = () => {
   ] as const;
 
   return (
-    <nav className="w-full bg-white border-t border-[#EFEFEF] pt-1.5 pb-[max(8px,env(safe-area-inset-bottom))]">
+    <nav
+      className="w-full pt-1.5 pb-[max(8px,env(safe-area-inset-bottom))] transition-colors duration-200"
+      style={{
+        backgroundColor: t.tabBarBg,
+        borderTop: t.isMp ? '1px solid rgba(255,255,255,0.08)' : '1px solid #EFEFEF',
+      }}
+    >
       <div className="grid grid-cols-6">
         {tabs.map((tab) => (
           <button
@@ -40,7 +49,7 @@ export const AppTabBar: React.FC = () => {
                 aria-label={tab.label}
                 className="block w-[28px] h-[28px] transition-colors"
                 style={{
-                  backgroundColor: tab.active ? '#E40032' : '#858585',
+                  backgroundColor: tab.active ? t.tabBarActive : t.tabBarInactive,
                   WebkitMaskImage: `url(${tab.icon})`,
                   maskImage: `url(${tab.icon})`,
                   WebkitMaskRepeat: 'no-repeat',
@@ -52,15 +61,25 @@ export const AppTabBar: React.FC = () => {
                 }}
               />
               {'badge' in tab && tab.badge > 0 && (
-                <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E40032] text-white text-[10px] font-bold flex items-center justify-center leading-none border border-white tabular-nums">
+                <span
+                  className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-1 rounded-full text-[10px] font-bold flex items-center justify-center leading-none tabular-nums"
+                  style={{
+                    backgroundColor: t.isMpOpt1 ? '#DDB97D' : t.isMpBefore ? '#FFFFFF' : '#E40032',
+                    color: t.isMp ? '#1A1A1A' : '#FFFFFF',
+                    border: `1px solid ${t.tabBarBg}`,
+                  }}
+                >
                   {tab.badge > 99 ? '99+' : tab.badge}
                 </span>
               )}
             </div>
             <span
               className={`text-[10px] leading-[14px] ${
-                tab.active ? 'text-[#E40032] font-semibold' : 'text-[#858585] font-medium'
+                tab.active ? 'font-semibold' : 'font-medium'
               }`}
+              style={{
+                color: tab.active ? t.tabBarActive : t.tabBarInactive,
+              }}
             >
               {tab.label}
             </span>

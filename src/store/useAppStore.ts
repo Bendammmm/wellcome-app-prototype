@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type {
+  AppTheme,
   AuthUser,
   CartItem,
   Coupon,
@@ -71,6 +72,10 @@ export interface ToastMessage {
 }
 
 interface AppState {
+  // Brand & Theme ('we' | 'mp-before' | 'mp-opt1')
+  appTheme: AppTheme;
+  setAppTheme: (theme: AppTheme) => void;
+
   // Routing
   activePage: RoutePage;
   activeProductId: string;
@@ -261,9 +266,29 @@ export function computePricingSummary(
 
 let toastTimer: ReturnType<typeof setTimeout> | null = null;
 
+function getInitialThemeFromUrl(): AppTheme {
+  if (typeof window === 'undefined') return 'we';
+  const params = new URLSearchParams(window.location.search);
+  const raw = params.get('theme') ?? params.get('brand');
+  if (raw === 'mp-opt1' || raw === 'mp' || raw === 'opt1') return 'mp-opt1';
+  if (raw === 'mp-before' || raw === 'before') return 'mp-before';
+  return 'we';
+}
+
 export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
+      appTheme: getInitialThemeFromUrl(),
+      setAppTheme: (theme) => {
+        set({ appTheme: theme });
+        if (typeof window !== 'undefined') {
+          const url = new URL(window.location.href);
+          if (theme === 'we') url.searchParams.delete('theme');
+          else url.searchParams.set('theme', theme);
+          window.history.replaceState({}, '', url.toString());
+        }
+      },
+
       activePage: 'home',
       activeProductId: 'belena-shiraz',
       history: [],

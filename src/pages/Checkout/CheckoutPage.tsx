@@ -37,6 +37,8 @@ export const CheckoutPage: React.FC = () => {
   const applyPromoCode = useAppStore((s) => s.applyPromoCode);
   const submitMockOrder = useAppStore((s) => s.submitMockOrder);
   const showToast = useAppStore((s) => s.showToast);
+  const appTheme = useAppStore((s) => s.appTheme);
+  const isMpOpt1 = appTheme === 'mp-opt1';
 
   const isDelivery = fulfillmentMode === 'delivery';
   const currentAddr =
@@ -720,7 +722,9 @@ export const CheckoutPage: React.FC = () => {
                   />
                 </div>
                 <p className="text-[12px] leading-[16px] font-normal text-[#3D3D3D]">
-                  {item.description}
+                  {isMpOpt1
+                    ? item.description.replace('Wellcome', 'Market Place')
+                    : item.description}
                 </p>
               </div>
             </div>

@@ -25,6 +25,7 @@ import {
   getEffectiveItemMeta,
 } from '../../data/catalog';
 import { computePricingSummary, useAppStore } from '../../store/useAppStore';
+import { getThemeTokens } from '../../theme/themeConfig';
 import type { CartItem, OrderRecord } from '../../types';
 import { BottomSheetDrawer } from '../../components/shared/BottomSheetDrawer';
 import { PriceBlock } from '../../components/shared/PriceBlock';
@@ -37,6 +38,8 @@ import { ThresholdProgressBar } from '../../components/shared/ThresholdProgressB
 export const CartPage: React.FC = () => {
   const goBack = useAppStore((s) => s.goBack);
   const navigate = useAppStore((s) => s.navigate);
+  const appTheme = useAppStore((s) => s.appTheme);
+  const t = getThemeTokens(appTheme);
   const fulfillmentMode = useAppStore((s) => s.fulfillmentMode);
   const selectedAddressId = useAppStore((s) => s.selectedAddressId);
   const selectedStoreId = useAppStore((s) => s.selectedStoreId);
@@ -219,11 +222,20 @@ export const CartPage: React.FC = () => {
             onClick={() => toggleItemSelected(item.key)}
             className="w-[24px] h-[24px] flex items-center justify-center shrink-0"
           >
-            <img
-              src={item.selected ? ICONS.radioChecked : ICONS.radioBlank}
-              alt=""
-              className="w-[24px] h-[24px] object-contain"
-            />
+            {item.selected && t.isMp ? (
+              <span
+                className="w-[20px] h-[20px] rounded-full flex items-center justify-center text-white"
+                style={{ backgroundColor: t.primary }}
+              >
+                <Check className="w-[12px] h-[12px]" strokeWidth={3} />
+              </span>
+            ) : (
+              <img
+                src={item.selected ? ICONS.radioChecked : ICONS.radioBlank}
+                alt=""
+                className="w-[24px] h-[24px] object-contain"
+              />
+            )}
           </button>
 
           {/* Product Thumbnail (Figma 8585:131791: 76x76px, radius 4px) */}
@@ -401,7 +413,11 @@ export const CartPage: React.FC = () => {
                       className="inline-flex items-center gap-[2px] text-[16px] leading-[24px] font-bold text-[#1A1A1A]"
                     >
                       <span>{isDelivery ? 'Home Delivery' : 'Click & Collect'}</span>
-                      <img src={ICONS.chevronRightRed} alt="" className="w-[16px] h-[16px] object-contain" />
+                      {t.isMp ? (
+                        <ChevronRight className="w-[16px] h-[16px]" style={{ color: t.primary }} />
+                      ) : (
+                        <img src={ICONS.chevronRightRed} alt="" className="w-[16px] h-[16px] object-contain" />
+                      )}
                     </button>
                     <div className="inline-flex items-center gap-[2px] shrink-0">
                       <span className="px-[4px] py-[2px] rounded-[4px] bg-[#F7F7F7] text-[10px] leading-[14px] text-[#3D3D3D] font-normal">
@@ -550,7 +566,11 @@ export const CartPage: React.FC = () => {
                 <div className="sticky top-[48px] z-20 bg-white pt-[12px] pb-[12px] flex items-center justify-between border-b border-[#E0E0E0] rounded-t-[12px]">
                   <span className="inline-flex items-center gap-[2px] text-[16px] leading-[24px] font-bold text-[#1A1A1A]">
                     <span>Pre-order</span>
-                    <img src={ICONS.chevronRightRed} alt="" className="w-[16px] h-[16px] object-contain" />
+                    {t.isMp ? (
+                      <ChevronRight className="w-[16px] h-[16px]" style={{ color: t.primary }} />
+                    ) : (
+                      <img src={ICONS.chevronRightRed} alt="" className="w-[16px] h-[16px] object-contain" />
+                    )}
                   </span>
                   <div className="inline-flex items-center gap-[2px] shrink-0">
                     <span className="px-[4px] py-[2px] rounded-[4px] bg-[#F7F7F7] text-[10px] leading-[14px] text-[#3D3D3D] font-normal">
@@ -656,11 +676,20 @@ export const CartPage: React.FC = () => {
                 onClick={handleToggleBasketAll}
                 className="inline-flex items-center gap-[4px] text-[14px] leading-[20px] text-[#3D3D3D]"
               >
-                <img
-                  src={allSelected ? ICONS.radioChecked : ICONS.radioBlank}
-                  alt=""
-                  className="w-[24px] h-[24px] object-contain"
-                />
+                {allSelected && t.isMp ? (
+                  <span
+                    className="w-[20px] h-[20px] rounded-full flex items-center justify-center text-white"
+                    style={{ backgroundColor: t.primary }}
+                  >
+                    <Check className="w-[12px] h-[12px]" strokeWidth={3} />
+                  </span>
+                ) : (
+                  <img
+                    src={allSelected ? ICONS.radioChecked : ICONS.radioBlank}
+                    alt=""
+                    className="w-[24px] h-[24px] object-contain"
+                  />
+                )}
                 <span>All</span>
               </button>
 

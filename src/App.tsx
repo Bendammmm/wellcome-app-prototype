@@ -1,5 +1,6 @@
 import React from 'react';
 import { HomePage } from './pages/Home/HomePage';
+import { MpHomePage } from './pages/Home/MpHomePage';
 import { PdpPage } from './pages/PDP/PdpPage';
 import { CartPage } from './pages/Cart/CartPage';
 import { SmartTipsPage } from './pages/Cart/SmartTipsPage';
@@ -20,8 +21,10 @@ import { FeedbackPage } from './pages/Feedback/FeedbackPage';
 import { SplashPage } from './pages/Auth/SplashPage';
 import { LoginPage } from './pages/Auth/LoginPage';
 import { FulfillmentSheet } from './components/shared/FulfillmentSheet';
+import { ThemeSwitcherPill } from './components/shared/ThemeSwitcherPill';
 import { ToastBanner } from './components/shared/ToastBanner';
 import { getTotalCartCount, useAppStore } from './store/useAppStore';
+import { getThemeTokens } from './theme/themeConfig';
 
 export const App: React.FC = () => {
   const activePage = useAppStore((s) => s.activePage);
@@ -30,6 +33,8 @@ export const App: React.FC = () => {
   const openFulfillmentSheet = useAppStore((s) => s.openFulfillmentSheet);
   const resetDemoCart = useAppStore((s) => s.resetDemoCart);
   const cartCount = useAppStore((s) => getTotalCartCount(s.cartItems));
+  const appTheme = useAppStore((s) => s.appTheme);
+  const t = getThemeTokens(appTheme);
 
   return (
     <div className="app-viewport-outer">
@@ -110,10 +115,14 @@ export const App: React.FC = () => {
       </aside>
 
       {/* Main 393px Mobile App Shell */}
-      <main className="app-viewport-shell">
+      <main
+        data-theme={appTheme}
+        className="app-viewport-shell"
+        style={{ backgroundColor: t.canvasBg }}
+      >
         {activePage === 'splash' && <SplashPage />}
         {activePage === 'login' && <LoginPage />}
-        {activePage === 'home' && <HomePage />}
+        {activePage === 'home' && (t.isMp ? <MpHomePage /> : <HomePage />)}
         {activePage === 'categories' && <CategoriesPage />}
         {activePage === 'search' && <SearchPage />}
         {activePage === 'search-results' && <SearchResultsPage />}
@@ -132,6 +141,7 @@ export const App: React.FC = () => {
         {activePage === 'refund-success' && <RefundSuccessPage />}
         {activePage === 'feedback' && <FeedbackPage />}
 
+        <ThemeSwitcherPill />
         <FulfillmentSheet />
         <ToastBanner />
       </main>

@@ -1,3 +1,5 @@
+export type AppTheme = 'we' | 'mp-before' | 'mp-opt1';
+
 export type RoutePage =
   | 'splash'
   | 'login'

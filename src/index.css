@@ -72,6 +72,73 @@
   }
 }
 
+/* ==========================================================================
+   Market Place Multi-Theme Overrides (Before vs Option 1: Heritage Branding)
+   Applies cleanly across PDP, Cart, Checkout & shared flows without altering WE.
+   ========================================================================== */
+[data-theme='mp-before'] {
+  --mp-primary: #155d2d;
+  --mp-primary-soft: #ebf3ed;
+  --mp-canvas: #f7f7f7;
+}
+
+[data-theme='mp-opt1'] {
+  --mp-primary: #28443c;
+  --mp-primary-soft: #ebf0ee;
+  --mp-canvas: #f7f5f0;
+}
+
+[data-theme='mp-before'] .bg-\[\#E40032\],
+[data-theme='mp-opt1'] .bg-\[\#E40032\] {
+  background-color: var(--mp-primary) !important;
+}
+
+[data-theme='mp-before'] .text-\[\#E40032\],
+[data-theme='mp-opt1'] .text-\[\#E40032\] {
+  color: var(--mp-primary) !important;
+}
+
+[data-theme='mp-before'] .border-\[\#E40032\],
+[data-theme='mp-opt1'] .border-\[\#E40032\] {
+  border-color: var(--mp-primary) !important;
+}
+
+[data-theme='mp-before'] .fill-\[\#E40032\],
+[data-theme='mp-opt1'] .fill-\[\#E40032\] {
+  fill: var(--mp-primary) !important;
+}
+
+[data-theme='mp-before'] .bg-\[\#FFF6F5\],
+[data-theme='mp-opt1'] .bg-\[\#FFF6F5\],
+[data-theme='mp-before'] .bg-\[\#FFF0F2\],
+[data-theme='mp-opt1'] .bg-\[\#FFF0F2\] {
+  background-color: var(--mp-primary-soft) !important;
+}
+
+/* Warm heritage canvas background in MP Option 1 */
+[data-theme='mp-opt1'] .bg-\[\#F7F7F7\],
+[data-theme='mp-opt1'] .bg-\[\#F7F7F7\]\/95 {
+  background-color: #f7f5f0 !important;
+}
+
+/* Lora serif headings in MP Option 1 across PDP, Cart, Checkout */
+[data-theme='mp-opt1'] h1,
+[data-theme='mp-opt1'] h2,
+[data-theme='mp-opt1'] h3 {
+  font-family: 'Lora', Georgia, serif;
+}
+
+[data-theme='mp-opt1'] section h2:not(.text-white),
+[data-theme='mp-opt1'] header h1 {
+  color: #28443c;
+}
+
+/* MP sharp refined CTA radius (4px) on primary action buttons */
+[data-theme='mp-before'] button.bg-\[\#E40032\],
+[data-theme='mp-opt1'] button.bg-\[\#E40032\] {
+  border-radius: 4px;
+}
+
 @keyframes slideUpDrawer {
   from {
     transform: translateY(100%);

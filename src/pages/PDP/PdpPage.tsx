@@ -30,6 +30,8 @@ export const PdpPage: React.FC = () => {
   const wishlistIds = useAppStore((s) => s.wishlistIds);
   const toggleWishlist = useAppStore((s) => s.toggleWishlist);
   const showToast = useAppStore((s) => s.showToast);
+  const appTheme = useAppStore((s) => s.appTheme);
+  const isMp = appTheme !== 'we';
   const totalCartCount = useAppStore((s) => getTotalCartCount(s.cartItems));
 
   const product = getProductById(activeProductId);
@@ -749,7 +751,7 @@ export const PdpPage: React.FC = () => {
                 />
                 <div className="space-y-[4px]">
                   <p className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">
-                    Wellcome · Trusted for 80+ Years
+                    {isMp ? 'Market Place · Curated Global Groceries' : 'Wellcome · Trusted for 80+ Years'}
                   </p>
                   <p className="text-[14px] leading-[20px] text-[#666666]">
                     Fresh · Quality · Value

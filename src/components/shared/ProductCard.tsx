@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Product } from '../../types';
 import { useAppStore } from '../../store/useAppStore';
+import { getThemeTokens } from '../../theme/themeConfig';
 import { PriceBlock } from './PriceBlock';
 import { PromoTag } from './PromoTag';
 import { ProductAddControl } from './ProductAddControl';
@@ -28,6 +29,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onCardClick,
 }) => {
   const navigate = useAppStore((s) => s.navigate);
+  const appTheme = useAppStore((s) => s.appTheme);
+  const t = getThemeTokens(appTheme);
 
   const handleOpen = () => {
     if (onCardClick) {
@@ -131,32 +134,52 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </div>
 
-        {/* Price Footer: content-adaptive on waterfall; fixed height on standard floor cards */}
-        <div
-          className={`relative flex items-end pt-[8px] pb-[6px] pl-[8px] pr-[4px] w-full shrink-0 ${
-            isWaterfall
-              ? 'min-h-[42px]'
-              : isCompact
-                ? 'mt-auto h-[50px]'
-                : 'mt-auto h-[48px]'
-          }`}
-        >
-          <div className="flex flex-col items-start justify-end pr-[36px] min-w-0">
+        {/* Price Footer: MP uses stacked Price + full-width "+ Add" button; WE uses bottom-right red "+" */}
+        {t.isMp ? (
+          <div
+            className={`flex flex-col justify-end gap-[6px] pt-[8px] pb-[8px] px-[8px] w-full shrink-0 ${
+              isWaterfall ? '' : 'mt-auto'
+            }`}
+          >
             <PriceBlock
               price={product.price}
               originalPrice={product.originalPrice}
               unitPriceText={product.unitPriceText}
               size={isCompact ? 'sm' : 'md'}
             />
+            <ProductAddControl
+              productId={product.id}
+              disabled={product.isOutOfStock}
+              fullWidth
+            />
           </div>
+        ) : (
+          <div
+            className={`relative flex items-end pt-[8px] pb-[6px] pl-[8px] pr-[4px] w-full shrink-0 ${
+              isWaterfall
+                ? 'min-h-[42px]'
+                : isCompact
+                  ? 'mt-auto h-[50px]'
+                  : 'mt-auto h-[48px]'
+            }`}
+          >
+            <div className="flex flex-col items-start justify-end pr-[36px] min-w-0">
+              <PriceBlock
+                price={product.price}
+                originalPrice={product.originalPrice}
+                unitPriceText={product.unitPriceText}
+                size={isCompact ? 'sm' : 'md'}
+              />
+            </div>
 
-          {/* AddButton strictly pinned at bottom-[4px] right-[4px] (Figma 490:55663) */}
-          <ProductAddControl
-            productId={product.id}
-            disabled={product.isOutOfStock}
-            className="absolute bottom-[4px] right-[4px] z-10"
-          />
-        </div>
+            {/* AddButton strictly pinned at bottom-[4px] right-[4px] (Figma 490:55663) */}
+            <ProductAddControl
+              productId={product.id}
+              disabled={product.isOutOfStock}
+              className="absolute bottom-[4px] right-[4px] z-10"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
