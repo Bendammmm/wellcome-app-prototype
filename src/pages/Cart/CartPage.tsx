@@ -169,51 +169,67 @@ export const CartPage: React.FC = () => {
     setConfirmedOrder(order);
   };
 
-  const renderCartRow = (item: CartItem) => {
+  const renderPromoHeader = (promoId: string | undefined, items: CartItem[]) => {
+    if (!promoId || items.length === 0) return null;
+    const totalQty = items.reduce((sum, i) => sum + i.qty, 0);
+    const totalAmount = items.reduce((sum, i) => {
+      const m = getEffectiveItemMeta(i.productId, i.variantId);
+      return sum + m.price * i.qty;
+    }, 0);
+
+    if (promoId === '10-off') {
+      return (
+        <div className="flex items-center justify-between gap-[8px] mb-[8px]">
+          <div className="flex items-center gap-[8px] min-w-0">
+            <PromoTag label="10% off" applied />
+            <span className="text-[12px] leading-[16px] text-[#3D3D3D] truncate">
+              Offer applied, Saved: &#36;{(totalAmount * 0.1).toFixed(2)}
+            </span>
+          </div>
+          <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
+        </div>
+      );
+    }
+    if (promoId === 'buy2-30') {
+      const firstMeta = getEffectiveItemMeta(items[0].productId, items[0].variantId);
+      const saved = Math.max(4, Math.floor(totalQty / 2) * Math.max(0, firstMeta.price * 2 - 30));
+      return (
+        <div className="flex items-center justify-between gap-[8px] mb-[8px]">
+          <div className="flex items-center gap-[8px] min-w-0">
+            <PromoTag label="Buy 2 for $30" applied={totalQty >= 2} />
+            <span className="text-[12px] leading-[16px] text-[#3D3D3D] truncate">
+              {totalQty >= 2
+                ? `Offer applied, Saved: $${saved.toFixed(2)}`
+                : 'Add 1 more to get 2 for $30'}
+            </span>
+          </div>
+          <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
+        </div>
+      );
+    }
+    if (promoId === '2-for-20-off') {
+      return (
+        <div className="flex items-center justify-between gap-[8px] mb-[8px]">
+          <div className="flex items-center gap-[8px] min-w-0">
+            <PromoTag label="2 for 20% off" applied={totalQty >= 2} />
+            <span className="text-[12px] leading-[16px] text-[#3D3D3D] truncate">
+              {totalQty >= 2
+                ? `Offer applied, Saved: $${(totalAmount * 0.2).toFixed(2)}`
+                : 'Add 1 more item to get 20% off'}
+            </span>
+          </div>
+          <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const renderCartRowInner = (item: CartItem) => {
     const meta = getEffectiveItemMeta(item.productId, item.variantId);
-    const promoId = meta.product.promoGroupId;
 
     return (
-      <div key={item.key} className="py-[8px] border-b border-[#E0E0E0] last:border-b-0">
-        {/* Optional Promo Group Header matching Figma 8585:131791 (_Cart Promo Bar) */}
-        {promoId === '10-off' && (
-          <div className="flex items-center justify-between gap-[8px] mb-[8px]">
-            <div className="flex items-center gap-[8px] min-w-0">
-              <PromoTag label="10% off" applied />
-              <span className="text-[12px] leading-[16px] text-[#3D3D3D] truncate">
-                Saved: &#36;{(meta.price * item.qty * 0.1).toFixed(2)}
-              </span>
-            </div>
-            <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
-          </div>
-        )}
-        {promoId === 'buy2-30' && (
-          <div className="flex items-center justify-between gap-[8px] mb-[8px]">
-            <div className="flex items-center gap-[8px] min-w-0">
-              <PromoTag label="Buy 2 for $30" applied={item.qty >= 2} />
-              <span className="text-[12px] leading-[16px] text-[#3D3D3D] truncate">
-                {item.qty >= 2
-                  ? `Offer applied, Saved: $${(Math.floor(item.qty / 2) * (meta.price * 2 - 30)).toFixed(2)}`
-                  : 'Add 1 more to get 2 for $30'}
-              </span>
-            </div>
-            <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
-          </div>
-        )}
-        {promoId === '2-for-20-off' && (
-          <div className="flex items-center justify-between gap-[8px] mb-[8px]">
-            <div className="flex items-center gap-[8px] min-w-0">
-              <PromoTag label="2 for 20% off" applied={item.qty >= 2} />
-              <span className="text-[12px] leading-[16px] text-[#3D3D3D] truncate">
-                {item.qty >= 2
-                  ? `Offer applied, Saved: $${(meta.price * item.qty * 0.2).toFixed(2)}`
-                  : 'Add 1 more item to get 20% off'}
-              </span>
-            </div>
-            <img src={ICONS.chevronRight} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
-          </div>
-        )}
-
+      <div key={item.key}>
         <div className="flex items-center gap-[8px] py-[8px]">
           {/* Checkbox (Figma 8461:107347: 24x24px) */}
           <button
@@ -238,11 +254,11 @@ export const CartPage: React.FC = () => {
             )}
           </button>
 
-          {/* Product Thumbnail (Figma 8585:131791: 76x76px, radius 4px) */}
+          {/* Product Thumbnail (76x76px, full-bleed without extra grey margin) */}
           <button
             type="button"
             onClick={() => navigate('pdp', item.productId)}
-            className="w-[76px] h-[76px] rounded-[4px] bg-white p-1 flex items-center justify-center shrink-0 overflow-hidden"
+            className="w-[76px] h-[76px] rounded-[4px] bg-white flex items-center justify-center shrink-0 overflow-hidden"
           >
             <img src={meta.image} alt={meta.title} className="w-full h-full object-contain" />
           </button>
@@ -260,16 +276,16 @@ export const CartPage: React.FC = () => {
                 </p>
               </button>
 
-              <div className="flex flex-wrap items-center gap-[4px] mt-[2px]">
-                {meta.product.shortSpec && (
-                  <span className="text-[12px] leading-[16px] text-[#666666]">
-                    {meta.product.shortSpec}
-                  </span>
-                )}
-                {meta.isExtraLeadTime && (
+              {meta.product.shortSpec && (
+                <p className="text-[12px] leading-[16px] text-[#666666] mt-[2px]">
+                  {meta.product.shortSpec}
+                </p>
+              )}
+              {meta.isExtraLeadTime && (
+                <div className="mt-[4px]">
                   <PromoTag label="Extra lead time" variant="leadtime" />
-                )}
-              </div>
+                </div>
+              )}
             </div>
 
             <div className="mt-[8px] flex items-end justify-between gap-[8px]">
@@ -306,8 +322,63 @@ export const CartPage: React.FC = () => {
     );
   };
 
+  // Group items by shared promoGroupId (merged into one card for same promo, independent white cards otherwise)
+  const renderBasketCards = (items: CartItem[]) => {
+    const groups: { key: string; promoId?: string; items: CartItem[] }[] = [];
+    const promoMap = new Map<string, { key: string; promoId?: string; items: CartItem[] }>();
+
+    for (const item of items) {
+      const meta = getEffectiveItemMeta(item.productId, item.variantId);
+      const promoId = meta.product.promoGroupId;
+      if (promoId) {
+        let existing = promoMap.get(promoId);
+        if (!existing) {
+          existing = { key: `promo-${promoId}`, promoId, items: [] };
+          promoMap.set(promoId, existing);
+          groups.push(existing);
+        }
+        existing.items.push(item);
+      } else {
+        groups.push({ key: item.key, items: [item] });
+      }
+    }
+
+    if (t.isMp) {
+      return (
+        <div className="space-y-[8px]">
+          {groups.map((grp) => (
+            <div key={grp.key} className="bg-white px-[12px] py-[10px]">
+              {renderPromoHeader(grp.promoId, grp.items)}
+              <div className="divide-y divide-[#F0EFEA]">
+                {grp.items.map((it) => (
+                  <div key={it.key} className="py-[2px] first:pt-0 last:pb-0">
+                    {renderCartRowInner(it)}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        {groups.map((grp) => (
+          <div key={grp.key} className="py-[8px] border-b border-[#E0E0E0] last:border-b-0">
+            {renderPromoHeader(grp.promoId, grp.items)}
+            {grp.items.map(renderCartRowInner)}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
-    <div className="min-h-dvh bg-[#F7F7F7] pb-[196px]">
+    <div
+      className="min-h-dvh pb-[196px]"
+      style={{ backgroundColor: t.isMp ? t.canvasBg : '#F7F7F7' }}
+    >
       {/* Sticky Top NavigationBar (Figma 8585:133872 — exact 48px row) */}
       <header className="sticky top-0 z-30 bg-white border-b border-[#EFEFEF] pt-[env(safe-area-inset-top)]">
         <div className="h-[48px] px-[12px] flex items-center justify-between gap-[8px]">
@@ -363,9 +434,27 @@ export const CartPage: React.FC = () => {
       </header>
 
       <div className="mp-edge-stack px-[8px] pt-[8px] flex flex-col gap-[8px]">
-        {/* Promo Notice Strip (Figma 8585:131776) */}
-        <div className="bg-gradient-to-t from-white to-[#FFF6F5] border-2 border-white rounded-[12px] p-[12px] flex items-center gap-[8px]">
-          <span className="w-[24px] h-[24px] rounded-full bg-[#E40032] flex items-center justify-center shrink-0">
+        {/* Promo Notice Strip — light green to white gradient on MP, pink to white on WE */}
+        <div
+          className={`p-[12px] flex items-center gap-[8px] ${
+            t.isMp
+              ? 'border-y border-white'
+              : 'bg-gradient-to-t from-white to-[#FFF6F5] border-2 border-white rounded-[12px]'
+          }`}
+          style={
+            t.isMp
+              ? {
+                  background: t.isMpOpt1
+                    ? 'linear-gradient(180deg, #E8EFE9 0%, #FFFFFF 100%)'
+                    : 'linear-gradient(180deg, #E8F3EC 0%, #FFFFFF 100%)',
+                }
+              : undefined
+          }
+        >
+          <span
+            className="w-[24px] h-[24px] rounded-full flex items-center justify-center shrink-0"
+            style={{ backgroundColor: t.primary }}
+          >
             <img src={ICONS.promoOutline} alt="" className="w-[14px] h-[14px] object-contain" />
           </span>
           <p className="text-[12px] leading-[16px] text-[#3D3D3D] font-normal truncate">
@@ -402,16 +491,26 @@ export const CartPage: React.FC = () => {
           </section>
         ) : (
           <>
-            {/* Main Fulfillment Cart Card (Figma 8585:131777) — per-basket sticky header */}
+            {/* Main Fulfillment Cart Section — transparent header + independent/promo-grouped white cards on MP */}
             {mainItems.length > 0 && (
-              <section ref={mainBasketRef} className="bg-white rounded-[12px] px-[12px] pb-[12px]">
-                <div className="sticky top-[48px] z-20 bg-white pt-[12px] pb-[12px] border-b border-[#E0E0E0] space-y-[12px] rounded-t-[12px]">
+              <section
+                ref={mainBasketRef}
+                className={t.isMp ? '' : 'bg-white rounded-[12px] px-[12px] pb-[12px]'}
+              >
+                <div
+                  className={
+                    t.isMp
+                      ? 'sticky top-[48px] z-20 px-[12px] pt-[12px] pb-[8px] space-y-[8px]'
+                      : 'sticky top-[48px] z-20 bg-white pt-[12px] pb-[12px] border-b border-[#E0E0E0] space-y-[12px] rounded-t-[12px]'
+                  }
+                  style={t.isMp ? { backgroundColor: t.canvasBg } : undefined}
+                >
                   <div className="flex items-center justify-between gap-[4px]">
                     <button
                       type="button"
                       onClick={openFulfillmentSheet}
                       className="inline-flex items-center gap-[2px] text-[16px] leading-[24px] font-bold text-[#1A1A1A]"
-                      style={t.isMpOpt1 ? { fontFamily: t.headingFont, color: t.headingColor } : undefined}
+                      style={t.isMp ? { fontFamily: t.headingFont, color: t.headingColor } : undefined}
                     >
                       <span>{isDelivery ? 'Home Delivery' : 'Click & Collect'}</span>
                       {t.isMp ? (
@@ -421,7 +520,7 @@ export const CartPage: React.FC = () => {
                       )}
                     </button>
                     <div className="inline-flex items-center gap-[2px] shrink-0">
-                      <span className="px-[4px] py-[2px] rounded-[4px] bg-[#F7F7F7] text-[10px] leading-[14px] text-[#3D3D3D] font-normal">
+                      <span className="px-[4px] py-[2px] rounded-[4px] bg-white/80 text-[10px] leading-[14px] text-[#3D3D3D] font-normal">
                         Earliest
                       </span>
                       <span className="text-[12px] leading-[16px] font-normal text-[#3D3D3D]">
@@ -435,7 +534,9 @@ export const CartPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setLeadTimeDrawerOpen(true)}
-                      className="w-full h-[32px] bg-[#FFF5CC] rounded-[8px] px-[12px] py-[4px] flex items-center justify-between gap-[4px] text-left active:opacity-90"
+                      className={`w-full h-[32px] bg-[#FFF5CC] px-[12px] py-[4px] flex items-center justify-between gap-[4px] text-left active:opacity-90 ${
+                        t.isMp ? 'rounded-none' : 'rounded-[8px]'
+                      }`}
                     >
                       <span className="inline-flex items-center gap-[4px] text-[12px] leading-[16px] text-[#3D3D3D] min-w-0">
                         <img src={ICONS.timeOutline} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
@@ -448,7 +549,7 @@ export const CartPage: React.FC = () => {
                   )}
                 </div>
 
-                <div>{mainItems.map(renderCartRow)}</div>
+                {renderBasketCards(mainItems)}
               </section>
             )}
 
@@ -493,15 +594,15 @@ export const CartPage: React.FC = () => {
               </section>
             )}
 
-            {/* Unavailable items (Figma 8585:131831) */}
+            {/* Unavailable items (Figma 8585:131831) — full-bleed white thumb with centered Out of stock pill */}
             <section className="bg-white rounded-[12px] p-[12px]">
               <h3 className="text-[14px] leading-[20px] font-bold text-[#1A1A1A] mb-[12px]">
                 Unavailable items
               </h3>
               <div className="flex items-center gap-[8px]">
-                <div className="relative w-[76px] h-[76px] rounded-[4px] bg-[#F7F7F7] flex items-center justify-center shrink-0 overflow-hidden opacity-80">
-                  <img src={ASSETS.fujiApple} alt="" className="w-[64px] h-[64px] object-contain" />
-                  <span className="absolute inset-x-1 bottom-1 bg-black/65 text-white text-[9px] text-center py-[1px] rounded-full">
+                <div className="relative w-[76px] h-[76px] bg-white flex items-center justify-center shrink-0 overflow-hidden">
+                  <img src={ASSETS.fujiApple} alt="" className="w-full h-full object-contain opacity-65" />
+                  <span className="absolute inset-x-1 top-1/2 -translate-y-1/2 bg-black/55 text-white text-[10px] leading-[16px] text-center py-[2px] rounded-full">
                     Out of stock
                   </span>
                 </div>
@@ -518,7 +619,7 @@ export const CartPage: React.FC = () => {
                           key={id}
                           type="button"
                           onClick={() => navigate('pdp', id)}
-                          className="w-[56px] h-[56px] rounded-[6px] bg-white p-1 flex items-center justify-center shrink-0"
+                          className="w-[56px] h-[56px] rounded-[6px] bg-white flex items-center justify-center shrink-0 overflow-hidden"
                         >
                           <img src={prod.image} alt="" className="w-full h-full object-contain" />
                         </button>
@@ -529,10 +630,15 @@ export const CartPage: React.FC = () => {
               </div>
             </section>
 
-            {/* Promo code (Figma 4119:170794 & 4119:170800) */}
+            {/* Promo code (Figma 4119:170794 & 4119:170800) — 16px module heading in serif on MP */}
             <section className="bg-white rounded-[12px] p-[12px]">
               <div className="flex items-center justify-between mb-[8px]">
-                <h3 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Promo code</h3>
+                <h3
+                  className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]"
+                  style={t.isMp ? { fontFamily: t.headingFont, color: t.headingColor } : undefined}
+                >
+                  Promo code
+                </h3>
               </div>
               <div className="h-[40px] rounded-[8px] bg-white border border-[#E0E0E0] px-[12px] flex items-center justify-between gap-[8px] focus-within:border-[#E40032]">
                 <input
@@ -561,11 +667,24 @@ export const CartPage: React.FC = () => {
               )}
             </section>
 
-            {/* Pre-order section (Figma 7939:425539) — per-basket sticky header */}
+            {/* Pre-order section — transparent header + independent/promo-grouped white cards on MP */}
             {preorderItems.length > 0 && (
-              <section ref={preorderBasketRef} className="bg-white rounded-[12px] px-[12px] pb-[12px]">
-                <div className="sticky top-[48px] z-20 bg-white pt-[12px] pb-[12px] flex items-center justify-between border-b border-[#E0E0E0] rounded-t-[12px]">
-                  <span className="inline-flex items-center gap-[2px] text-[16px] leading-[24px] font-bold text-[#1A1A1A]">
+              <section
+                ref={preorderBasketRef}
+                className={t.isMp ? '' : 'bg-white rounded-[12px] px-[12px] pb-[12px]'}
+              >
+                <div
+                  className={
+                    t.isMp
+                      ? 'sticky top-[48px] z-20 px-[12px] pt-[12px] pb-[8px] flex items-center justify-between'
+                      : 'sticky top-[48px] z-20 bg-white pt-[12px] pb-[12px] flex items-center justify-between border-b border-[#E0E0E0] rounded-t-[12px]'
+                  }
+                  style={t.isMp ? { backgroundColor: t.canvasBg } : undefined}
+                >
+                  <span
+                    className="inline-flex items-center gap-[2px] text-[16px] leading-[24px] font-bold text-[#1A1A1A]"
+                    style={t.isMp ? { fontFamily: t.headingFont, color: t.headingColor } : undefined}
+                  >
                     <span>Pre-order</span>
                     {t.isMp ? (
                       <ChevronRight className="w-[16px] h-[16px]" style={{ color: t.primary }} />
@@ -574,7 +693,7 @@ export const CartPage: React.FC = () => {
                     )}
                   </span>
                   <div className="inline-flex items-center gap-[2px] shrink-0">
-                    <span className="px-[4px] py-[2px] rounded-[4px] bg-[#F7F7F7] text-[10px] leading-[14px] text-[#3D3D3D] font-normal">
+                    <span className="px-[4px] py-[2px] rounded-[4px] bg-white/80 text-[10px] leading-[14px] text-[#3D3D3D] font-normal">
                       Earliest
                     </span>
                     <span className="text-[12px] leading-[16px] font-normal text-[#3D3D3D]">
@@ -582,13 +701,13 @@ export const CartPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                {preorderItems.map(renderCartRow)}
+                {renderBasketCards(preorderItems)}
               </section>
             )}
           </>
         )}
 
-        {/* You May Like / Your Usuals Waterfall */}
+        {/* You May Like / Your Usuals Waterfall — serif tab headings on MP */}
         <section className="pt-1">
           <div className="grid grid-cols-2 border-b border-[#EAEAEA] mb-2.5">
             <button
@@ -599,6 +718,14 @@ export const CartPage: React.FC = () => {
                   ? 'border-[#E40032] text-[#E40032] font-bold'
                   : 'border-transparent text-[#666666] font-medium'
               }`}
+              style={
+                t.isMp
+                  ? {
+                      fontFamily: t.headingFont,
+                      ...(recTab === 'like' ? { borderColor: t.primary, color: t.primary } : {}),
+                    }
+                  : undefined
+              }
             >
               You May Like
             </button>
@@ -610,6 +737,14 @@ export const CartPage: React.FC = () => {
                   ? 'border-[#E40032] text-[#E40032] font-bold'
                   : 'border-transparent text-[#666666] font-medium'
               }`}
+              style={
+                t.isMp
+                  ? {
+                      fontFamily: t.headingFont,
+                      ...(recTab === 'usuals' ? { borderColor: t.primary, color: t.primary } : {}),
+                    }
+                  : undefined
+              }
             >
               Your Usuals
             </button>
@@ -631,17 +766,10 @@ export const CartPage: React.FC = () => {
             : 'translate-y-0'
         }`}
       >
-        {activeBasket === 'preorder' ? (
-          <div className="bg-[#FFF6F5] px-[12px] py-[8px] flex items-center justify-between text-[12px] leading-[16px] text-[#3D3D3D] border-b border-[#F2E4E6]">
-            <span className="font-semibold text-[#1A1A1A]">Pre-order Basket</span>
-            <span className="text-[#666666]">Earliest 15 Jun 18:00</span>
-          </div>
-        ) : (
-          <ThresholdProgressBar
-            variant="compact"
-            onClick={() => navigate('smart-tips')}
-          />
-        )}
+        <ThresholdProgressBar
+          variant="compact"
+          onClick={() => navigate('smart-tips')}
+        />
 
         {isEditMode ? (
           <div className="px-[12px] pt-[12px] pb-[max(14px,env(safe-area-inset-bottom))] flex items-center justify-between">
@@ -728,9 +856,7 @@ export const CartPage: React.FC = () => {
               onClick={handleCheckoutPress}
               className="w-full h-[46px] rounded-[10px] bg-[#E40032] text-white text-[15px] font-bold active:opacity-90 disabled:opacity-40 transition-opacity"
             >
-              {activeBasket === 'preorder'
-                ? `Check out Pre-order (${pricing.totalUnits})`
-                : `Check out (${pricing.totalUnits})`}
+              {`Check out (${pricing.totalUnits})`}
             </button>
           </div>
         )}

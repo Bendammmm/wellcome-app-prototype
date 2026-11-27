@@ -259,6 +259,7 @@ export const PRODUCTS: Product[] = [
     originalPrice: 35.0,
     soldText: '2k sold',
     promoTags: ['Special price'],
+    promoGroupId: 'buy2-30',
     category: 'Fruit & Vegetable',
     giftItem: {
       name: 'Jumbo Blueberry Tube 200GM (Sample)',

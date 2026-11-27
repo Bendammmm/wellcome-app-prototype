@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { ICONS, PRODUCTS } from '../../data/catalog';
 import { useAppStore } from '../../store/useAppStore';
+import { getThemeTokens } from '../../theme/themeConfig';
 import type { Product } from '../../types';
 import { AppTabBar } from '../../components/shared/AppTabBar';
 import { BottomSheetDrawer } from '../../components/shared/BottomSheetDrawer';
@@ -163,6 +164,16 @@ function catalogToRow(p: Product, topCat: string): CategoryRowItem {
 
 export const CategoriesPage: React.FC = () => {
   const navigate = useAppStore((s) => s.navigate);
+  const appTheme = useAppStore((s) => s.appTheme);
+  const t = getThemeTokens(appTheme);
+
+  const mpCatImages: Record<string, string> = {
+    fresh: '/assets/figma/mp/cat-meat.png',
+    wine: '/assets/figma/mp/cat-wine.png',
+    beverages: '/assets/figma/mp/cat-fruit.png',
+    home: '/assets/figma/mp/cat-dairy.jpg',
+    frozen: '/assets/figma/mp/cat-seafood.png',
+  };
 
   const [activeTopCatId, setActiveTopCatId] = useState<string>('fresh');
   const [activeSubCat, setActiveSubCat] = useState<string>('Fruit');
@@ -213,23 +224,50 @@ export const CategoriesPage: React.FC = () => {
   }, [activeTopCatId, activeChip, priceFilter, searchQuery]);
 
   return (
-    <div className="min-h-dvh bg-[#F7F7F7] pb-[118px] relative">
-      {/* 1. Sticky Top Search Bar (Figma 6877:108276 — exact 48px row) */}
-      <header className="sticky top-0 z-30 bg-white pt-[env(safe-area-inset-top)]">
+    <div
+      className="min-h-dvh pb-[118px] relative"
+      style={{ backgroundColor: t.isMp ? t.canvasBg : '#F7F7F7' }}
+    >
+      {/* 1. Sticky Top Search Bar — Pure Black on MP Before, Deep Forest Green #28443C on MP Opt 1, White on WE */}
+      <header
+        className="sticky top-0 z-30 pt-[env(safe-area-inset-top)] transition-colors"
+        style={{
+          backgroundColor: t.isMpOpt1 ? '#28443C' : t.isMpBefore ? '#000000' : '#FFFFFF',
+        }}
+      >
         <div className="h-[48px] px-[12px] flex items-center">
-          <div className="h-[36px] w-full rounded-[8px] border border-[#E0E0E0] bg-white flex items-center pl-[12px] pr-[4px] gap-[8px]">
-            <img src={ICONS.search} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
+          <div
+            className={`h-[36px] w-full bg-white flex items-center pl-[12px] pr-[4px] gap-[8px] ${
+              t.isMp ? 'rounded-none' : 'rounded-[8px] border border-[#E0E0E0]'
+            }`}
+          >
+            <img
+              src={t.isMp ? t.icons.search : ICONS.search}
+              alt=""
+              className="w-[16px] h-[16px] object-contain shrink-0"
+            />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search products"
+              placeholder={t.isMp ? 'Beef' : 'Search products'}
               className="flex-1 min-w-0 text-[14px] leading-[20px] text-[#1A1A1A] placeholder:text-[#858585] bg-transparent outline-none"
             />
+            {t.isMp && (
+              <img
+                src={t.icons.qrScan}
+                alt=""
+                className="w-[18px] h-[18px] object-contain shrink-0"
+              />
+            )}
             <button
               type="button"
               onClick={() => setSearchQuery((q) => q.trim())}
-              className="h-[28px] px-[12px] rounded-[4px] bg-[#FFF6F5] text-[#E40032] text-[12px] leading-[16px] font-semibold shrink-0 active:opacity-80"
+              className={`h-[28px] px-[12px] text-[12px] leading-[16px] font-semibold shrink-0 active:opacity-80 ${
+                t.isMp
+                  ? 'rounded-none bg-[#F2F4F3] text-[#1A1A1A]'
+                  : 'rounded-[4px] bg-[#FFF6F5] text-[#E40032]'
+              }`}
             >
               Search
             </button>
@@ -251,14 +289,14 @@ export const CategoriesPage: React.FC = () => {
               >
                 <div
                   className={`w-[54px] h-[54px] rounded-full flex items-center justify-center overflow-hidden transition-all ${
-                    active ? 'ring-2 ring-[#E40032]/25' : ''
+                    !t.isMp && active ? 'ring-2 ring-[#E40032]/25' : ''
                   }`}
-                  style={{ backgroundColor: cat.bg }}
+                  style={{ backgroundColor: t.isMp ? '#1A1A1A' : cat.bg }}
                 >
                   <img
-                    src={cat.image}
+                    src={t.isMp ? mpCatImages[cat.id] ?? cat.image : cat.image}
                     alt={cat.label}
-                    className="w-[46px] h-[46px] object-contain"
+                    className={t.isMp ? 'w-full h-full object-cover' : 'w-[46px] h-[46px] object-contain'}
                   />
                 </div>
                 <span
@@ -341,8 +379,11 @@ export const CategoriesPage: React.FC = () => {
 
       {/* 3. Split Left Side Navigation + Right Product Feed (Sticky per Figma 8499:117743) */}
       <div className="flex items-stretch bg-white min-h-[calc(100dvh-220px)]">
-        {/* Sticky Left Sidebar (88px) — full height grey rail */}
-        <div className="w-[88px] shrink-0 bg-[#F7F7F7]">
+        {/* Sticky Left Sidebar (88px) — warm #F7F5F0 rail on MP, #F7F7F7 on WE */}
+        <div
+          className="w-[88px] shrink-0"
+          style={{ backgroundColor: t.isMp ? t.canvasBg : '#F7F7F7' }}
+        >
           <aside className="sticky top-[48px] max-h-[calc(100dvh-160px)] overflow-y-auto no-scrollbar">
             {activeTopCat.subCategories.map((sub) => {
               const active = sub === activeSubCat;
@@ -351,11 +392,17 @@ export const CategoriesPage: React.FC = () => {
                   key={sub}
                   type="button"
                   onClick={() => setActiveSubCat(sub)}
-                  className={`w-full text-left px-[8px] py-[12px] text-[12px] leading-[16px] transition-colors ${
-                    active
-                      ? 'bg-white border-l-4 border-[#E40032] text-[#E40032] font-semibold'
-                      : 'border-l-4 border-transparent text-[#3D3D3D] font-normal'
+                  className={`w-full text-left px-[8px] py-[12px] text-[12px] leading-[16px] transition-colors border-l-4 ${
+                    active ? 'bg-white font-semibold' : 'border-transparent text-[#3D3D3D] font-normal'
                   }`}
+                  style={
+                    active
+                      ? {
+                          borderLeftColor: t.primary,
+                          color: t.isMp ? '#1A1A1A' : '#E40032',
+                        }
+                      : undefined
+                  }
                 >
                   <span className="line-clamp-2">{sub}</span>
                 </button>
@@ -368,7 +415,7 @@ export const CategoriesPage: React.FC = () => {
         <div className="flex-1 min-w-0 bg-white">
           {/* Top Promo Banner */}
           <div className="px-[10px] pt-[10px]">
-            <div className="relative h-[68px] rounded-[8px] overflow-hidden bg-[#1A1A1A]">
+            <div className={`relative h-[68px] overflow-hidden bg-[#1A1A1A] ${t.isMp ? 'rounded-none' : 'rounded-[8px]'}`}>
               <img
                 src={CAT_ASSETS.banner}
                 alt="Premium Selection"
@@ -378,14 +425,17 @@ export const CategoriesPage: React.FC = () => {
                 <span className="text-[9px] tracking-wider uppercase text-white/80 font-medium">
                   PREMIUM SELECTION
                 </span>
-                <p className="text-[11px] leading-[14px] text-white/95 font-normal">
+                <p
+                  className="text-[11px] leading-[14px] text-white/95 font-normal"
+                  style={t.isMp ? { fontFamily: t.heroFont } : undefined}
+                >
                   A great evening, beautifully simple.
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Sticky Quick Filter Row (Sticky per Figma 8499:117743) */}
+          {/* Sticky Quick Filter Row — Filled solid pill on MP (Before #155D2D / Opt 1 #28443C), outlined red on WE */}
           <div className="sticky top-[48px] z-20 bg-white px-[10px] py-[10px] flex items-center justify-between gap-[6px]">
             <div className="flex items-center gap-[6px] overflow-x-auto no-scrollbar flex-1 min-w-0">
               {(['Bestsellers', 'Offers', 'SeasonalPick'] as const).map((chip) => {
@@ -396,10 +446,21 @@ export const CategoriesPage: React.FC = () => {
                     type="button"
                     onClick={() => setActiveChip(chip)}
                     className={`h-[28px] px-[10px] rounded-full text-[12px] leading-[16px] shrink-0 whitespace-nowrap transition-colors ${
-                      active
+                      !t.isMp && active
                         ? 'border border-[#E40032] text-[#E40032] bg-white font-medium'
-                        : 'border border-transparent text-[#1A1A1A] bg-[#F7F7F7] font-normal'
+                        : !t.isMp
+                          ? 'border border-transparent text-[#1A1A1A] bg-[#F7F7F7] font-normal'
+                          : active
+                            ? 'font-medium'
+                            : 'font-normal'
                     }`}
+                    style={
+                      t.isMp
+                        ? active
+                          ? { backgroundColor: t.primary, color: '#FFFFFF' }
+                          : { backgroundColor: t.canvasBg, color: '#1A1A1A' }
+                        : undefined
+                    }
                   >
                     {chip}
                   </button>
@@ -435,9 +496,9 @@ export const CategoriesPage: React.FC = () => {
                     className="w-full h-full object-contain"
                   />
                   {item.badge && (
-                    <span className="absolute top-0 right-0 bg-[#E40032] text-white text-[10px] leading-[14px] font-medium px-[6px] rounded-[4px]">
-                      {item.badge}
-                    </span>
+                    <div className="absolute top-0 right-0">
+                      <PromoTag label={item.badge} variant="new" />
+                    </div>
                   )}
                 </button>
 
