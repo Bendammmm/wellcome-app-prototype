@@ -83,7 +83,7 @@ wellcome-app/
 
 1. **No CSS-redrawn icons or marketing banners**: Always export original Figma SVGs and `3x` raster banners into `public/assets/figma/`.
 2. **Exact Figma alignment**: Check font sizes, weights, icon dimensions, padding, edge margins (horizontal scroll sections have left padding at rest and right padding at scroll-end), and component library states — never eyeball or invent dimensions.
-3. **Module-by-module visual verification**: Always inspect each modified module individually via browser screenshots against Figma before finishing.
+3. **Mandatory Visual QA Skill & Pixel-Diff Tool**: Before declaring any page/module done, load `.agents/skills/visual-qa-figma/SKILL.md` and run `node scripts/visual-diff.mjs <figma.png> <actual.png> <out-triptych.png>` to inspect the 3-panel `[Figma | Actual | Diff Heatmap]` and complete the 7-point checklist.
 4. **Build gate**: Run `npm run build` and ensure zero TypeScript/Vite errors before committing.
 
 ---

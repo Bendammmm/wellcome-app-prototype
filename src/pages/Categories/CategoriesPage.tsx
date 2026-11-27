@@ -338,27 +338,29 @@ export const CategoriesPage: React.FC = () => {
       </section>
 
       {/* 3. Split Left Side Navigation + Right Product Feed (Sticky per Figma 8499:117743) */}
-      <div className="flex items-start bg-white min-h-[calc(100dvh-220px)]">
-        {/* Sticky Left Sidebar (88px) */}
-        <aside className="w-[88px] shrink-0 bg-[#F7F7F7] sticky top-[54px] self-start max-h-[calc(100dvh-165px)] overflow-y-auto no-scrollbar">
-          {activeTopCat.subCategories.map((sub) => {
-            const active = sub === activeSubCat;
-            return (
-              <button
-                key={sub}
-                type="button"
-                onClick={() => setActiveSubCat(sub)}
-                className={`w-full text-left px-[8px] py-[12px] text-[12px] leading-[16px] transition-colors ${
-                  active
-                    ? 'bg-white border-l-4 border-[#E40032] text-[#E40032] font-semibold'
-                    : 'border-l-4 border-transparent text-[#3D3D3D] font-normal'
-                }`}
-              >
-                <span className="line-clamp-2">{sub}</span>
-              </button>
-            );
-          })}
-        </aside>
+      <div className="flex items-stretch bg-white min-h-[calc(100dvh-220px)]">
+        {/* Sticky Left Sidebar (88px) — full height grey rail */}
+        <div className="w-[88px] shrink-0 bg-[#F7F7F7]">
+          <aside className="sticky top-[54px] max-h-[calc(100dvh-165px)] overflow-y-auto no-scrollbar">
+            {activeTopCat.subCategories.map((sub) => {
+              const active = sub === activeSubCat;
+              return (
+                <button
+                  key={sub}
+                  type="button"
+                  onClick={() => setActiveSubCat(sub)}
+                  className={`w-full text-left px-[8px] py-[12px] text-[12px] leading-[16px] transition-colors ${
+                    active
+                      ? 'bg-white border-l-4 border-[#E40032] text-[#E40032] font-semibold'
+                      : 'border-l-4 border-transparent text-[#3D3D3D] font-normal'
+                  }`}
+                >
+                  <span className="line-clamp-2">{sub}</span>
+                </button>
+              );
+            })}
+          </aside>
+        </div>
 
         {/* Right Product List */}
         <div className="flex-1 min-w-0 bg-white">

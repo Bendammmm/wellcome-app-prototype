@@ -4,6 +4,7 @@ import {
   ASSETS,
   BANNERS,
   DELIVERY_ADDRESSES,
+  HOME_COUPONS,
   ICONS,
   PICKUP_STORES,
   PRODUCTS,
@@ -211,14 +212,14 @@ export const HomePage: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate('search')}
-            className="flex-1 h-[36px] bg-white rounded-full pl-3 pr-1 flex items-center gap-1.5 text-left"
+            className="flex-1 h-[36px] bg-white rounded-[8px] pl-3 pr-1 flex items-center gap-1.5 text-left"
           >
             <img src={ICONS.search} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
             <span className="text-[14px] leading-[20px] text-[#858585] truncate flex-1">
               Coca-Cola
             </span>
             <img src={ICONS.qrScan} alt="" className="w-[24px] h-[24px] object-contain shrink-0 mr-1" />
-            <span className="h-[28px] px-3 rounded-full bg-[#FFF0F2] text-[#E40032] text-[12px] leading-[16px] font-semibold inline-flex items-center">
+            <span className="h-[28px] px-3 rounded-[6px] bg-[#FFF0F2] text-[#E40032] text-[12px] leading-[16px] font-semibold inline-flex items-center">
               Search
             </span>
           </button>
@@ -273,10 +274,20 @@ export const HomePage: React.FC = () => {
                 onClick={openFulfillmentSheet}
                 className="flex items-center gap-1 text-[14px] leading-[20px] text-[#1A1A1A] max-w-full"
               >
-                <img
-                  src={isDelivery ? ICONS.truck : ICONS.cncBag}
-                  alt=""
-                  className="w-[16px] h-[16px] object-contain shrink-0"
+                <span
+                  aria-hidden="true"
+                  className="block w-[16px] h-[16px] shrink-0"
+                  style={{
+                    backgroundColor: '#1A1A1A',
+                    WebkitMaskImage: `url(${isDelivery ? ICONS.truck : ICONS.cncBag})`,
+                    maskImage: `url(${isDelivery ? ICONS.truck : ICONS.cncBag})`,
+                    WebkitMaskRepeat: 'no-repeat',
+                    maskRepeat: 'no-repeat',
+                    WebkitMaskPosition: 'center',
+                    maskPosition: 'center',
+                    WebkitMaskSize: 'contain',
+                    maskSize: 'contain',
+                  }}
                 />
                 <span className="font-semibold shrink-0">
                   {isDelivery ? 'Delivery' : 'Click & Collect'}
@@ -683,19 +694,25 @@ export const HomePage: React.FC = () => {
                 <span className="absolute -right-[6px] top-[122px] w-[12px] h-[12px] rounded-full bg-[#F7F7F7] border border-[#EBEBEB]" />
 
                 {/* 36px-tall Top Icon / Brand Box */}
-                <div className="h-[36px] min-w-[36px] max-w-full rounded-[8px] overflow-hidden flex items-center justify-center shrink-0">
-                  {cp.brandIcon ? (
-                    <img src={cp.brandIcon} alt={cp.brandLabel} className="w-[36px] h-[36px] object-contain" />
-                  ) : cp.brandLabel === 'Wellcome' ? (
-                    <div className="w-[36px] h-[36px] bg-[#FFE2E0] flex items-center justify-center text-[#E40032]">
-                      <Ticket className="w-[22px] h-[22px]" strokeWidth={2} />
+                {(() => {
+                  const resolvedIcon =
+                    cp.brandIcon ?? HOME_COUPONS.find((h) => h.id === cp.id)?.brandIcon;
+                  return (
+                    <div className="h-[36px] min-w-[36px] max-w-full rounded-[8px] overflow-hidden flex items-center justify-center shrink-0">
+                      {resolvedIcon ? (
+                        <img src={resolvedIcon} alt={cp.brandLabel} className="w-[36px] h-[36px] object-contain" />
+                      ) : cp.brandLabel === 'Wellcome' ? (
+                        <div className="w-[36px] h-[36px] bg-[#FFE2E0] flex items-center justify-center text-[#E40032]">
+                          <Ticket className="w-[22px] h-[22px]" strokeWidth={2} />
+                        </div>
+                      ) : (
+                        <div className="h-[32px] px-2 rounded-[6px] bg-[#F7F7F7] flex items-center justify-center text-[10px] font-extrabold text-[#1A1A1A] tracking-tight whitespace-nowrap">
+                          {cp.brandLabel}
+                        </div>
+                      )}
                     </div>
-                  ) : (
-                    <div className="h-[32px] px-2 rounded-[6px] bg-[#F7F7F7] flex items-center justify-center text-[10px] font-extrabold text-[#1A1A1A] tracking-tight whitespace-nowrap">
-                      {cp.brandLabel}
-                    </div>
-                  )}
-                </div>
+                  );
+                })()}
 
                 {/* Amount + Condition (exact Figma 16px/14px/12px) */}
                 <div className="mt-1 flex-1 flex flex-col items-center">
@@ -840,33 +857,48 @@ export const HomePage: React.FC = () => {
               <ProductCard key={p.id} product={p} variant="grid" />
             ))}
 
-            {/* Top Fruits Ranked Card */}
-            <div className="bg-white rounded-[8px] p-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col justify-between">
-              <div className="text-[14px] font-bold text-[#1A1A1A] mb-2">Top Fruits</div>
-              <div className="space-y-2.5">
+            {/* Top Fruits Ranked Card (Figma 2329:171344) */}
+            <div
+              className="rounded-[8px] p-[10px] shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col gap-[10px]"
+              style={{
+                background: 'linear-gradient(180deg, #FFFCEB 0%, #FFFFFF 38%)',
+              }}
+            >
+              <div className="text-[14px] leading-[20px] font-bold text-[#1A1A1A]">Top Fruits</div>
+              <div className="space-y-[12px]">
                 {topFruits.map(({ rank, product, displayPrice }) => (
                   <div
                     key={product.id}
                     onClick={() => navigate('pdp', product.id)}
-                    className="flex items-center gap-1.5 cursor-pointer"
+                    className="flex items-center gap-[8px] cursor-pointer"
                   >
-                    <div className="relative w-10 h-10 shrink-0 flex items-center justify-center">
+                    <div className="relative w-[44px] h-[44px] shrink-0 flex items-center justify-center">
                       <img
                         src={product.image}
                         alt={product.name}
                         className="w-full h-full object-contain"
                       />
-                      <span className="absolute -top-1 -left-1 w-4 h-4 rounded-[4px] bg-[#FFCF00] text-[#1A1A1A] text-[10px] font-bold flex items-center justify-center">
+                      <span
+                        className={`absolute -top-1 -left-1 w-[16px] h-[16px] rounded-[4px] text-[#1A1A1A] text-[10px] font-bold flex items-center justify-center ${
+                          rank === 1
+                            ? 'bg-[#FFCF00]'
+                            : rank === 2
+                              ? 'bg-[#D6E4F0]'
+                              : 'bg-[#F4D08A]'
+                        }`}
+                      >
                         {rank}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[11px] leading-[14px] text-[#1A1A1A] line-clamp-2 font-medium">
+                      <p className="text-[12px] leading-[16px] text-[#1A1A1A] line-clamp-2 font-normal">
                         {product.name}
                       </p>
-                      <div className="flex items-center justify-between mt-1">
-                        <span className="text-[12px] font-bold text-[#E40032]">
-                          &#36;{displayPrice}.00
+                      <div className="flex items-end justify-between mt-[4px]">
+                        <span className="inline-flex items-baseline font-bold text-[#E40032]">
+                          <span className="text-[10px]">&#36;</span>
+                          <span className="text-[14px] leading-[18px]">{displayPrice}</span>
+                          <span className="text-[10px]">.00</span>
                         </span>
                         <ProductAddControl productId={product.id} size="sm" />
                       </div>

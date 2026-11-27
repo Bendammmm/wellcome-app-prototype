@@ -140,14 +140,14 @@ export const OrderDetailPage: React.FC = () => {
               <p className="text-[11px] text-[#858585] mt-[2px]">2KG</p>
               <div className="mt-[4px] flex items-center justify-between text-[12px]">
                 <span className="text-[#3D3D3D]">Qty: 2</span>
-                <span className="font-semibold text-[#1A1A1A]">&#36;13.00</span>
+                <span className="font-semibold text-[#1A1A1A]">&#36;214.00</span>
               </div>
             </div>
           </div>
 
           <div className="flex justify-center">
             <span className="px-[12px] py-[3px] rounded-full bg-[#F2F2F2] text-[11px] text-[#666666]">
-              Total 1 piece/13.81Kg
+              Total 2 pieces / 4.00Kg
             </span>
           </div>
 
@@ -164,7 +164,7 @@ export const OrderDetailPage: React.FC = () => {
             </div>
             <div className="flex items-center justify-end gap-[4px] pt-[6px] border-t border-[#F2F2F2]">
               <span className="text-[12px] text-[#3D3D3D]">Total:</span>
-              <span className="text-[16px] font-bold text-[#1A1A1A]">&#36;514.16</span>
+              <span className="text-[16px] font-bold text-[#1A1A1A]">&#36;430.00</span>
             </div>
           </div>
         </section>
