@@ -111,8 +111,11 @@
 [data-theme='mp-before'] .bg-\[\#FFF6F5\],
 [data-theme='mp-opt1'] .bg-\[\#FFF6F5\],
 [data-theme='mp-before'] .bg-\[\#FFF0F2\],
-[data-theme='mp-opt1'] .bg-\[\#FFF0F2\] {
+[data-theme='mp-opt1'] .bg-\[\#FFF0F2\],
+[data-theme='mp-before'] .bg-\[\#FFEC99\],
+[data-theme='mp-opt1'] .bg-\[\#FFEC99\] {
   background-color: var(--mp-primary-soft) !important;
+  color: var(--mp-primary) !important;
 }
 
 /* Warm heritage canvas background in MP Option 1 */

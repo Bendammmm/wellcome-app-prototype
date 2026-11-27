@@ -468,7 +468,7 @@ export const CartPage: React.FC = () => {
                     <X className="w-4 h-4" />
                   </button>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className={t.isMp ? 'grid grid-cols-2 gap-2 px-[8px]' : 'grid grid-cols-2 gap-2'}>
                   {[
                     PRODUCTS.find((p) => p.id === 'flash-apple')!,
                     PRODUCTS.find((p) => p.id === 'redeem-oil')!,
@@ -615,7 +615,7 @@ export const CartPage: React.FC = () => {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className={t.isMp ? 'grid grid-cols-2 gap-2 px-[8px]' : 'grid grid-cols-2 gap-2'}>
             {recProducts.map((p) => (
               <ProductCard key={p.id} product={p} variant="grid" />
             ))}

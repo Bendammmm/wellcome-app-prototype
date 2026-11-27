@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { ASSETS, ICONS, PRODUCTS, getProductById } from '../../data/catalog';
 import { getTotalCartCount, useAppStore } from '../../store/useAppStore';
+import { getThemeTokens } from '../../theme/themeConfig';
 import { BottomSheetDrawer } from '../../components/shared/BottomSheetDrawer';
 import { CountdownTimer } from '../../components/shared/CountdownTimer';
 import { PriceBlock } from '../../components/shared/PriceBlock';
@@ -31,7 +32,8 @@ export const PdpPage: React.FC = () => {
   const toggleWishlist = useAppStore((s) => s.toggleWishlist);
   const showToast = useAppStore((s) => s.showToast);
   const appTheme = useAppStore((s) => s.appTheme);
-  const isMp = appTheme !== 'we';
+  const t = getThemeTokens(appTheme);
+  const isMp = t.isMp;
   const totalCartCount = useAppStore((s) => getTotalCartCount(s.cartItems));
 
   const product = getProductById(activeProductId);
@@ -296,7 +298,7 @@ export const PdpPage: React.FC = () => {
       )}
 
       {/* Main PDP Cards */}
-      <div className="px-[8px] pt-[8px] space-y-[8px]">
+      <div className="mp-edge-stack px-[8px] pt-[8px] flex flex-col gap-[8px]">
         {/* 3. Price Banner + Product Info Card (Figma 7650:77009) */}
         <section className="bg-white rounded-[12px] overflow-hidden">
           {/* Dynamic Price Banner matching Figma 7656:81124 */}
@@ -331,7 +333,10 @@ export const PdpPage: React.FC = () => {
             <div className="px-[12px] pt-[12px]">
               {/* Figma 7650:77009: 28px/36px bold price + 14px/20px unit price */}
               <div className="flex items-baseline gap-[4px] whitespace-nowrap">
-                <span className="inline-flex items-start font-bold text-[#E40032] text-[28px] leading-[36px]">
+                <span
+                  className="inline-flex items-start font-bold text-[#E40032] text-[28px] leading-[36px]"
+                  style={isMp ? { fontFamily: t.heroFont } : undefined}
+                >
                   &#36;{activePrice.toFixed(2)}
                 </span>
                 {activeUnitPrice ? (
@@ -763,7 +768,7 @@ export const PdpPage: React.FC = () => {
         </section>
 
         {/* 9. You May Like */}
-        <section id="pdp-recommend" className="pt-1">
+        <section id="pdp-recommend" className={isMp ? 'pt-1 px-[12px]' : 'pt-1'}>
           <h2 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A] px-[4px] mb-[8px]">
             You May Like
           </h2>

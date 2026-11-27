@@ -731,11 +731,29 @@ export const CheckoutPage: React.FC = () => {
           </h2>
           {WORRY_FREE_GUARANTEES.map((item) => (
             <div key={item.title} className="flex items-center gap-[8px]">
-              <img
-                src={CHECKOUT_ASSETS.checkGreenOutline}
-                alt=""
-                className="w-[24px] h-[24px] shrink-0"
-              />
+                {t.isMp ? (
+                  <span
+                    aria-hidden="true"
+                    className="block w-[24px] h-[24px] shrink-0"
+                    style={{
+                      backgroundColor: t.primary,
+                      WebkitMaskImage: `url(${CHECKOUT_ASSETS.checkGreenOutline})`,
+                      maskImage: `url(${CHECKOUT_ASSETS.checkGreenOutline})`,
+                      WebkitMaskRepeat: 'no-repeat',
+                      maskRepeat: 'no-repeat',
+                      WebkitMaskPosition: 'center',
+                      maskPosition: 'center',
+                      WebkitMaskSize: 'contain',
+                      maskSize: 'contain',
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={CHECKOUT_ASSETS.checkGreenOutline}
+                    alt=""
+                    className="w-[24px] h-[24px] shrink-0"
+                  />
+                )}
               <div className="flex-1 min-w-0 flex flex-col gap-[4px]">
                 <div className="flex items-center gap-[2px]">
                   <span className="text-[14px] leading-[20px] font-semibold text-[#1A1A1A]">
