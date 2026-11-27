@@ -12,6 +12,7 @@ import {
 import { useAppStore } from '../../store/useAppStore';
 import { AppTabBar } from '../../components/shared/AppTabBar';
 import { CountdownTimer } from '../../components/shared/CountdownTimer';
+import { FlashDealsMarquee } from '../../components/shared/FlashDealsMarquee';
 import { ProductAddControl } from '../../components/shared/ProductAddControl';
 import { ProductCard } from '../../components/shared/ProductCard';
 import { ThresholdProgressBar } from '../../components/shared/ThresholdProgressBar';
@@ -119,7 +120,10 @@ export const HomePage: React.FC = () => {
     ? `to ${currentAddr.shortNavLabel}`
     : `· ${currentStore.shortNavLabel}`;
 
-  const flashProducts = PRODUCTS.filter((p) => p.isFlashDeal);
+  const flashProducts = [
+    ...PRODUCTS.filter((p) => p.isFlashDeal),
+    ...PRODUCTS.filter((p) => !p.isFlashDeal).slice(0, 5),
+  ];
   const topSalesProducts = PRODUCTS.filter(
     (p) => !p.isFlashDeal && (topSalesCat === 'All' || p.category === topSalesCat)
   ).slice(0, 6);
@@ -238,7 +242,7 @@ export const HomePage: React.FC = () => {
           </button>
           <button
             type="button"
-            onClick={openFulfillmentSheet}
+            onClick={() => navigate('in-store')}
             className="flex flex-col items-center text-white shrink-0"
           >
             <img
@@ -312,7 +316,7 @@ export const HomePage: React.FC = () => {
               </button>
               <button
                 type="button"
-                onClick={openFulfillmentSheet}
+                onClick={() => navigate('in-store')}
                 className="flex flex-col items-center text-[#1A1A1A]"
               >
                 <img src={ICONS.store} alt="Store" className="w-[24px] h-[24px] object-contain" />
@@ -497,11 +501,7 @@ export const HomePage: React.FC = () => {
             <CountdownTimer initialSeconds={29 * 60 + 59} />
           </div>
 
-          <div className="bg-white rounded-[10px] divide-y divide-[#F3F3F3] overflow-hidden">
-            {flashProducts.map((p) => (
-              <ProductCard key={p.id} product={p} variant="row" className="rounded-none" />
-            ))}
-          </div>
+          <FlashDealsMarquee products={flashProducts} />
         </section>
 
         {/* 4. Pre-Order / New / Signature — Coded + 3s Animated Product Swap */}

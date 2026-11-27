@@ -91,11 +91,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </div>
 
       {/* Product Info Container (Figma 486:54670) */}
-      <div className="flex flex-col w-full shrink-0">
-        {/* Basic Info: fixed height so all cards in a row align cleanly */}
+      <div className="flex flex-col flex-1 w-full">
+        {/* Basic Info: fixed height so all cards in a row align cleanly without overflowing into price */}
         <div
-          className={`flex flex-col gap-[4px] px-[8px] py-[4px] w-full shrink-0 ${
-            isCompact ? 'h-[76px]' : 'h-[86px]'
+          className={`flex flex-col gap-[4px] px-[8px] pt-[4px] pb-[2px] w-full shrink-0 ${
+            isCompact ? 'min-h-[78px]' : 'min-h-[88px]'
           }`}
         >
           <div className="flex flex-col gap-[2px] w-full">
@@ -124,15 +124,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </div>
 
-        {/* Fixed 46px Price Footer (Figma 490:55879: h-[46px] min-h-[46px] max-h-[46px] items-end) */}
-        <div className="relative flex items-end h-[46px] min-h-[46px] max-h-[46px] pb-[4px] pl-[8px] pr-[4px] w-full shrink-0">
-          <div className="flex flex-col items-start justify-end py-[4px] pr-[36px] min-w-0">
+        {/* Price Footer with consistent 10px breathing room below promo tags (Figma 490:55879) */}
+        <div className="mt-auto relative flex items-end min-h-[46px] pt-[10px] pb-[6px] pl-[8px] pr-[4px] w-full shrink-0">
+          <div className="flex flex-col items-start justify-end pr-[36px] min-w-0">
             <PriceBlock
               price={product.price}
               originalPrice={product.originalPrice}
               unitPriceText={product.unitPriceText}
               size={isCompact ? 'sm' : 'md'}
-              className="flex-nowrap whitespace-nowrap"
             />
           </div>
 
