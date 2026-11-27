@@ -22,8 +22,8 @@ export const PromoTag: React.FC<PromoTagProps> = ({
   if (variant === 'new') {
     return (
       <span
-        className={`inline-flex items-center justify-center h-[16px] bg-[#B8001F] text-white text-[11px] font-medium leading-[16px] px-[5px] ${
-          t.isMp ? 'rounded-[2px]' : 'bg-[#E40032] rounded-[4px] text-[12px] font-normal px-[4px]'
+        className={`inline-flex items-center justify-center h-[16px] text-white text-[11px] font-medium leading-[16px] px-[5px] ${
+          t.isMp ? 'bg-[#9E0E11] rounded-none' : 'bg-[#E40032] rounded-[4px] text-[12px] font-normal px-[4px]'
         } ${className}`}
       >
         {label}

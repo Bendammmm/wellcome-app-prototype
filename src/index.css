@@ -133,10 +133,35 @@
   color: #28443c;
 }
 
-/* MP sharp refined CTA radius (4px) on primary action buttons */
-[data-theme='mp-before'] button.bg-\[\#E40032\],
-[data-theme='mp-opt1'] button.bg-\[\#E40032\] {
-  border-radius: 4px;
+/* MP sharp architectural 0px radius (Figma Theme: radius/sm..xl = radius-0) */
+[data-theme='mp-before'] .rounded-\[2px\],
+[data-theme='mp-before'] .rounded-\[3px\],
+[data-theme='mp-before'] .rounded-\[4px\],
+[data-theme='mp-before'] .rounded-\[6px\],
+[data-theme='mp-before'] .rounded-\[8px\],
+[data-theme='mp-before'] .rounded-\[10px\],
+[data-theme='mp-before'] .rounded-\[12px\],
+[data-theme='mp-opt1'] .rounded-\[2px\],
+[data-theme='mp-opt1'] .rounded-\[3px\],
+[data-theme='mp-opt1'] .rounded-\[4px\],
+[data-theme='mp-opt1'] .rounded-\[6px\],
+[data-theme='mp-opt1'] .rounded-\[8px\],
+[data-theme='mp-opt1'] .rounded-\[10px\],
+[data-theme='mp-opt1'] .rounded-\[12px\] {
+  border-radius: 0px !important;
+}
+
+/* MP full-bleed content inset (space/content/inset = 0px, space/section/gap = 12px) */
+[data-theme='mp-before'] .mp-edge-stack,
+[data-theme='mp-opt1'] .mp-edge-stack {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  gap: 12px !important;
+}
+
+/* MP serif headings: Noto Serif HK in Before -> Lora in Option 1 */
+[data-theme='mp-before'] header h1 {
+  font-family: 'Noto Serif HK', Georgia, serif;
 }
 
 @keyframes slideUpDrawer {

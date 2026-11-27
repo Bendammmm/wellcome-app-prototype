@@ -362,7 +362,7 @@ export const CartPage: React.FC = () => {
         </div>
       </header>
 
-      <div className="px-[8px] pt-[8px] space-y-[8px]">
+      <div className="mp-edge-stack px-[8px] pt-[8px] flex flex-col gap-[8px]">
         {/* Promo Notice Strip (Figma 8585:131776) */}
         <div className="bg-gradient-to-t from-white to-[#FFF6F5] border-2 border-white rounded-[12px] p-[12px] flex items-center gap-[8px]">
           <span className="w-[24px] h-[24px] rounded-full bg-[#E40032] flex items-center justify-center shrink-0">

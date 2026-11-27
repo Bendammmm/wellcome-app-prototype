@@ -165,8 +165,8 @@ export const CheckoutPage: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content Stack (gap 8px, px 8px) */}
-      <div className="px-[8px] pt-[4px] flex flex-col gap-[8px]">
+      {/* Main Content Stack (WE: gap 8px, px 8px; MP: full-bleed px 0, gap 12px) */}
+      <div className="mp-edge-stack px-[8px] pt-[4px] flex flex-col gap-[8px]">
         {/* 1. Deliver & Recipient Card (2329:198217 / 7953:77019) */}
         <section
           onClick={openFulfillmentSheet}
