@@ -121,34 +121,91 @@ export const MpHomePage: React.FC = () => {
     ? `to ${currentAddr.shortNavLabel}`
     : `· ${currentStore.shortNavLabel}`;
 
-  const qualityPicks = [
-    {
-      id: 'us-beef-blade',
-      rankImg: MP_ASSETS.rank1,
-      name: 'Kirkland Signature Fresh Farmed Atlantic Salmon Portions',
-      img: MP_ASSETS.qualitySalmon,
-      price: 168.0,
-      originalPrice: 198.0,
-      promo: '20% off',
-      saved: 'Saved $20.00',
-      badge: 'New',
-    },
-    {
-      id: 'belena-shiraz',
-      rankImg: MP_ASSETS.rank2,
-      name: "CH D'ESCLANS Whispering Angel 24/25 (750mL)",
-      img: MP_ASSETS.qualityRose,
-      price: 178.0,
-      originalPrice: 200.0,
-    },
-    {
-      id: 'flash-orange',
-      rankImg: MP_ASSETS.rank3,
-      name: 'Australian Navel Orange High Brix 1kg',
-      img: MP_ASSETS.qualityOrange,
-      price: 78.0,
-      originalPrice: 92.0,
-    },
+  const qualityGroups = [
+    [
+      {
+        id: 'us-beef-blade',
+        rank: 1,
+        rankImg: MP_ASSETS.rank1,
+        name: 'Kirkland Signature Fresh Farmed Atlantic Salmon Portions',
+        img: MP_ASSETS.qualitySalmon,
+        price: 168.0,
+        originalPrice: 198.0,
+        promo: '20% off',
+        saved: 'Saved $20.00',
+        badge: 'New',
+      },
+      {
+        id: 'belena-shiraz',
+        rank: 2,
+        rankImg: MP_ASSETS.rank2,
+        name: "CH D'ESCLANS Whispering Angel 24/25 (750mL)",
+        img: MP_ASSETS.qualityRose,
+        price: 178.0,
+        originalPrice: 200.0,
+      },
+      {
+        id: 'flash-orange',
+        rank: 3,
+        rankImg: MP_ASSETS.rank3,
+        name: 'Australian Navel Orange High Brix 1kg',
+        img: MP_ASSETS.qualityOrange,
+        price: 78.0,
+        originalPrice: 92.0,
+      },
+    ],
+    [
+      {
+        id: 'zespri-kiwi',
+        rank: 4,
+        name: 'ZESPRI JUMBLE GOLD KIWIFRUIT 1PC',
+        img: ASSETS.kiwi,
+        price: 35.0,
+        originalPrice: 45.0,
+      },
+      {
+        id: 'ferrarini-ham',
+        rank: 5,
+        name: 'YAMAGATA GYU Japan Yamagata Chilled A5 Grade Wagyu Ribeye',
+        img: MP_ASSETS.preorderWagyu2,
+        price: 456.0,
+        originalPrice: 520.0,
+      },
+      {
+        id: 'jumbo-blueberry',
+        rank: 6,
+        name: 'Australian Super Jumbo Blueberry (200g)',
+        img: ASSETS.blueberry,
+        price: 28.9,
+        originalPrice: 35.0,
+      },
+    ],
+    [
+      {
+        id: 'bin-180-wine',
+        rank: 7,
+        name: 'RUINART Rose NV 750mL (750mL)',
+        img: MP_ASSETS.preorderChampagne1,
+        price: 730.0,
+        originalPrice: 800.0,
+      },
+      {
+        id: 'fuji-apple',
+        rank: 8,
+        name: 'China Fuji Apple 1EA High Sweetness',
+        img: ASSETS.fujiApple,
+        price: 15.0,
+        originalPrice: 18.0,
+      },
+      {
+        id: 'emina-cheese',
+        rank: 9,
+        name: 'Emina Vanilla Dessert Cheese 6PC',
+        img: MP_ASSETS.brandOliversProd,
+        price: 67.0,
+        originalPrice: 75.0,
+      },
+    ],
   ];
 
   const preorderWagyuPicks = [
@@ -205,54 +262,51 @@ export const MpHomePage: React.FC = () => {
           originalPrice: undefined,
           promoTags: [],
         },
-        PRODUCTS.find((p) => p.id === 'jumbo-blueberry')!,
       ],
     },
     {
       id: 'brand2',
-      name: 'Calabria',
+      name: 'Bibigo',
       logo: MP_ASSETS.brandTab2,
       bg: '#E8E3D9',
       heroImg: MP_ASSETS.preorderChampagneBg,
       products: [
-        PRODUCTS.find((p) => p.id === 'belena-shiraz')!,
-        PRODUCTS.find((p) => p.id === 'bin-180-wine')!,
-        PRODUCTS.find((p) => p.id === 'emina-cheese')!,
+        { ...PRODUCTS.find((p) => p.id === 'belena-shiraz')!, promoTags: [] },
+        { ...PRODUCTS.find((p) => p.id === 'bin-180-wine')!, promoTags: [] },
       ],
     },
     {
       id: 'brand3',
-      name: 'Wagyu Craft',
+      name: 'Woolworths',
       logo: MP_ASSETS.brandTab3,
       bg: '#EDE4DC',
       heroImg: MP_ASSETS.preorderWagyuBg,
       products: [
-        PRODUCTS.find((p) => p.id === 'us-beef-blade')!,
-        PRODUCTS.find((p) => p.id === 'ferrarini-ham')!,
-        PRODUCTS.find((p) => p.id === 'belena-shiraz')!,
+        { ...PRODUCTS.find((p) => p.id === 'us-beef-blade')!, promoTags: [] },
+        { ...PRODUCTS.find((p) => p.id === 'ferrarini-ham')!, promoTags: [] },
       ],
     },
     {
-      id: 'brand4',
-      name: 'Artisan Fresh',
+      id: 'benecol',
+      name: 'Benecol',
       logo: MP_ASSETS.brandTab4,
       bg: '#E2ECE7',
       heroImg: MP_ASSETS.brand360Bg,
       products: [
-        PRODUCTS.find((p) => p.id === 'fuji-apple')!,
-        PRODUCTS.find((p) => p.id === 'jumbo-blueberry')!,
-        PRODUCTS.find((p) => p.id === 'zespri-kiwi')!,
+        { ...PRODUCTS.find((p) => p.id === 'fuji-apple')!, promoTags: [] },
+        { ...PRODUCTS.find((p) => p.id === 'jumbo-blueberry')!, promoTags: [] },
       ],
     },
   ];
 
   const activeBrand = featuredBrands[activeBrandIdx] ?? featuredBrands[0];
 
+  // Fewer promo tags on MP for cleaner editorial presentation
   const todaysDeals = PRODUCTS.filter((p) =>
     ['bin-180-wine', 'us-beef-blade', 'jumbo-blueberry', 'zespri-kiwi', 'emina-cheese'].includes(
       p.id
     )
-  );
+  ).map((p, idx) => (idx === 2 ? p : { ...p, promoTags: [] }));
 
   const feedProducts = (() => {
     const orderedIds = [
@@ -266,7 +320,8 @@ export const MpHomePage: React.FC = () => {
     ];
     const base = orderedIds
       .map((id) => PRODUCTS.find((p) => p.id === id))
-      .filter((p): p is (typeof PRODUCTS)[number] => Boolean(p));
+      .filter((p): p is (typeof PRODUCTS)[number] => Boolean(p))
+      .map((p, idx) => (idx === 4 ? p : { ...p, promoTags: [] }));
     if (feedTab === 'dinner') return [...base].reverse();
     if (feedTab === 'healthy') return [...base].sort((a, b) => a.price - b.price);
     return base;
@@ -287,6 +342,13 @@ export const MpHomePage: React.FC = () => {
 
   const headingStyle: React.CSSProperties = {
     fontFamily: t.headingFont,
+    color: t.headingColor,
+  };
+
+  // Before: only section titles & prices use serif; sub-card titles & feed tabs use Noto Sans.
+  // Opt 1: broader Lora serif scope including sub-card titles & feed tabs.
+  const subTitleStyle: React.CSSProperties = {
+    fontFamily: t.isMpOpt1 ? t.headingFont : "'Noto Sans', sans-serif",
     color: t.headingColor,
   };
 
@@ -461,8 +523,8 @@ export const MpHomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 2. 8 Circular Editorial Category Strip + Synced Scroll Indicator */}
-      <section className="bg-white pt-4 pb-3 flex flex-col items-center gap-3">
+      {/* 2. 8 Circular Editorial Category Strip + Synced Scroll Indicator (uses page canvas bg directly) */}
+      <section className="pt-4 pb-2 flex flex-col items-center gap-3">
         <div
           ref={catTrackRef}
           onScroll={handleCatScroll}
@@ -496,10 +558,10 @@ export const MpHomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Main Content Floors */}
-      <div className="pt-3 space-y-3">
+      {/* Main Content Floors — generous 24px vertical section rhythm matching Figma */}
+      <div className="pt-5 space-y-6">
         {/* 3. Pick up where you left off — 4 Cards, Full-Bleed Zero-Border Product Thumbnails */}
-        <section className="space-y-2">
+        <section className="space-y-2.5">
           <h2
             className="px-4 text-[16px] leading-[22px] font-semibold transition-colors"
             style={headingStyle}
@@ -549,7 +611,7 @@ export const MpHomePage: React.FC = () => {
                 <div className="flex items-center justify-between mb-2">
                   <span
                     className="text-[14px] leading-[20px] font-medium transition-colors"
-                    style={headingStyle}
+                    style={subTitleStyle}
                   >
                     {group.title}
                   </span>
@@ -572,25 +634,25 @@ export const MpHomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* 4. Quality Picks — Full-Section Background Photography, Exact Rank SVGs, Floating Add Stepper */}
-        <section className="relative overflow-hidden pb-3">
-          {/* Full-section editorial background matching Figma I8817:86862;5166:207901 */}
-          <div className="absolute inset-x-0 top-0 h-[420px] pointer-events-none overflow-hidden">
+        {/* 4. Quality Picks — Upper-Right Product Framed, 3 Swipeable Ranked Groups (1-3, 4-6, 7-9), Floating Stepper */}
+        <section className="relative overflow-hidden pb-2">
+          {/* Editorial background framed so upper-right wine bottle, grapes, cheese & honey sit visibly above pills */}
+          <div className="absolute inset-x-0 top-0 h-[440px] pointer-events-none overflow-hidden">
             <img
               src={MP_ASSETS.qualityBg}
               alt=""
-              className="w-full h-full object-cover object-top"
+              className="w-full h-full object-cover object-[center_28%]"
             />
             <div
-              className="absolute inset-x-0 bottom-0 h-[180px]"
+              className="absolute inset-x-0 bottom-0 h-[170px]"
               style={{
                 background: `linear-gradient(180deg, rgba(247,245,240,0) 0%, ${t.canvasBg} 85%)`,
               }}
             />
           </div>
 
-          {/* Title Block */}
-          <div className="relative z-10 h-[120px] pt-7 pl-8">
+          {/* Title Block — generous height so upper-right wine bottle & fruit pedestal are fully revealed */}
+          <div className="relative z-10 h-[142px] pt-7 pl-6">
             <p className="text-[10px] tracking-[0.06em] uppercase text-[#724300] font-normal mb-1">
               CURATED FOR YOU
             </p>
@@ -623,60 +685,75 @@ export const MpHomePage: React.FC = () => {
             })}
           </div>
 
-          {/* Ranked 1-2-3 Gourmet List */}
-          <div className="relative z-10 mx-4 bg-white divide-y divide-[#F2F0EB] shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
-            {qualityPicks.map((p, idx) => (
+          {/* Horizontal Swipeable Ranked Groups: 1-3, 4-6, 7-9 (peeks next group on right like Figma) */}
+          <div className="relative z-10 flex gap-2.5 overflow-x-auto snap-x snap-mandatory no-scrollbar px-4 pb-1">
+            {qualityGroups.map((group, groupIdx) => (
               <div
-                key={p.id}
-                onClick={() => navigate('pdp', p.id)}
-                className="flex items-center gap-2.5 px-3 py-3 cursor-pointer active:bg-[#FAF9F6]"
+                key={`qgroup-${groupIdx}`}
+                className="w-[334px] shrink-0 snap-start bg-white divide-y divide-[#F2F0EB] shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
               >
-                {/* Exact Figma Rank 1 / 2 / 3 SVG circles with white bold digits */}
-                <div className="relative w-[24px] h-[24px] shrink-0 flex items-center justify-center">
-                  <img src={p.rankImg} alt="" className="absolute inset-0 w-full h-full" />
-                  <span className="relative z-10 text-[12px] font-bold text-white leading-none">
-                    {idx + 1}
-                  </span>
-                </div>
-
-                {/* Full-bleed product image (zero extra margin) */}
-                <div className="relative w-[82px] h-[82px] bg-white overflow-hidden shrink-0">
-                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" />
-                  {p.badge && (
-                    <div className="absolute top-0 right-0">
-                      <PromoTag label={p.badge} variant="new" />
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <p className="text-[13px] leading-[18px] font-normal text-[#1A1A1A] line-clamp-2">
-                    {p.name}
-                  </p>
-                  {p.promo && <PromoTag label={p.promo} className="mt-1" />}
-                  <div className="flex items-end justify-between gap-2 mt-1.5">
-                    <div className="min-w-0">
-                      <PriceBlock
-                        price={p.price}
-                        originalPrice={p.originalPrice}
-                        size="sm"
-                      />
-                      {p.saved && (
-                        <p className="text-[10px] leading-[12px] text-[#3D3D3D] font-medium mt-0.5">
-                          {p.saved}
-                        </p>
+                {group.map((p) => (
+                  <div
+                    key={`${groupIdx}-${p.rank}-${p.id}`}
+                    onClick={() => navigate('pdp', p.id)}
+                    className="flex items-center gap-2.5 px-3 py-3 cursor-pointer active:bg-[#FAF9F6]"
+                  >
+                    {/* Rank 1-3 metallic SVG circles; Rank 4-9 neutral circles */}
+                    <div className="relative w-[24px] h-[24px] shrink-0 flex items-center justify-center">
+                      {'rankImg' in p && p.rankImg ? (
+                        <>
+                          <img src={p.rankImg} alt="" className="absolute inset-0 w-full h-full" />
+                          <span className="relative z-10 text-[12px] font-bold text-white leading-none">
+                            {p.rank}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="w-[22px] h-[22px] rounded-full bg-[#EFECE6] text-[#555555] text-[11px] font-bold inline-flex items-center justify-center">
+                          {p.rank}
+                        </span>
                       )}
                     </div>
 
-                    {/* Fixed 32×32 slot so expanded 92px stepper floats OVER content without squeezing text */}
-                    <div className="relative w-[32px] h-[32px] shrink-0">
-                      <ProductAddControl
-                        productId={p.id}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 z-20"
-                      />
+                    {/* Full-bleed product image (zero extra margin) */}
+                    <div className="relative w-[82px] h-[82px] bg-white overflow-hidden shrink-0">
+                      <img src={p.img} alt={p.name} className="w-full h-full object-cover" />
+                      {'badge' in p && p.badge && (
+                        <div className="absolute top-0 right-0">
+                          <PromoTag label={p.badge} variant="new" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[13px] leading-[18px] font-normal text-[#1A1A1A] line-clamp-2">
+                        {p.name}
+                      </p>
+                      {'promo' in p && p.promo && <PromoTag label={p.promo} className="mt-1" />}
+                      <div className="flex items-end justify-between gap-2 mt-1.5">
+                        <div className="min-w-0">
+                          <PriceBlock
+                            price={p.price}
+                            originalPrice={p.originalPrice}
+                            size="sm"
+                          />
+                          {'saved' in p && p.saved && (
+                            <p className="text-[10px] leading-[12px] text-[#3D3D3D] font-medium mt-0.5">
+                              {p.saved}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Fixed 32×32 slot so expanded 92px stepper floats OVER content without squeezing text */}
+                        <div className="relative w-[32px] h-[32px] shrink-0">
+                          <ProductAddControl
+                            productId={p.id}
+                            className="absolute right-0 top-1/2 -translate-y-1/2 z-20"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
             ))}
           </div>
@@ -704,14 +781,17 @@ export const MpHomePage: React.FC = () => {
                 }}
               />
 
-              <div className="relative z-10 p-4 flex flex-col gap-5">
-                <div className="space-y-3">
-                  <span
-                    className="inline-block px-2.5 py-1 text-[14px] leading-[18px] font-semibold text-white transition-colors"
-                    style={{ backgroundColor: t.sage, fontFamily: t.heroFont }}
-                  >
-                    Fresh pre-order
-                  </span>
+              <div className="relative z-10 p-4 flex flex-col gap-4">
+                {/* Fixed 168px header height so Slide 1 & Slide 2 cards align at the exact same Y */}
+                <div className="h-[168px] flex flex-col justify-between">
+                  <div>
+                    <span
+                      className="inline-block px-2.5 py-1 text-[14px] leading-[18px] font-semibold text-white transition-colors"
+                      style={{ backgroundColor: t.sage, fontFamily: t.heroFont }}
+                    >
+                      Fresh pre-order
+                    </span>
+                  </div>
                   <div>
                     <h2
                       className="text-[24px] leading-[28px] font-normal text-white"
@@ -730,15 +810,15 @@ export const MpHomePage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Tightly spaced product cards over frosted bottom */}
+                {/* Pure white cards with consistent height & reserved promo-tag slot */}
                 <div className="space-y-2">
                   {preorderWagyuPicks.map((p) => (
                     <div
                       key={p.name}
                       onClick={() => navigate('pdp', p.id)}
-                      className="bg-white/95 backdrop-blur-xs p-2 flex items-center gap-2.5 text-[#1A1A1A] cursor-pointer"
+                      className="bg-white h-[112px] p-2.5 flex items-center gap-2.5 text-[#1A1A1A] cursor-pointer"
                     >
-                      <div className="relative w-[78px] h-[78px] bg-white overflow-hidden shrink-0">
+                      <div className="relative w-[92px] h-[92px] bg-white overflow-hidden shrink-0">
                         <img src={p.img} alt={p.name} className="w-full h-full object-cover" />
                         {p.signature && (
                           <span
@@ -749,11 +829,15 @@ export const MpHomePage: React.FC = () => {
                           </span>
                         )}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[12px] leading-[16px] font-normal text-[#1A1A1A] line-clamp-2">
-                          {p.name}
-                        </p>
-                        <div className="flex items-center justify-between gap-2 mt-2">
+                      <div className="flex-1 min-w-0 h-full flex flex-col justify-between py-0.5">
+                        <div>
+                          <p className="text-[12px] leading-[16px] font-normal text-[#1A1A1A] line-clamp-2">
+                            {p.name}
+                          </p>
+                          {/* Reserved promo-tag slot so card height stays uniform */}
+                          <div className="h-[20px] flex items-center mt-0.5" />
+                        </div>
+                        <div className="flex items-end justify-between gap-2">
                           <PriceBlock price={p.price} originalPrice={p.originalPrice} size="sm" />
                           <div className="w-[78px] shrink-0">
                             <ProductAddControl productId={p.id} fullWidth />
@@ -781,8 +865,9 @@ export const MpHomePage: React.FC = () => {
                 }}
               />
 
-              <div className="relative z-10 p-4 flex flex-col gap-5">
-                <div className="space-y-2.5">
+              <div className="relative z-10 p-4 flex flex-col gap-4">
+                {/* Identical 168px top header height so Slide 2 cards align pixel-for-pixel with Slide 1 */}
+                <div className="h-[168px] flex flex-col justify-end space-y-2.5">
                   <h2
                     className="text-[22px] leading-[24px] font-normal text-[#DED6C9]"
                     style={{ fontFamily: t.heroFont, color: '#DED6C9' }}
@@ -795,9 +880,11 @@ export const MpHomePage: React.FC = () => {
                   <p className="text-[11px] leading-[14px] tracking-[0.08em] text-[#DED6C9] uppercase">
                     RAISE A BRIGHTER TOMORROW
                   </p>
-                  <span className="inline-flex items-center justify-center px-3 py-1.5 bg-[#DED6C9] text-black text-[12px] font-medium">
-                    VIEW ALL
-                  </span>
+                  <div>
+                    <span className="inline-flex items-center justify-center px-3 py-1.5 bg-[#DED6C9] text-black text-[12px] font-medium">
+                      VIEW ALL
+                    </span>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -805,17 +892,21 @@ export const MpHomePage: React.FC = () => {
                     <div
                       key={p.name}
                       onClick={() => navigate('pdp', p.id)}
-                      className="bg-white/95 backdrop-blur-xs p-2 flex items-center gap-2.5 text-[#1A1A1A] cursor-pointer"
+                      className="bg-white h-[112px] p-2.5 flex items-center gap-2.5 text-[#1A1A1A] cursor-pointer"
                     >
-                      <div className="w-[78px] h-[78px] bg-white overflow-hidden shrink-0">
+                      <div className="w-[92px] h-[92px] bg-white overflow-hidden shrink-0">
                         <img src={p.img} alt={p.name} className="w-full h-full object-cover" />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[12px] leading-[16px] font-normal text-[#1A1A1A] line-clamp-2">
-                          {p.name}
-                        </p>
-                        {p.promo && <PromoTag label={p.promo} className="mt-1" />}
-                        <div className="flex items-center justify-between gap-2 mt-1.5">
+                      <div className="flex-1 min-w-0 h-full flex flex-col justify-between py-0.5">
+                        <div>
+                          <p className="text-[12px] leading-[16px] font-normal text-[#1A1A1A] line-clamp-2">
+                            {p.name}
+                          </p>
+                          <div className="h-[20px] flex items-center mt-0.5">
+                            {p.promo && <PromoTag label={p.promo} />}
+                          </div>
+                        </div>
+                        <div className="flex items-end justify-between gap-2">
                           <PriceBlock price={p.price} originalPrice={p.originalPrice} size="sm" />
                           <div className="w-[78px] shrink-0">
                             <ProductAddControl productId={p.id} fullWidth />
@@ -904,13 +995,21 @@ export const MpHomePage: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="relative z-10 w-[108px] h-[124px] bg-white flex flex-col items-center justify-between shrink-0 shadow-md overflow-hidden pb-1">
-                  <img
-                    src={b.prodImg}
-                    alt={b.name}
-                    className="w-full h-[96px] object-cover"
-                  />
-                  <PriceBlock price={b.price} size="sm" />
+                {/* 3-card stacked product deck matching Figma Our Brands */}
+                <div className="relative z-10 w-[124px] h-[132px] shrink-0">
+                  {/* Card 3 (back-most peeking card) */}
+                  <div className="absolute right-0 top-2 bottom-2 w-[108px] bg-white/80 shadow-xs" />
+                  {/* Card 2 (middle peeking card) */}
+                  <div className="absolute right-[7px] top-1 bottom-1 w-[108px] bg-white/95 shadow-sm" />
+                  {/* Card 1 (front active product card) */}
+                  <div className="relative w-[110px] h-full bg-white flex flex-col items-center justify-between shadow-md overflow-hidden pb-1.5">
+                    <img
+                      src={b.prodImg}
+                      alt={b.name}
+                      className="w-full h-[102px] object-cover"
+                    />
+                    <PriceBlock price={b.price} size="sm" />
+                  </div>
                 </div>
               </div>
             ))}
@@ -953,70 +1052,96 @@ export const MpHomePage: React.FC = () => {
             <ChevronRight className="w-4 h-4 text-[#666666]" />
           </div>
 
-          {/* 4 Clickable Brand Tabs */}
+          {/* 4 Clickable Brand Tabs — all uniform white background with crisp logos */}
           <div className="flex gap-2 overflow-x-auto no-scrollbar px-4">
             {featuredBrands.map((brand, idx) => {
               const active = idx === activeBrandIdx;
-              const isBenecol = idx === 3;
               return (
                 <button
                   key={brand.id}
                   type="button"
                   onClick={() => setActiveBrandIdx(idx)}
-                  className="w-[88px] h-[40px] shrink-0 flex items-center justify-center px-2 transition-colors"
+                  className="w-[88px] h-[40px] shrink-0 bg-white flex items-center justify-center px-2 transition-colors"
                   style={{
-                    backgroundColor: isBenecol ? '#007C7B' : '#FFFFFF',
                     border: active ? `1.5px solid ${t.primary}` : '1px solid #E0E0E0',
                   }}
                 >
-                  <img
-                    src={brand.logo}
-                    alt={brand.name}
-                    className="max-h-[26px] max-w-[68px] object-contain"
-                  />
+                  {brand.id === 'benecol' ? (
+                    <svg viewBox="0 0 84 22" className="h-[18px] w-auto" aria-label="Benecol">
+                      <text
+                        x="2"
+                        y="17"
+                        fill="#007C7B"
+                        fontFamily="Noto Sans, sans-serif"
+                        fontWeight="800"
+                        fontSize="16"
+                        letterSpacing="-0.4"
+                      >
+                        Benec
+                      </text>
+                      <circle cx="62" cy="12" r="4.5" fill="#D91E48" />
+                      <text
+                        x="69"
+                        y="17"
+                        fill="#007C7B"
+                        fontFamily="Noto Sans, sans-serif"
+                        fontWeight="800"
+                        fontSize="16"
+                      >
+                        l
+                      </text>
+                    </svg>
+                  ) : (
+                    <img
+                      src={brand.logo}
+                      alt={brand.name}
+                      className="max-h-[26px] max-w-[68px] object-contain"
+                    />
+                  )}
                 </button>
               );
             })}
           </div>
 
-          {/* Full-Height Left Vertical Hero + Horizontal Product Shelf */}
+          {/* Full-Height Left Vertical Hero + Fixed 2-Product Non-Scrolling Panel */}
           <div
-            className="relative overflow-x-auto no-scrollbar py-2 pl-[116px] pr-2 transition-colors"
+            className="relative overflow-hidden py-2 pl-[114px] pr-2 transition-colors"
             style={{ backgroundColor: activeBrand.bg }}
           >
             {/* Full-height left brand photo with right gradient fade (zero top/bottom truncation) */}
-            <div className="absolute left-0 top-0 bottom-0 w-[166px] pointer-events-none overflow-hidden">
+            <div className="absolute left-0 top-0 bottom-0 w-[160px] pointer-events-none overflow-hidden">
               <img
                 src={activeBrand.heroImg}
                 alt={activeBrand.name}
                 className="w-full h-full object-cover object-center"
               />
               <div
-                className="absolute inset-y-0 right-0 w-[52px]"
+                className="absolute inset-y-0 right-0 w-[48px]"
                 style={{
                   background: `linear-gradient(90deg, rgba(0,0,0,0) 0%, ${activeBrand.bg} 100%)`,
                 }}
               />
-              <div
-                className="absolute top-2 left-2 px-2 py-1 shadow-xs"
-                style={{ backgroundColor: activeBrandIdx === 3 ? '#007C7B' : 'rgba(255,255,255,0.95)' }}
-              >
-                <img
-                  src={activeBrand.logo}
-                  alt={activeBrand.name}
-                  className="h-[20px] w-auto object-contain"
-                />
+              <div className="absolute top-2 left-2 bg-white/95 px-2 py-1 shadow-xs">
+                {activeBrand.id === 'benecol' ? (
+                  <span className="text-[12px] font-extrabold text-[#007C7B]">Benecol</span>
+                ) : (
+                  <img
+                    src={activeBrand.logo}
+                    alt={activeBrand.name}
+                    className="h-[20px] w-auto object-contain"
+                  />
+                )}
               </div>
             </div>
 
-            {/* Horizontal 3-card product shelf */}
-            <div className="relative z-10 inline-flex gap-2 bg-white p-2 shadow-xs">
-              {activeBrand.products.map((p, idx) => (
+            {/* Fixed 2-product grid (no horizontal scroll per Figma) */}
+            <div className="relative z-10 grid grid-cols-2 gap-1.5 bg-white p-1.5 shadow-xs">
+              {activeBrand.products.slice(0, 2).map((p, idx) => (
                 <ProductCard
                   key={`${activeBrand.id}-${idx}`}
                   product={p}
                   variant="compact"
-                  className="w-[132px] shrink-0"
+                  className="w-full min-w-0"
                 />
               ))}
             </div>
@@ -1043,11 +1168,13 @@ export const MpHomePage: React.FC = () => {
                   style={
                     active
                       ? {
+                          fontFamily: subTitleStyle.fontFamily,
                           borderColor: t.feedTabActive,
                           color: t.feedTabActive,
                           fontWeight: 700,
                         }
                       : {
+                          fontFamily: subTitleStyle.fontFamily,
                           borderColor: 'transparent',
                           color: '#555555',
                           fontWeight: 500,

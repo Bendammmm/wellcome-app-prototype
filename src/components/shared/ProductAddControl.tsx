@@ -172,8 +172,27 @@ export const ProductAddControl: React.FC<ProductAddControlProps> = ({
         className={`w-[32px] h-[32px] min-w-[24px] min-h-[24px] rounded-[8px] inline-flex items-center justify-center shrink-0 active:scale-95 transition-transform ${className}`}
       >
         <span
-          className="min-w-[24px] h-[24px] px-1 rounded-[4px] inline-flex items-center justify-center text-white text-[14px] leading-[22px] font-bold tabular-nums"
-          style={{ backgroundColor: t.primary, borderColor: t.primary }}
+          className="min-w-[24px] h-[24px] px-1 inline-flex items-center justify-center text-[13px] leading-[20px] font-bold tabular-nums"
+          style={
+            t.isMpBefore
+              ? {
+                  backgroundColor: '#FFFFFF',
+                  border: `1px solid ${t.primary}`,
+                  color: t.primary,
+                  borderRadius: '2px',
+                }
+              : t.isMpOpt1
+                ? {
+                    backgroundColor: t.primary,
+                    color: '#FFFFFF',
+                    borderRadius: '2px',
+                  }
+                : {
+                    backgroundColor: t.primary,
+                    color: '#FFFFFF',
+                    borderRadius: '4px',
+                  }
+          }
         >
           {qty}
         </span>
@@ -184,7 +203,9 @@ export const ProductAddControl: React.FC<ProductAddControlProps> = ({
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className={`h-[32px] w-[92px] bg-white border border-[#E0E0E0] rounded-[8px] p-[4px] inline-flex items-center justify-center gap-[2px] shadow-[0_2px_8px_rgba(0,0,0,0.12)] shrink-0 ${className}`}
+      className={`h-[32px] w-[92px] bg-white border border-[#E0E0E0] p-[4px] inline-flex items-center justify-center gap-[2px] shadow-[0_2px_8px_rgba(0,0,0,0.12)] shrink-0 ${
+        t.isMp ? 'rounded-[2px]' : 'rounded-[8px]'
+      } ${className}`}
     >
       <button
         type="button"
@@ -193,12 +214,16 @@ export const ProductAddControl: React.FC<ProductAddControlProps> = ({
           setCartItemQty(itemKey, qty - 1);
           scheduleCollapse();
         }}
-        className="w-[24px] h-[24px] rounded-[4px] text-white inline-flex items-center justify-center shrink-0 active:scale-90 transition-transform"
-        style={{ backgroundColor: t.primary }}
+        className="w-[24px] h-[24px] inline-flex items-center justify-center shrink-0 active:scale-90 transition-transform"
+        style={
+          t.isMpBefore
+            ? { backgroundColor: '#FFFFFF', border: `1px solid ${t.primary}`, color: t.primary, borderRadius: '2px' }
+            : { backgroundColor: t.primary, color: '#FFFFFF', borderRadius: t.isMp ? '2px' : '4px' }
+        }
       >
-        <Minus className="w-[16px] h-[16px]" strokeWidth={2.4} />
+        <Minus className="w-[15px] h-[15px]" strokeWidth={2.2} />
       </button>
-      <span className="w-[32px] text-center text-[16px] leading-normal font-normal text-[#1A1A1A] tabular-nums shrink-0">
+      <span className="w-[32px] text-center text-[15px] leading-normal font-medium text-[#1A1A1A] tabular-nums shrink-0">
         {qty}
       </span>
       <button
@@ -208,10 +233,14 @@ export const ProductAddControl: React.FC<ProductAddControlProps> = ({
           setCartItemQty(itemKey, qty + 1);
           scheduleCollapse();
         }}
-        className="w-[24px] h-[24px] rounded-[4px] text-white inline-flex items-center justify-center shrink-0 active:scale-90 transition-transform"
-        style={{ backgroundColor: t.primary }}
+        className="w-[24px] h-[24px] inline-flex items-center justify-center shrink-0 active:scale-90 transition-transform"
+        style={
+          t.isMpBefore
+            ? { backgroundColor: '#FFFFFF', border: `1px solid ${t.primary}`, color: t.primary, borderRadius: '2px' }
+            : { backgroundColor: t.primary, color: '#FFFFFF', borderRadius: t.isMp ? '2px' : '4px' }
+        }
       >
-        <Plus className="w-[16px] h-[16px]" strokeWidth={2.4} />
+        <Plus className="w-[15px] h-[15px]" strokeWidth={2.2} />
       </button>
     </div>
   );

@@ -28,11 +28,11 @@ export const PriceBlock: React.FC<PriceBlockProps> = ({
   const [intPart, decPart] = fixed.split('.');
 
   const sizeMap = {
-    xs: { sym: 'text-[10px]', main: 'text-[14px] leading-[18px]', dec: 'text-[10px]', sub: 'text-[11px]' },
-    sm: { sym: 'text-[10px]', main: 'text-[15px] leading-[18px]', dec: 'text-[10px]', sub: 'text-[11px]' },
-    md: { sym: 'text-[10px]', main: 'text-[16px] leading-[20px]', dec: 'text-[10px]', sub: 'text-[12px]' },
-    lg: { sym: 'text-[12px]', main: 'text-[20px] leading-[24px]', dec: 'text-[12px]', sub: 'text-[12px]' },
-    hero: { sym: 'text-[16px]', main: 'text-[28px] leading-[34px]', dec: 'text-[16px]', sub: 'text-[13px]' },
+    xs: { sym: 'text-[10px] leading-[1] mt-[1px]', main: 'text-[14px] leading-[1]', dec: 'text-[10px] leading-[1] mt-[1px]', sub: 'text-[11px] leading-[1]' },
+    sm: { sym: 'text-[10px] leading-[1] mt-[1px]', main: 'text-[15px] leading-[1]', dec: 'text-[10px] leading-[1] mt-[1px]', sub: 'text-[11px] leading-[1]' },
+    md: { sym: 'text-[11px] leading-[1] mt-[1px]', main: 'text-[16px] leading-[1]', dec: 'text-[11px] leading-[1] mt-[1px]', sub: 'text-[12px] leading-[1]' },
+    lg: { sym: 'text-[12px] leading-[1] mt-[2px]', main: 'text-[20px] leading-[1]', dec: 'text-[12px] leading-[1] mt-[2px]', sub: 'text-[12px] leading-[1]' },
+    hero: { sym: 'text-[16px] leading-[1] mt-[3px]', main: 'text-[28px] leading-[1]', dec: 'text-[16px] leading-[1] mt-[3px]', sub: 'text-[13px] leading-[1]' },
   }[size];
 
   const mainColor = inverse ? '#FFFFFF' : t.primary;
@@ -40,7 +40,7 @@ export const PriceBlock: React.FC<PriceBlockProps> = ({
   const origColor = inverse ? 'text-white/75' : 'text-[#858585]';
 
   return (
-    <div className={`inline-flex flex-wrap items-baseline gap-1 ${className}`}>
+    <div className={`inline-flex flex-wrap items-end gap-1 ${className}`}>
       <span
         className="inline-flex items-start font-bold tracking-tight"
         style={{
@@ -48,15 +48,15 @@ export const PriceBlock: React.FC<PriceBlockProps> = ({
           fontFamily: t.isMp ? t.heroFont : undefined,
         }}
       >
-        <span className={`${sizeMap.sym} leading-[12px] mr-[0.5px]`}>&#36;</span>
+        <span className={`${sizeMap.sym} mr-[0.5px]`}>&#36;</span>
         <span className={sizeMap.main}>{intPart}</span>
-        <span className={`${sizeMap.dec} leading-[12px]`}>.{decPart}</span>
+        <span className={sizeMap.dec}>.{decPart}</span>
       </span>
 
       {unitPriceText ? (
         <span className={`${sizeMap.sub} font-normal ${unitColor}`}>{unitPriceText}</span>
       ) : originalPrice && originalPrice > price ? (
-        <span className={`${sizeMap.sub} font-normal line-through ${origColor}`}>
+        <span className={`${sizeMap.sub} font-normal line-through pb-[1px] ${origColor}`}>
           &#36;{originalPrice.toFixed(2)}
         </span>
       ) : null}
