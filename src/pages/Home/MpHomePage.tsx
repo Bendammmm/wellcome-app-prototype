@@ -685,7 +685,7 @@ export const MpHomePage: React.FC = () => {
             <img
               src={MP_ASSETS.qualityBg}
               alt=""
-              className="w-full h-full object-cover object-[center_20%]"
+              className="w-full h-full object-cover object-[center_48%]"
             />
             <div
               className="absolute inset-x-0 bottom-0 h-[150px]"
@@ -1227,9 +1227,9 @@ export const MpHomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* 9. Feed Tabs & Waterfall */}
-        <section className="px-3 pt-1">
-          <div className="flex items-center gap-5 px-1 pb-2.5 border-b border-black/5 mb-2.5">
+        {/* 9. Feed Tabs & Waterfall (Tabs px-16, Waterfall cards px-8) */}
+        <section className="pt-1">
+          <div className="flex items-center gap-5 px-[16px] pb-2.5 border-b border-black/5 mb-2.5">
             {(
               [
                 { id: 'recommend', label: 'Recommend' },
@@ -1279,7 +1279,7 @@ export const MpHomePage: React.FC = () => {
 
             return (
               <>
-                <div className="flex gap-2 items-start">
+                <div className="flex gap-2 items-start px-[8px]">
                   <div className="flex-1 min-w-0 flex flex-col gap-2">
                     {/* Exact 3x Figma Waterfall Banner */}
                     <button

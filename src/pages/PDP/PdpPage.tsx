@@ -835,10 +835,12 @@ export const PdpPage: React.FC = () => {
           )}
         </section>
 
-        {/* 9. You May Like — Content-Adaptive Infinite Masonry Waterfall */}
-        <section id="pdp-recommend" className={isMp ? 'pt-1 px-[16px]' : 'pt-1'}>
+        {/* 9. You May Like — Content-Adaptive Infinite Masonry Waterfall (Title px-16, Cards px-8) */}
+        <section id="pdp-recommend" className="pt-1">
           <h2
-            className="text-[16px] leading-[24px] font-bold text-[#1A1A1A] mb-[8px]"
+            className={`text-[16px] leading-[24px] font-bold text-[#1A1A1A] mb-[8px] ${
+              isMp ? 'px-[16px]' : 'px-[4px]'
+            }`}
             style={mpHeadingStyle}
           >
             You May Like
@@ -854,7 +856,7 @@ export const PdpPage: React.FC = () => {
             const right = expanded.filter((_, idx) => idx % 2 === 1);
             return (
               <>
-                <div className="flex gap-[8px] items-start">
+                <div className={isMp ? 'flex gap-[8px] items-start px-[8px]' : 'flex gap-[8px] items-start'}>
                   <div className="flex-1 min-w-0 flex flex-col gap-[8px]">
                     {left.map(({ product: item, renderKey }) => (
                       <ProductCard key={renderKey} product={item} variant="waterfall" />
