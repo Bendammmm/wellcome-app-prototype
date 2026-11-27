@@ -13,15 +13,40 @@ import { AppTabBar } from '../../components/shared/AppTabBar';
 import { ProductAddControl } from '../../components/shared/ProductAddControl';
 import { ProductCard } from '../../components/shared/ProductCard';
 import { PriceBlock } from '../../components/shared/PriceBlock';
+import { PromoTag } from '../../components/shared/PromoTag';
 import { ThresholdProgressBar } from '../../components/shared/ThresholdProgressBar';
+
+const MP_ASSETS = {
+  heroSteak: '/assets/figma/mp/hero-steak.png',
+  catWine: '/assets/figma/mp/cat-wine.png',
+  catMeat: '/assets/figma/mp/cat-meat.png',
+  catFruit: '/assets/figma/mp/cat-fruit.png',
+  catSeafood: '/assets/figma/mp/cat-seafood.png',
+  qualityBg: '/assets/figma/mp/quality-bg.png',
+  qualityTitle: '/assets/figma/mp/quality-title.svg',
+  qualitySalmon: '/assets/figma/mp/quality-salmon.png',
+  qualityRose: '/assets/figma/mp/quality-rose.png',
+  qualityOrange: '/assets/figma/mp/quality-orange.png',
+  preorderWagyuBg: '/assets/figma/mp/preorder-wagyu-bg.png',
+  preorderWagyu1: '/assets/figma/mp/preorder-wagyu-1.png',
+  preorderWagyu2: '/assets/figma/mp/preorder-wagyu-2.png',
+  brand360Bg: '/assets/figma/mp/brand-360-bg.png',
+  brand360Logo: '/assets/figma/mp/brand-360-logo.svg',
+  brand360Prod: '/assets/figma/mp/brand-360-prod.png',
+  brandOliversBg: '/assets/figma/mp/brand-olivers-bg.png',
+  brandOliversLogo: '/assets/figma/mp/brand-olivers-logo.svg',
+  brandOliversProd: '/assets/figma/mp/brand-olivers-prod.png',
+  featuredZespriBg: '/assets/figma/mp/featured-zespri-bg.png',
+  featuredZespriLogo: '/assets/figma/mp/featured-zespri-logo.png',
+};
 
 const QUALITY_CATS = ['All', 'Seasonal Pick', 'Healthy Choice', 'Wine & Spirits'] as const;
 
 const QUICK_CATEGORIES = [
-  { label: 'Wine', img: ASSETS.wineBelenaAward, productId: 'belena-shiraz' },
-  { label: 'Meat', img: ASSETS.beef, productId: 'us-beef-blade' },
-  { label: 'Fruit', img: ASSETS.fujiApple, productId: 'fuji-apple' },
-  { label: 'Berries', img: ASSETS.blueberry, productId: 'jumbo-blueberry' },
+  { label: 'Wine', img: MP_ASSETS.catWine, productId: 'belena-shiraz' },
+  { label: 'Meat', img: MP_ASSETS.catMeat, productId: 'us-beef-blade' },
+  { label: 'Fruit', img: MP_ASSETS.catFruit, productId: 'fuji-apple' },
+  { label: 'Seafood', img: MP_ASSETS.catSeafood, productId: 'jumbo-blueberry' },
   { label: 'Dairy & Deli', img: ASSETS.eminaCheese, productId: 'emina-cheese' },
 ];
 
@@ -40,7 +65,7 @@ export const MpHomePage: React.FC = () => {
   const [feedTab, setFeedTab] = useState<'recommend' | 'dinner' | 'healthy'>('recommend');
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 150);
+    const onScroll = () => setScrolled(window.scrollY > 160);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -57,14 +82,47 @@ export const MpHomePage: React.FC = () => {
     : `· ${currentStore.shortNavLabel}`;
 
   const qualityPicks = [
-    PRODUCTS.find((p) => p.id === 'us-beef-blade')!,
-    PRODUCTS.find((p) => p.id === 'belena-shiraz')!,
-    PRODUCTS.find((p) => p.id === 'flash-orange') ?? PRODUCTS[0],
+    {
+      id: 'us-beef-blade',
+      name: 'Kirkland Signature Fresh Farmed Atlantic Salmon Fillet',
+      img: MP_ASSETS.qualitySalmon,
+      price: 168.0,
+      originalPrice: 198.0,
+      promo: '20% Off',
+      badge: 'New',
+    },
+    {
+      id: 'belena-shiraz',
+      name: "CH D'ESCLANS Whispering Angel Rosé 2024 750ML",
+      img: MP_ASSETS.qualityRose,
+      price: 178.0,
+      originalPrice: 215.0,
+    },
+    {
+      id: 'flash-orange',
+      name: 'Australian Navel Orange High Brix 1kg',
+      img: MP_ASSETS.qualityOrange,
+      price: 78.0,
+      originalPrice: 92.0,
+    },
   ];
 
   const preorderPicks = [
-    PRODUCTS.find((p) => p.id === 'us-beef-blade')!,
-    PRODUCTS.find((p) => p.id === 'ferrarini-ham') ?? PRODUCTS[1],
+    {
+      id: 'us-beef-blade',
+      name: 'YAMAGATA GYU Japan Yamagata Chilled A5 Grade Wagyu Beef Sukiyaki',
+      img: MP_ASSETS.preorderWagyu1,
+      price: 238.0,
+      originalPrice: 288.0,
+    },
+    {
+      id: 'ferrarini-ham',
+      name: 'YAMAGATA GYU Japan Yamagata Chilled A5 Grade Wagyu Beef Ribeye',
+      img: MP_ASSETS.preorderWagyu2,
+      price: 456.0,
+      originalPrice: 520.0,
+      signature: true,
+    },
   ];
 
   const todaysDeals = PRODUCTS.filter((p) =>
@@ -98,9 +156,9 @@ export const MpHomePage: React.FC = () => {
   ];
 
   // Annotation #01: Pure Black (#000000) in Before -> MP Green (#28443C) in Option 1
-  const heroOverlayBg = t.isMpOpt1
-    ? 'linear-gradient(180deg, #28443C 0%, rgba(40,68,60,0.92) 48%, rgba(40,68,60,0.45) 78%, rgba(40,68,60,0.82) 100%)'
-    : 'linear-gradient(180deg, #000000 0%, rgba(0,0,0,0.88) 48%, rgba(0,0,0,0.45) 78%, rgba(0,0,0,0.82) 100%)';
+  const heroTopGradient = t.isMpOpt1
+    ? 'linear-gradient(180deg, #28443C 0%, rgba(40,68,60,0.88) 42%, rgba(40,68,60,0) 78%)'
+    : 'linear-gradient(180deg, #000000 0%, rgba(0,0,0,0.88) 42%, rgba(0,0,0,0) 78%)';
 
   const stickyHeaderBg = t.isMpOpt1 ? '#28443C' : '#000000';
 
@@ -136,17 +194,14 @@ export const MpHomePage: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate('search')}
-            className="flex-1 h-[36px] bg-white rounded-[4px] pl-3 pr-1 flex items-center gap-1.5 text-left"
+            className="flex-1 h-[36px] bg-white rounded-[2px] pl-3 pr-1 flex items-center gap-1.5 text-left"
           >
             <img src={ICONS.search} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
             <span className="text-[13px] leading-[18px] text-[#858585] truncate flex-1">
-              Search Market Place
+              Coca-Cola
             </span>
-            <img src={ICONS.qrScan} alt="" className="w-[22px] h-[22px] object-contain shrink-0 mr-1" />
-            <span
-              className="h-[28px] px-3 rounded-[2px] text-[12px] leading-[16px] font-semibold inline-flex items-center"
-              style={{ backgroundColor: t.primarySoftBg, color: t.primary }}
-            >
+            <img src={ICONS.qrScan} alt="" className="w-[20px] h-[20px] object-contain shrink-0 mr-1" />
+            <span className="h-[28px] px-3 rounded-[2px] bg-[#F2F4F3] text-[#1A1A1A] text-[12px] leading-[16px] font-medium inline-flex items-center">
               Search
             </span>
           </button>
@@ -166,43 +221,52 @@ export const MpHomePage: React.FC = () => {
         </header>
       )}
 
-      {/* 1. Editorial Hero Banner (Annotation #01 & #02) */}
-      <section className="relative w-full h-[276px] overflow-hidden bg-[#111]">
+      {/* 1. Editorial Hero Banner (Figma 8817:86709 — 298px, real Wagyu steak + golden oil) */}
+      <section className="relative w-full h-[298px] overflow-hidden bg-[#0E0E0E]">
         <img
-          src={ASSETS.beef}
-          alt="Market Place Heritage Culinary"
-          className="absolute inset-0 w-full h-full object-cover object-center scale-110 opacity-85"
+          src={MP_ASSETS.heroSteak}
+          alt="Market Place Premium Selection"
+          className="absolute inset-x-0 top-[44px] w-full h-[264px] object-cover object-center"
         />
+        {/* Left subtle vignette for legibility */}
         <div
-          className="absolute inset-0 transition-all duration-300"
-          style={{ backgroundImage: heroOverlayBg }}
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(90deg, rgba(0,0,0,0.68) 0%, rgba(0,0,0,0.22) 55%, rgba(0,0,0,0.05) 100%)',
+          }}
+        />
+        {/* Top brand gradient overlay (Annotation #01: Black -> MP Green #28443C) */}
+        <div
+          className="absolute inset-0 pointer-events-none transition-all duration-300"
+          style={{ backgroundImage: heroTopGradient }}
         />
 
-        <div className="relative z-10 h-full flex flex-col justify-between px-3 pt-[max(14px,env(safe-area-inset-top))] pb-4">
+        <div className="relative z-10 h-full flex flex-col justify-between px-4 pt-[max(14px,env(safe-area-inset-top))] pb-4">
           {/* Top Bar */}
           <div className="space-y-2.5">
             <div className="flex items-start justify-between">
-              <div className="space-y-1 min-w-0 flex-1 pr-2">
-                <div className="inline-flex items-center gap-1 text-[11px] leading-[15px] font-medium text-white/90">
-                  <span className="font-semibold">2,100</span>
+              <div className="space-y-0.5 min-w-0 flex-1 pr-2">
+                <div className="inline-flex items-center gap-1 text-[12px] leading-[16px] font-medium text-white">
+                  <span className="font-semibold">2,3160</span>
                   <img src={ASSETS.yuuCoin} alt="yuu" className="w-[14px] h-[14px] object-contain" />
-                  <span>= &#36;105</span>
+                  <span>= &#36;156</span>
                 </div>
 
                 <button
                   type="button"
                   onClick={openFulfillmentSheet}
-                  className="flex items-center gap-1 text-[13px] leading-[18px] text-white max-w-full"
+                  className="flex items-center gap-1 text-[14px] leading-[20px] text-white max-w-full"
                 >
                   <img
                     src={isDelivery ? ICONS.truck : ICONS.cncBag}
                     alt=""
-                    className="w-[15px] h-[15px] object-contain brightness-0 invert shrink-0"
+                    className="w-[16px] h-[16px] object-contain brightness-0 invert shrink-0"
                   />
-                  <span className="font-semibold shrink-0">
+                  <span className="font-bold shrink-0">
                     {isDelivery ? 'Delivery' : 'Click & Collect'}
                   </span>
-                  <span className="truncate font-normal text-white/85">{navLocation}</span>
+                  <span className="truncate font-normal text-white/90">{navLocation}</span>
                   <img
                     src={ICONS.chevronDown}
                     alt=""
@@ -211,7 +275,7 @@ export const MpHomePage: React.FC = () => {
                 </button>
               </div>
 
-              <div className="flex items-center gap-3 shrink-0 pt-0.5 text-white">
+              <div className="flex items-center gap-3.5 shrink-0 pt-0.5 text-white">
                 <button
                   type="button"
                   onClick={() => showToast('No new notifications')}
@@ -222,7 +286,7 @@ export const MpHomePage: React.FC = () => {
                     alt="Notice"
                     className="w-[22px] h-[22px] object-contain brightness-0 invert"
                   />
-                  <span className="text-[10px] leading-[13px] text-white/85">Notice</span>
+                  <span className="text-[10px] leading-[13px] text-white/90">Notice</span>
                 </button>
                 <button
                   type="button"
@@ -234,77 +298,87 @@ export const MpHomePage: React.FC = () => {
                     alt="Store"
                     className="w-[22px] h-[22px] object-contain brightness-0 invert"
                   />
-                  <span className="text-[10px] leading-[13px] text-white/85">Store</span>
+                  <span className="text-[10px] leading-[13px] text-white/90">Store</span>
                 </button>
               </div>
             </div>
 
-            {/* Search Bar */}
+            {/* Sharp Editorial Search Bar (Figma 8817:86709) */}
             <button
               type="button"
               onClick={() => navigate('search')}
-              className="w-full h-[38px] bg-white rounded-[4px] pl-3 pr-1 flex items-center gap-2 shadow-sm"
+              className="w-full h-[40px] bg-white rounded-[2px] pl-3 pr-1 flex items-center gap-2 shadow-sm"
             >
               <img src={ICONS.search} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
-              <span className="text-[13px] leading-[18px] text-[#858585]">Coca-Cola</span>
+              <span className="text-[14px] leading-[20px] text-[#858585]">Coca-Cola</span>
               <div className="flex-1" />
               <img src={ICONS.qrScan} alt="" className="w-[22px] h-[22px] object-contain shrink-0 mr-1" />
-              <span
-                className="h-[30px] px-3.5 rounded-[2px] text-[12px] leading-[16px] font-semibold inline-flex items-center justify-center"
-                style={{ backgroundColor: t.primarySoftBg, color: t.primary }}
-              >
+              <span className="h-[32px] px-4 rounded-[2px] bg-[#F2F4F3] text-[#1A1A1A] text-[13px] leading-[18px] font-medium inline-flex items-center justify-center">
                 Search
               </span>
             </button>
           </div>
 
           {/* Editorial Hero Copy (Annotation #02: #E5C89C -> #DDB97D, Noto Serif HK -> Lora Regular) */}
-          <div className="pt-4">
-            <p
-              className="text-[10px] tracking-[0.16em] uppercase font-medium mb-1 transition-colors"
-              style={{ color: t.gold }}
-            >
-              CURATED BY MARKET PLACE
-            </p>
-            <h1
-              className="text-[22px] leading-[28px] font-normal text-white max-w-[240px]"
-              style={{ fontFamily: t.heroFont }}
-            >
-              A great evening,
-              <br />
-              beautifully simple.
-            </h1>
+          <div className="flex items-end justify-between">
+            <div className="space-y-1.5">
+              <p
+                className="text-[10px] tracking-[0.14em] uppercase font-normal transition-colors"
+                style={{ color: t.gold }}
+              >
+                PREMIUM SELECTION
+              </p>
+              <div className="w-[18px] h-[1px] bg-white/55" />
+              <h1
+                className="text-[20px] leading-[26px] font-normal text-white"
+                style={{ fontFamily: t.heroFont }}
+              >
+                A great evening,
+                <br />
+                beautifully simple.
+              </h1>
+            </div>
+
+            <span className="px-2 py-0.5 rounded-full bg-black/45 backdrop-blur-xs text-white text-[11px] leading-[16px] font-medium">
+              1/10 &gt;
+            </span>
           </div>
         </div>
       </section>
 
-      {/* 2. Circular Editorial Category Strip */}
-      <section className="bg-white px-3 py-3 border-b border-black/5">
-        <div className="grid grid-cols-5 gap-2">
+      {/* 2. Circular Editorial Category Strip (Figma 8817:86728 — 56×56 full-bleed photos + indicator) */}
+      <section className="bg-white pt-4 pb-3 px-2 flex flex-col items-center gap-3">
+        <div className="w-full flex items-start justify-between gap-1 overflow-x-auto no-scrollbar px-1">
           {QUICK_CATEGORIES.map((cat) => (
             <button
               key={cat.label}
               type="button"
               onClick={() => navigate('pdp', cat.productId)}
-              className="flex flex-col items-center gap-1.5 active:opacity-80"
+              className="w-[72px] shrink-0 flex flex-col items-center gap-1.5 active:opacity-80"
             >
-              <div className="w-[52px] h-[52px] rounded-full bg-[#F5F3EE] p-1.5 overflow-hidden flex items-center justify-center border border-black/5">
-                <img src={cat.img} alt={cat.label} className="w-full h-full object-contain" />
+              <div className="w-[56px] h-[56px] rounded-full overflow-hidden bg-[#F5F3EE] shrink-0">
+                <img src={cat.img} alt={cat.label} className="w-full h-full object-cover" />
               </div>
-              <span className="text-[11px] leading-[14px] text-[#3D3D3D] font-medium text-center">
+              <span className="text-[12px] leading-[15px] text-[#3D3D3D] font-normal text-center line-clamp-2">
                 {cat.label}
               </span>
             </button>
           ))}
         </div>
+        <div className="w-[48px] h-[4px] rounded-full bg-[#E5E5E5] overflow-hidden">
+          <div
+            className="w-[20px] h-full rounded-full transition-colors"
+            style={{ backgroundColor: t.primary }}
+          />
+        </div>
       </section>
 
       {/* Main Content Floors */}
-      <div className="px-2.5 pt-3 space-y-3">
+      <div className="pt-3 space-y-3">
         {/* 3. Pick up where you left off (Annotation #03 & #04) */}
-        <section className="space-y-2">
+        <section className="px-3 space-y-2">
           <h2
-            className="px-0.5 text-[17px] leading-[24px] font-semibold transition-colors"
+            className="text-[16px] leading-[22px] font-semibold transition-colors"
             style={headingStyle}
           >
             Pick up where you left off
@@ -315,15 +389,15 @@ export const MpHomePage: React.FC = () => {
               {
                 title: 'Recently Viewed',
                 items: [
-                  { id: 'us-beef-blade', img: ASSETS.beef },
-                  { id: 'ferrarini-ham', img: ASSETS.ferrariniHam },
+                  { id: 'us-beef-blade', img: MP_ASSETS.brand360Prod },
+                  { id: 'ferrarini-ham', img: MP_ASSETS.preorderWagyu2 },
                   { id: 'zespri-kiwi', img: ASSETS.kiwi },
                 ],
               },
               {
                 title: 'Buy it again',
                 items: [
-                  { id: 'belena-shiraz', img: ASSETS.wineBelenaAward },
+                  { id: 'belena-shiraz', img: MP_ASSETS.qualityRose },
                   { id: 'jumbo-blueberry', img: ASSETS.blueberry },
                   { id: 'fuji-apple', img: ASSETS.fujiApple },
                 ],
@@ -331,7 +405,7 @@ export const MpHomePage: React.FC = () => {
             ].map((group) => (
               <div
                 key={group.title}
-                className="w-[272px] shrink-0 bg-white rounded-[6px] p-2.5 shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
+                className="w-[276px] shrink-0 bg-white rounded-[4px] p-2.5 shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
               >
                 <div className="flex items-center justify-between mb-2">
                   <span
@@ -348,7 +422,7 @@ export const MpHomePage: React.FC = () => {
                       key={item.id}
                       type="button"
                       onClick={() => navigate('pdp', item.id)}
-                      className="aspect-square rounded-[4px] bg-[#FAF9F6] p-1.5 flex items-center justify-center active:scale-95 transition-transform"
+                      className="aspect-square rounded-[4px] bg-[#FAF9F6] p-1 flex items-center justify-center active:scale-95 transition-transform"
                     >
                       <img src={item.img} alt="" className="w-full h-full object-contain" />
                     </button>
@@ -359,29 +433,34 @@ export const MpHomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* 4. Quality Picks (Annotation #05: All pill #155D2D -> MP Blue #0F3655; #06 global brand green) */}
-        <section className="bg-white rounded-[8px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
-          <div
-            className="px-3.5 pt-3.5 pb-3"
-            style={{
-              background: t.isMpOpt1
-                ? 'linear-gradient(135deg, #F3EEE2 0%, #E7DFCE 100%)'
-                : 'linear-gradient(135deg, #F3EFE6 0%, #E8E0D0 100%)',
-            }}
-          >
-            <p className="text-[10px] tracking-[0.14em] uppercase text-[#6E6352] font-semibold">
-              CHEF&apos;S SELECTION
-            </p>
-            <h2
-              className="text-[20px] leading-[26px] font-semibold mt-0.5"
-              style={headingStyle}
-            >
-              Quality Picks
-            </h2>
+        {/* 4. Quality Picks (Figma 8817:86862 — real photography bg + scripted title + #0F3655 active pill) */}
+        <section className="relative overflow-hidden">
+          <div className="relative h-[136px] w-full overflow-hidden">
+            <img
+              src={MP_ASSETS.qualityBg}
+              alt="Quality Picks"
+              className="absolute inset-0 w-full h-full object-cover object-center"
+            />
+            <div
+              className="absolute inset-x-0 bottom-0 h-[72px]"
+              style={{
+                background: `linear-gradient(180deg, rgba(247,245,240,0) 0%, ${t.canvasBg} 100%)`,
+              }}
+            />
+            <div className="relative z-10 pt-7 pl-8">
+              <p className="text-[10px] tracking-[0.06em] uppercase text-[#724300] font-normal mb-1">
+                CURATED FOR YOU
+              </p>
+              <img
+                src={MP_ASSETS.qualityTitle}
+                alt="Quality Picks"
+                className="h-[46px] w-auto object-contain"
+              />
+            </div>
           </div>
 
-          {/* Filter Pills — Active pill switches #155D2D -> MP Blue #0F3655 in Option 1 */}
-          <div className="flex gap-1.5 overflow-x-auto no-scrollbar px-3 py-2.5 border-b border-[#F2F0EB]">
+          {/* Filter Pills — Annotation #05: Active pill #155D2D (Before) -> MP Blue #0F3655 (Option 1) */}
+          <div className="flex gap-2 overflow-x-auto no-scrollbar px-4 py-2">
             {QUALITY_CATS.map((cat) => {
               const active = qualityCat === cat;
               return (
@@ -389,11 +468,11 @@ export const MpHomePage: React.FC = () => {
                   key={cat}
                   type="button"
                   onClick={() => setQualityCat(cat)}
-                  className="h-[28px] px-3 rounded-full text-[12px] leading-[16px] font-medium shrink-0 transition-colors"
+                  className="h-[30px] px-3.5 rounded-full text-[12px] leading-[16px] font-medium shrink-0 transition-colors"
                   style={
                     active
                       ? { backgroundColor: t.accentBlue, color: '#FFFFFF' }
-                      : { backgroundColor: '#F5F3EE', color: '#444444' }
+                      : { backgroundColor: '#FFFFFF', color: '#3D3D3D', border: '1px solid #EAE7E1' }
                   }
                 >
                   {cat}
@@ -402,13 +481,13 @@ export const MpHomePage: React.FC = () => {
             })}
           </div>
 
-          {/* Ranked 1-2-3 List */}
-          <div className="divide-y divide-[#F2F0EB]">
+          {/* Ranked 1-2-3 Gourmet List */}
+          <div className="mx-3 bg-white rounded-[4px] divide-y divide-[#F2F0EB] shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
             {qualityPicks.map((p, idx) => (
               <div
                 key={p.id}
                 onClick={() => navigate('pdp', p.id)}
-                className="flex items-center gap-2.5 px-3 py-2.5 cursor-pointer active:bg-[#FAF9F6]"
+                className="flex items-center gap-2.5 px-3 py-3 cursor-pointer active:bg-[#FAF9F6]"
               >
                 <span
                   className="w-[18px] h-[18px] rounded-full text-[10px] font-bold flex items-center justify-center shrink-0"
@@ -419,13 +498,19 @@ export const MpHomePage: React.FC = () => {
                 >
                   {idx + 1}
                 </span>
-                <div className="w-[54px] h-[54px] rounded-[4px] bg-[#FAF9F6] p-1 flex items-center justify-center shrink-0">
-                  <img src={p.image} alt={p.name} className="w-full h-full object-contain" />
+                <div className="relative w-[62px] h-[62px] rounded-[4px] bg-[#FAF9F6] p-1 flex items-center justify-center shrink-0">
+                  <img src={p.img} alt={p.name} className="w-full h-full object-contain" />
+                  {p.badge && (
+                    <div className="absolute -top-1 -right-1">
+                      <PromoTag label={p.badge} variant="new" />
+                    </div>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[13px] leading-[18px] font-medium text-[#1A1A1A] line-clamp-2">
                     {p.name}
                   </p>
+                  {p.promo && <PromoTag label={p.promo} className="mt-1" />}
                   <PriceBlock
                     price={p.price}
                     originalPrice={p.originalPrice}
@@ -439,58 +524,89 @@ export const MpHomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* 5. Fresh pre-order (Annotation #07: badge #155D2D -> Sage #9CAF88; Lora Regular title) */}
-        <section className="rounded-[8px] overflow-hidden bg-[#1D1C1A] text-white shadow-sm">
-          <div className="relative px-3.5 pt-4 pb-3">
-            <span
-              className="inline-block px-2 py-0.5 text-[11px] font-medium rounded-[2px] text-white mb-2 transition-colors"
-              style={{ backgroundColor: t.sage }}
-            >
-              Fresh pre-order
-            </span>
-            <h2
-              className="text-[22px] leading-[28px] font-normal text-white"
-              style={{ fontFamily: t.heroFont }}
-            >
-              Bring Home,
-              <br />
-              Something Special.
-            </h2>
-            <p className="text-[11px] text-white/70 mt-1">
-              Air-flown Wagyu &amp; seasonal delicacies, reserved to order.
-            </p>
-          </div>
+        {/* 5. Fresh pre-order (Figma 8817:86863 — real full-bleed Wagyu hotpot photo + Sage #9CAF88 badge) */}
+        <section className="relative w-full h-[520px] overflow-hidden bg-[#1D1815]">
+          <img
+            src={MP_ASSETS.preorderWagyuBg}
+            alt="Fresh pre-order Wagyu"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+          />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.18) 38%, rgba(0,0,0,0.72) 72%, rgba(0,0,0,0.88) 100%)',
+            }}
+          />
 
-          <div className="px-3 pb-3 space-y-2">
-            {preorderPicks.map((p) => (
-              <div
-                key={p.id}
-                onClick={() => navigate('pdp', p.id)}
-                className="bg-white rounded-[4px] p-2.5 flex items-center gap-2.5 text-[#1A1A1A] cursor-pointer"
+          <div className="relative z-10 h-full flex flex-col justify-between p-4">
+            {/* Top Copy (Annotation #07) */}
+            <div className="space-y-4">
+              <span
+                className="inline-block px-2.5 py-1 text-[14px] leading-[18px] font-semibold text-white transition-colors"
+                style={{ backgroundColor: t.sage, fontFamily: t.heroFont }}
               >
-                <div className="w-[58px] h-[58px] rounded-[4px] bg-[#FAF9F6] p-1 flex items-center justify-center shrink-0">
-                  <img src={p.image} alt={p.name} className="w-full h-full object-contain" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[12px] leading-[16px] font-medium text-[#1A1A1A] line-clamp-2">
-                    {p.name}
-                  </p>
-                  <div className="flex items-center justify-between gap-2 mt-1.5">
-                    <PriceBlock price={p.price} originalPrice={p.originalPrice} size="sm" />
-                    <div className="w-[74px] shrink-0">
-                      <ProductAddControl productId={p.id} fullWidth />
+                Fresh pre-order
+              </span>
+
+              <div>
+                <h2
+                  className="text-[24px] leading-[28px] font-normal text-white"
+                  style={{ fontFamily: t.heroFont }}
+                >
+                  Bring Home,
+                  <br />
+                  <span style={{ color: t.gold }}>Something Special.</span>
+                </h2>
+                <p className="text-[12px] text-white/85 mt-2">
+                  Curated A5 Wagyu for Everyday Indulgence.
+                </p>
+                <span className="inline-flex items-center justify-center w-8 h-6 mt-2.5 bg-white text-[#1A1A1A] text-[12px] font-medium">
+                  →
+                </span>
+              </div>
+            </div>
+
+            {/* Bottom Frosted Wagyu Product Cards */}
+            <div className="space-y-2">
+              {preorderPicks.map((p) => (
+                <div
+                  key={p.name}
+                  onClick={() => navigate('pdp', p.id)}
+                  className="bg-white/95 backdrop-blur-xs rounded-[2px] p-2.5 flex items-center gap-2.5 text-[#1A1A1A] cursor-pointer"
+                >
+                  <div className="relative w-[68px] h-[68px] rounded-[2px] bg-[#FAF9F6] overflow-hidden shrink-0">
+                    <img src={p.img} alt={p.name} className="w-full h-full object-cover" />
+                    {p.signature && (
+                      <span
+                        className="absolute top-0 left-0 px-1.5 py-0.5 text-[9px] font-semibold text-white"
+                        style={{ backgroundColor: t.primary }}
+                      >
+                        Signature
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[12px] leading-[16px] font-medium text-[#1A1A1A] line-clamp-2">
+                      {p.name}
+                    </p>
+                    <div className="flex items-center justify-between gap-2 mt-2">
+                      <PriceBlock price={p.price} originalPrice={p.originalPrice} size="sm" />
+                      <div className="w-[78px] shrink-0">
+                        <ProductAddControl productId={p.id} fullWidth />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* 6. Our Brands (Annotation #08) */}
-        <section className="space-y-2">
-          <div className="flex items-center justify-between px-0.5">
-            <h2 className="text-[17px] leading-[24px] font-semibold" style={headingStyle}>
+        {/* 6. Our Brands (Figma 8817:86864 — real 3hreesixty & OLIVER'S photography + official SVG logos) */}
+        <section className="px-3 space-y-2">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-[16px] leading-[22px] font-semibold" style={headingStyle}>
               Our Brands
             </h2>
             <ChevronRight className="w-4 h-4 text-[#666666]" />
@@ -499,44 +615,56 @@ export const MpHomePage: React.FC = () => {
           <div className="space-y-2">
             {[
               {
-                brand: '3hreesixty',
+                name: '3hreesixty',
                 tagline: 'Healthy, natural & organic living',
-                bg: 'linear-gradient(110deg, #5C555B 0%, #83757C 100%)',
-                product: PRODUCTS.find((p) => p.id === 'us-beef-blade')!,
+                bgImg: MP_ASSETS.brand360Bg,
+                logoSvg: MP_ASSETS.brand360Logo,
+                prodImg: MP_ASSETS.brand360Prod,
+                price: 688.0,
+                productId: 'us-beef-blade',
               },
               {
-                brand: "OLIVER'S",
+                name: "OLIVER'S",
                 tagline: "The world's finest gourmet",
-                bg: 'linear-gradient(110deg, #6E4730 0%, #9E6842 100%)',
-                product: PRODUCTS.find((p) => p.id === 'belena-shiraz')!,
+                bgImg: MP_ASSETS.brandOliversBg,
+                logoSvg: MP_ASSETS.brandOliversLogo,
+                prodImg: MP_ASSETS.brandOliversProd,
+                price: 1288.0,
+                productId: 'belena-shiraz',
               },
             ].map((b) => (
               <div
-                key={b.brand}
-                onClick={() => navigate('pdp', b.product.id)}
-                className="rounded-[6px] p-3 flex items-center justify-between gap-3 text-white cursor-pointer active:opacity-95"
-                style={{ background: b.bg }}
+                key={b.name}
+                onClick={() => navigate('pdp', b.productId)}
+                className="relative h-[152px] rounded-[4px] overflow-hidden p-3.5 flex items-center justify-between gap-3 text-white cursor-pointer active:opacity-95"
               >
-                <div className="flex-1 min-w-0">
-                  <p
-                    className="text-[18px] leading-[22px] font-semibold tracking-wide"
-                    style={{ fontFamily: t.heroFont }}
-                  >
-                    {b.brand}
-                  </p>
-                  <p className="text-[11px] text-white/85 mt-1">{b.tagline}</p>
-                  <span className="inline-flex items-center justify-center w-6 h-5 mt-2 rounded-[2px] border border-white/60 text-[11px]">
+                <img
+                  src={b.bgImg}
+                  alt={b.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/45" />
+
+                <div className="relative z-10 flex-1 min-w-0">
+                  <img
+                    src={b.logoSvg}
+                    alt={b.name}
+                    className="h-[22px] w-auto object-contain brightness-0 invert"
+                  />
+                  <p className="text-[12px] text-white/90 mt-1.5">{b.tagline}</p>
+                  <span className="inline-flex items-center justify-center w-7 h-5 mt-3 rounded-[2px] border border-white/70 text-[11px]">
                     →
                   </span>
                 </div>
-                <div className="w-[82px] h-[82px] rounded-[4px] bg-white p-1.5 flex flex-col items-center justify-between shrink-0">
+
+                <div className="relative z-10 w-[108px] h-[120px] rounded-[2px] bg-white p-1.5 flex flex-col items-center justify-between shrink-0 shadow-md">
                   <img
-                    src={b.product.image}
-                    alt={b.product.name}
-                    className="w-[54px] h-[54px] object-contain"
+                    src={b.prodImg}
+                    alt={b.name}
+                    className="w-[88px] h-[84px] object-contain"
                   />
-                  <span className="text-[11px] font-bold" style={{ color: t.primary }}>
-                    &#36;{b.product.price.toFixed(2)}
+                  <span className="text-[12px] font-bold" style={{ color: t.primary }}>
+                    &#36;{b.price.toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -545,9 +673,9 @@ export const MpHomePage: React.FC = () => {
         </section>
 
         {/* 7. Today's deal (Annotation #09) */}
-        <section className="space-y-2">
-          <div className="flex items-center justify-between px-0.5">
-            <h2 className="text-[17px] leading-[24px] font-semibold" style={headingStyle}>
+        <section className="px-3 space-y-2">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-[16px] leading-[22px] font-semibold" style={headingStyle}>
               Today&apos;s deal
             </h2>
             <button
@@ -571,27 +699,43 @@ export const MpHomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* 8. Featured Brands (Annotation #10) */}
-        <section className="space-y-2">
-          <div className="flex items-center justify-between px-0.5">
-            <h2 className="text-[17px] leading-[24px] font-semibold" style={headingStyle}>
+        {/* 8. Featured Brands (Figma 8817:86904 — real Zespri brand logo & kiwi editorial hero) */}
+        <section className="px-3 space-y-2">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-[16px] leading-[22px] font-semibold" style={headingStyle}>
               Featured Brands
             </h2>
             <ChevronRight className="w-4 h-4 text-[#666666]" />
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              PRODUCTS.find((p) => p.id === 'zespri-kiwi')!,
-              PRODUCTS.find((p) => p.id === 'fuji-apple')!,
-            ].map((p) => (
-              <ProductCard key={p.id} product={p} variant="grid" />
-            ))}
+          <div className="bg-white rounded-[4px] overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+            <div className="relative h-[126px] w-full overflow-hidden">
+              <img
+                src={MP_ASSETS.featuredZespriBg}
+                alt="Zespri SunGold Kiwifruit"
+                className="w-full h-full object-cover object-center"
+              />
+              <div className="absolute top-2.5 left-3 bg-white/95 px-2.5 py-1 rounded-[4px] shadow-xs">
+                <img
+                  src={MP_ASSETS.featuredZespriLogo}
+                  alt="Zespri"
+                  className="h-[22px] w-auto object-contain"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 p-2">
+              {[
+                PRODUCTS.find((p) => p.id === 'zespri-kiwi')!,
+                PRODUCTS.find((p) => p.id === 'fuji-apple')!,
+              ].map((p) => (
+                <ProductCard key={p.id} product={p} variant="grid" />
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* 9. Feed Tabs & Waterfall (Annotation #11: active tab #E40032 -> #28443C; #12: Top Fruits Lora SemiBold) */}
-        <section className="pt-1">
+        {/* 9. Feed Tabs & Waterfall (Annotation #11: active tab #E40032 -> #28443C; #12: Top Fruits) */}
+        <section className="px-3 pt-1">
           <div className="flex items-center gap-5 px-1 pb-2.5 border-b border-black/5 mb-2.5">
             {(
               [
@@ -631,17 +775,17 @@ export const MpHomePage: React.FC = () => {
           <div className="flex gap-2 items-start">
             {/* Left Column */}
             <div className="flex-1 min-w-0 flex flex-col gap-2">
-              {/* Editorial Wine Moment Card */}
               <button
                 type="button"
                 onClick={() => navigate('pdp', 'belena-shiraz')}
-                className="relative w-full h-[210px] rounded-[6px] overflow-hidden bg-[#1D2421] text-left p-3 flex flex-col justify-between"
+                className="relative w-full h-[216px] rounded-[4px] overflow-hidden bg-[#1D2421] text-left p-3 flex flex-col justify-between"
               >
                 <img
-                  src={ASSETS.wineBelenaAward}
+                  src={MP_ASSETS.heroSteak}
                   alt="Good Company Great Moments"
-                  className="absolute right-[-10px] bottom-[-10px] w-[120px] h-[160px] object-contain opacity-45"
+                  className="absolute inset-0 w-full h-full object-cover opacity-55"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/25" />
                 <div className="relative z-10">
                   <p className="text-[10px] tracking-[0.14em] uppercase" style={{ color: t.gold }}>
                     CELLAR SELECTION
@@ -677,7 +821,7 @@ export const MpHomePage: React.FC = () => {
 
               {/* Top Fruits Ranked Card (Annotation #12) */}
               <div
-                className="rounded-[6px] p-[10px] shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col gap-[10px] bg-white"
+                className="rounded-[4px] p-[10px] shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col gap-[10px] bg-white"
                 style={{
                   borderTop: `2px solid ${t.gold}`,
                 }}

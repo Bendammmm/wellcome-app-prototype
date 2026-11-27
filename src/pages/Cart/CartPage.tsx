@@ -411,6 +411,7 @@ export const CartPage: React.FC = () => {
                       type="button"
                       onClick={openFulfillmentSheet}
                       className="inline-flex items-center gap-[2px] text-[16px] leading-[24px] font-bold text-[#1A1A1A]"
+                      style={t.isMpOpt1 ? { fontFamily: t.headingFont, color: t.headingColor } : undefined}
                     >
                       <span>{isDelivery ? 'Home Delivery' : 'Click & Collect'}</span>
                       {t.isMp ? (

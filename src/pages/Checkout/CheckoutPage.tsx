@@ -5,6 +5,7 @@ import {
   getEffectiveItemMeta,
 } from '../../data/catalog';
 import { computePricingSummary, useAppStore } from '../../store/useAppStore';
+import { getThemeTokens } from '../../theme/themeConfig';
 import {
   CHECKOUT_ASSETS,
   CHECKOUT_CASH_VOUCHERS,
@@ -38,7 +39,8 @@ export const CheckoutPage: React.FC = () => {
   const submitMockOrder = useAppStore((s) => s.submitMockOrder);
   const showToast = useAppStore((s) => s.showToast);
   const appTheme = useAppStore((s) => s.appTheme);
-  const isMpOpt1 = appTheme === 'mp-opt1';
+  const t = getThemeTokens(appTheme);
+  const isMpOpt1 = t.isMpOpt1;
 
   const isDelivery = fulfillmentMode === 'delivery';
   const currentAddr =
@@ -177,11 +179,29 @@ export const CheckoutPage: React.FC = () => {
         >
           {/* Fulfillment Tag Pill */}
           <div className="bg-[#F7F7F7] rounded-[4px] px-[8px] py-[4px] inline-flex items-center gap-[4px] self-start">
-            <img
-              src={isDelivery ? CHECKOUT_ASSETS.truckOutline : CHECKOUT_ASSETS.cncBagOutline}
-              alt=""
-              className="w-[16px] h-[16px] shrink-0"
-            />
+            {t.isMp ? (
+              <span
+                aria-hidden="true"
+                className="block w-[16px] h-[16px] shrink-0"
+                style={{
+                  backgroundColor: t.primary,
+                  WebkitMaskImage: `url(${isDelivery ? CHECKOUT_ASSETS.truckOutline : CHECKOUT_ASSETS.cncBagOutline})`,
+                  maskImage: `url(${isDelivery ? CHECKOUT_ASSETS.truckOutline : CHECKOUT_ASSETS.cncBagOutline})`,
+                  WebkitMaskRepeat: 'no-repeat',
+                  maskRepeat: 'no-repeat',
+                  WebkitMaskPosition: 'center',
+                  maskPosition: 'center',
+                  WebkitMaskSize: 'contain',
+                  maskSize: 'contain',
+                }}
+              />
+            ) : (
+              <img
+                src={isDelivery ? CHECKOUT_ASSETS.truckOutline : CHECKOUT_ASSETS.cncBagOutline}
+                alt=""
+                className="w-[16px] h-[16px] shrink-0"
+              />
+            )}
             <span className="text-[12px] leading-[16px] font-normal text-[#1A1A1A]">
               {isDelivery ? 'Home Delivery' : 'Click & collect'}
             </span>
@@ -194,7 +214,10 @@ export const CheckoutPage: React.FC = () => {
                 <span className="h-[16px] px-[4px] rounded-[4px] border border-[#E40032] bg-white text-[10px] leading-[14px] text-[#E40032] inline-flex items-center justify-center shrink-0">
                   {currentAddr.tag || 'Home'}
                 </span>
-                <p className="text-[16px] leading-[24px] font-bold text-[#1A1A1A] truncate">
+                <p
+                  className="text-[16px] leading-[24px] font-bold text-[#1A1A1A] truncate"
+                  style={isMpOpt1 ? { fontFamily: t.headingFont } : undefined}
+                >
                   {currentAddr.title}
                 </p>
               </div>
@@ -617,7 +640,10 @@ export const CheckoutPage: React.FC = () => {
           </div>
 
           {/* Total Row */}
-          <div className="flex items-center justify-end text-[16px] leading-[24px] font-bold text-[#1A1A1A]">
+          <div
+            className="flex items-center justify-end text-[16px] leading-[24px] font-bold text-[#1A1A1A]"
+            style={isMpOpt1 ? { fontFamily: t.headingFont } : undefined}
+          >
             <span>Total: &#36;{payableTotal.toFixed(2)}</span>
           </div>
         </section>
