@@ -52,6 +52,7 @@ const MP_ASSETS = {
   brandTab3: '/assets/figma/mp/brand-tab-3.png',
   brandTab4: '/assets/figma/mp/brand-tab-4.png',
   zespri5pc: '/assets/figma/mp/zespri-5pc.png',
+  waterfallCellarBanner: '/assets/figma/mp/waterfall-cellar-banner.png',
 };
 
 const QUALITY_CATS = ['All', 'Seasonal Pick', 'Healthy Choice', 'Winter Warmers'] as const;
@@ -84,9 +85,30 @@ export const MpHomePage: React.FC = () => {
   const [activeBrandIdx, setActiveBrandIdx] = useState(0);
   const [brandDeckTick, setBrandDeckTick] = useState(0);
   const [feedTab, setFeedTab] = useState<'recommend' | 'dinner' | 'healthy'>('recommend');
+  const [feedPages, setFeedPages] = useState(2);
 
   const catTrackRef = useRef<HTMLDivElement>(null);
   const preorderTrackRef = useRef<HTMLDivElement>(null);
+  const feedSentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setFeedPages(2);
+  }, [feedTab]);
+
+  useEffect(() => {
+    const sentinel = feedSentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setFeedPages((prev) => Math.min(prev + 1, 20));
+        }
+      },
+      { rootMargin: '320px 0px' }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -707,8 +729,8 @@ export const MpHomePage: React.FC = () => {
             })}
           </div>
 
-          {/* Horizontal Swipeable Ranked Groups: 1-3, 4-6, 7-9 (16px right gap between groups) */}
-          <div className="relative z-10 flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar px-4 pb-1">
+          {/* Horizontal Swipeable Ranked Groups: 1-3, 4-6, 7-9 (8px gap between cards, 16px edge padding & scroll-snap inset) */}
+          <div className="relative z-10 flex gap-2 overflow-x-auto snap-x snap-mandatory scroll-px-4 no-scrollbar px-4 pb-1">
             {qualityGroups.map((group, groupIdx) => (
               <div
                 key={`qgroup-${groupIdx}`}
@@ -1024,27 +1046,12 @@ export const MpHomePage: React.FC = () => {
                       className="h-[22px] w-auto object-contain brightness-0 invert"
                     />
                     <p className="text-[12px] text-white/90 mt-1.5">{b.tagline}</p>
-                    <div className="flex items-center gap-2 mt-3">
-                      <span className="inline-flex items-center justify-center w-7 h-5 border border-white/70 text-[11px]">
-                        →
-                      </span>
-                      <div className="flex items-center gap-1">
-                        {b.deck.map((_, dIdx) => (
-                          <span
-                            key={dIdx}
-                            className="h-[3px] transition-all duration-300"
-                            style={{
-                              width: dIdx === activeIdx ? '12px' : '4px',
-                              backgroundColor:
-                                dIdx === activeIdx ? '#FFFFFF' : 'rgba(255,255,255,0.45)',
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </div>
+                    <span className="inline-flex items-center justify-center w-7 h-5 mt-3 border border-white/70 text-[11px]">
+                      →
+                    </span>
                   </div>
 
-                  {/* Interactive 3-card stacked product carousel deck */}
+                  {/* Subtle luxury 3-card stacked product carousel deck (no indicator dots) */}
                   <div
                     className="relative z-10 w-[124px] h-[132px] shrink-0"
                     onClick={(e) => {
@@ -1054,25 +1061,27 @@ export const MpHomePage: React.FC = () => {
                     title="Tap to cycle products"
                   >
                     {/* Card 3 (back-most peeking card) */}
-                    <div className="absolute right-0 top-2 bottom-2 w-[108px] bg-white/80 shadow-xs overflow-hidden transition-all duration-500">
+                    <div className="absolute right-0 top-2 bottom-2 w-[108px] bg-white/80 shadow-xs overflow-hidden transition-all duration-700 ease-out">
                       <img
                         src={backCard.img}
                         alt=""
-                        className="w-full h-[88px] object-cover opacity-50"
+                        className="w-full h-[88px] object-cover opacity-55 transition-opacity duration-700"
                       />
                     </div>
                     {/* Card 2 (middle peeking card) */}
-                    <div className="absolute right-[7px] top-1 bottom-1 w-[108px] bg-white/95 shadow-sm overflow-hidden transition-all duration-500">
+                    <div className="absolute right-[7px] top-1 bottom-1 w-[108px] bg-white/95 shadow-sm overflow-hidden transition-all duration-700 ease-out">
                       <img
                         src={midCard.img}
                         alt=""
-                        className="w-full h-[94px] object-cover opacity-75"
+                        className="w-full h-[94px] object-cover opacity-80 transition-opacity duration-700"
                       />
                     </div>
-                    {/* Card 1 (front active product card) */}
-                    <div className="relative w-[110px] h-full bg-white flex flex-col items-center justify-between shadow-md overflow-hidden pb-1.5 transition-all duration-500">
+                    {/* Card 1 (front active product card with subtle glide-in animation) */}
+                    <div
+                      key={`${b.name}-${activeIdx}`}
+                      className="mp-deck-enter relative w-[110px] h-full bg-white flex flex-col items-center justify-between shadow-md overflow-hidden pb-1.5"
+                    >
                       <img
-                        key={`${b.name}-${activeIdx}`}
                         src={frontCard.img}
                         alt={b.name}
                         className="w-full h-[102px] object-cover"
@@ -1257,103 +1266,110 @@ export const MpHomePage: React.FC = () => {
             })}
           </div>
 
-          {/* 2-Column Content-Adaptive Waterfall */}
-          <div className="flex gap-2 items-start">
-            <div className="flex-1 min-w-0 flex flex-col gap-2">
-              <button
-                type="button"
-                onClick={() => navigate('pdp', 'belena-shiraz')}
-                className="relative w-full h-[216px] overflow-hidden bg-[#1D2421] text-left p-3 flex flex-col justify-between"
-              >
-                <img
-                  src={MP_ASSETS.preorderChampagneBg}
-                  alt="Good Company Great Moments"
-                  className="absolute inset-0 w-full h-full object-cover opacity-75"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/25" />
-                <div className="relative z-10">
-                  <p className="text-[10px] tracking-[0.14em] uppercase" style={{ color: t.gold }}>
-                    CELLAR SELECTION
-                  </p>
-                  <p
-                    className="text-[17px] leading-[22px] text-white mt-1"
-                    style={{ fontFamily: t.heroFont }}
-                  >
-                    Good Company,
-                    <br />
-                    Great Moments
-                  </p>
-                </div>
-                <span className="relative z-10 inline-flex items-center gap-1 text-[11px] font-medium text-white/90">
-                  Explore wines <ArrowRight className="w-3 h-3" />
-                </span>
-              </button>
+          {/* 2-Column Infinite-Scroll Content-Adaptive Waterfall */}
+          {(() => {
+            const expandedFeed = Array.from({ length: feedPages }, (_, pageIdx) =>
+              feedProducts.map((p, itemIdx) => ({
+                product: p,
+                renderKey: `${feedTab}-p${pageIdx}-i${itemIdx}-${p.id}`,
+              }))
+            ).flat();
+            const leftItems = expandedFeed.filter((_, idx) => idx % 2 === 1);
+            const rightItems = expandedFeed.filter((_, idx) => idx % 2 === 0);
 
-              {feedProducts
-                .filter((_, idx) => idx % 2 === 1)
-                .map((p) => (
-                  <ProductCard key={p.id} product={p} variant="waterfall" />
-                ))}
-            </div>
-
-            <div className="flex-1 min-w-0 flex flex-col gap-2">
-              {feedProducts
-                .filter((_, idx) => idx % 2 === 0)
-                .map((p) => (
-                  <ProductCard key={p.id} product={p} variant="waterfall" />
-                ))}
-
-              <div
-                className="p-[10px] shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col gap-[10px] bg-white"
-                style={{ borderTop: `2px solid ${t.gold}` }}
-              >
-                <div className="text-[15px] leading-[20px] font-semibold" style={headingStyle}>
-                  Top Fruits
-                </div>
-                <div className="space-y-[10px]">
-                  {topFruits.map(({ rank, product, displayPrice }) => (
-                    <div
-                      key={product.id}
-                      onClick={() => navigate('pdp', product.id)}
-                      className="flex items-center gap-[8px] cursor-pointer"
+            return (
+              <>
+                <div className="flex gap-2 items-start">
+                  <div className="flex-1 min-w-0 flex flex-col gap-2">
+                    {/* Exact 3x Figma Waterfall Banner */}
+                    <button
+                      type="button"
+                      onClick={() => navigate('pdp', 'belena-shiraz')}
+                      className="w-full overflow-hidden bg-[#1D2421] block active:opacity-95"
                     >
-                      <div className="relative w-[44px] h-[44px] shrink-0 overflow-hidden bg-white">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                        <span
-                          className="absolute top-0 left-0 w-[15px] h-[15px] text-white text-[10px] font-bold flex items-center justify-center"
-                          style={{
-                            backgroundColor:
-                              rank === 1 ? '#D4A853' : rank === 2 ? '#9AA5B1' : '#C08A5B',
-                          }}
-                        >
-                          {rank}
-                        </span>
+                      <img
+                        src={MP_ASSETS.waterfallCellarBanner}
+                        alt="Good Company Great Moments"
+                        className="w-full h-auto block"
+                      />
+                    </button>
+
+                    {leftItems.map(({ product, renderKey }) => (
+                      <ProductCard key={renderKey} product={product} variant="waterfall" />
+                    ))}
+                  </div>
+
+                  <div className="flex-1 min-w-0 flex flex-col gap-2">
+                    {rightItems.slice(0, 3).map(({ product, renderKey }) => (
+                      <ProductCard key={renderKey} product={product} variant="waterfall" />
+                    ))}
+
+                    <div
+                      className="p-[10px] shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col gap-[10px] bg-white"
+                      style={{ borderTop: `2px solid ${t.gold}` }}
+                    >
+                      <div className="text-[15px] leading-[20px] font-semibold" style={headingStyle}>
+                        Top Fruits
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[12px] leading-[16px] text-[#1A1A1A] line-clamp-2 font-normal">
-                          {product.name}
-                        </p>
-                        <div className="flex items-end justify-between mt-[4px]">
-                          <PriceBlock price={displayPrice} size="xs" />
-                          <div className="relative w-[32px] h-[32px] shrink-0">
-                            <ProductAddControl
-                              productId={product.id}
-                              size="sm"
-                              className="absolute right-0 top-1/2 -translate-y-1/2 z-20"
-                            />
+                      <div className="space-y-[10px]">
+                        {topFruits.map(({ rank, product, displayPrice }) => (
+                          <div
+                            key={product.id}
+                            onClick={() => navigate('pdp', product.id)}
+                            className="flex items-center gap-[8px] cursor-pointer"
+                          >
+                            <div className="relative w-[44px] h-[44px] shrink-0 overflow-hidden bg-white">
+                              <img
+                                src={product.image}
+                                alt={product.name}
+                                className="w-full h-full object-cover"
+                              />
+                              <span
+                                className="absolute top-0 left-0 w-[15px] h-[15px] text-white text-[10px] font-bold flex items-center justify-center"
+                                style={{
+                                  backgroundColor:
+                                    rank === 1 ? '#D4A853' : rank === 2 ? '#9AA5B1' : '#C08A5B',
+                                }}
+                              >
+                                {rank}
+                              </span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[12px] leading-[16px] text-[#1A1A1A] line-clamp-2 font-normal">
+                                {product.name}
+                              </p>
+                              <div className="flex items-end justify-between mt-[4px]">
+                                <PriceBlock price={displayPrice} size="xs" />
+                                <div className="relative w-[32px] h-[32px] shrink-0">
+                                  <ProductAddControl
+                                    productId={product.id}
+                                    size="sm"
+                                    className="absolute right-0 top-1/2 -translate-y-1/2 z-20"
+                                  />
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                        </div>
+                        ))}
                       </div>
                     </div>
-                  ))}
+
+                    {rightItems.slice(3).map(({ product, renderKey }) => (
+                      <ProductCard key={renderKey} product={product} variant="waterfall" />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
+
+                {/* Infinite Scroll Sentinel */}
+                <div
+                  ref={feedSentinelRef}
+                  className="py-5 text-center text-[11px] text-[#858585]"
+                >
+                  {feedPages < 20 ? 'Loading more curated picks…' : 'You have reached the end'}
+                </div>
+              </>
+            );
+          })()}
         </section>
       </div>
 

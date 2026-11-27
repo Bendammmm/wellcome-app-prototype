@@ -427,7 +427,7 @@ export const CartPage: React.FC = () => {
             {isEditMode ? (
               <Check className="w-5 h-5 text-[#1A1A1A]" strokeWidth={2.4} />
             ) : (
-              <img src={ICONS.edit} alt="Edit" className="w-[24px] h-[24px] object-contain" />
+              <img src={t.icons.edit} alt="Edit" className="w-[24px] h-[24px] object-contain" />
             )}
           </button>
         </div>

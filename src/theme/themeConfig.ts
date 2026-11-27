@@ -52,6 +52,7 @@ export interface BrandThemeTokens {
     truck: string;
     qrScan: string;
     search: string;
+    edit: string;
   };
 }
 
@@ -92,6 +93,7 @@ export function getThemeTokens(theme: AppTheme): BrandThemeTokens {
         truck: '/assets/figma/icons-mp-before/truck.svg',
         qrScan: '/assets/figma/icons-mp-before/qr-scan.svg',
         search: '/assets/figma/icons-mp-before/search.svg',
+        edit: '/assets/figma/icons-mp-before/edit.svg',
       },
     };
   }
@@ -132,6 +134,7 @@ export function getThemeTokens(theme: AppTheme): BrandThemeTokens {
         truck: '/assets/figma/icons-mp-opt1/truck.svg',
         qrScan: '/assets/figma/icons-mp-opt1/qr-scan.svg',
         search: '/assets/figma/icons-mp-opt1/search.svg',
+        edit: '/assets/figma/icons-mp-opt1/edit.svg',
       },
     };
   }
@@ -171,6 +174,7 @@ export function getThemeTokens(theme: AppTheme): BrandThemeTokens {
       truck: '/assets/figma/truck.svg',
       qrScan: '/assets/figma/qr-scan.svg',
       search: '/assets/figma/search.svg',
+      edit: '/assets/figma/icons/edit.svg',
     },
   };
 }
