@@ -129,19 +129,19 @@ export const HomePage: React.FC = () => {
   ).slice(0, 6);
 
   const feedProducts = (() => {
-    const base = PRODUCTS.filter(
-      (p) =>
-        !p.isFlashDeal &&
-        [
-          'belena-shiraz',
-          'bin-180-wine',
-          'jumbo-blueberry',
-          'nissin-bowl',
-          'us-beef-blade',
-          'fuji-apple',
-          'zespri-kiwi',
-        ].includes(p.id)
-    );
+    // Explicit ordering so adjacent left/right waterfall cards have naturally staggered heights
+    const orderedIds = [
+      'belena-shiraz',
+      'fuji-apple',
+      'us-beef-blade',
+      'bin-180-wine',
+      'zespri-kiwi',
+      'jumbo-blueberry',
+      'nissin-bowl',
+    ];
+    const base = orderedIds
+      .map((id) => PRODUCTS.find((p) => p.id === id))
+      .filter((p): p is (typeof PRODUCTS)[number] => Boolean(p));
     if (feedTab === 'coke') return [...base].reverse();
     if (feedTab === 'cny') return [...base].sort((a, b) => b.price - a.price);
     return base;

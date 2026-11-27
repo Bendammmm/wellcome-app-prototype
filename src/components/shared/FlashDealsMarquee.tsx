@@ -4,7 +4,7 @@ import { ProductCard } from './ProductCard';
 
 interface FlashDealsMarqueeProps {
   products: Product[];
-  /** Auto-scroll speed in px/sec (default 26) */
+  /** Auto-scroll speed in px/sec (default 32) */
   speedPxPerSec?: number;
   /** Pause duration in ms after manual user scroll before resuming (default 3500) */
   resumeDelayMs?: number;
@@ -16,11 +16,13 @@ interface FlashDealsMarqueeProps {
  * Infinite vertically auto-scrolling & manually scrollable Flash Deals list.
  * Renders 3 copies of `products` and wraps scrollTop around the middle copy so
  * both auto-scroll and manual wheel/touch scrolling loop seamlessly without hitting a bottom.
- * Any user touch/pointer/wheel interaction pauses auto-scroll and resumes after `resumeDelayMs`.
+ * Uses `expectedScrollTopRef` so async browser `scroll` events triggered by programmatic
+ * rAF updates NEVER falsely pause auto-scroll, while real user wheel/touch/drag scrolls
+ * immediately pause and resume after `resumeDelayMs`.
  */
 export const FlashDealsMarquee: React.FC<FlashDealsMarqueeProps> = ({
   products,
-  speedPxPerSec = 26,
+  speedPxPerSec = 32,
   resumeDelayMs = 3500,
   heightPx = 172,
 }) => {
@@ -28,7 +30,7 @@ export const FlashDealsMarquee: React.FC<FlashDealsMarqueeProps> = ({
   const singleSetRef = useRef<HTMLDivElement>(null);
   const isUserHoldingRef = useRef(false);
   const pausedUntilRef = useRef(0);
-  const isProgrammaticScrollRef = useRef(false);
+  const expectedScrollTopRef = useRef(0);
   const subPixelRef = useRef(0);
 
   const pauseAutoScroll = () => {
@@ -45,11 +47,8 @@ export const FlashDealsMarquee: React.FC<FlashDealsMarqueeProps> = ({
     // Start at the beginning of the middle copy so user can scroll freely up OR down
     const initialSetH = getSetHeight();
     if (initialSetH > 0) {
-      isProgrammaticScrollRef.current = true;
       el.scrollTop = initialSetH;
-      requestAnimationFrame(() => {
-        isProgrammaticScrollRef.current = false;
-      });
+      expectedScrollTopRef.current = el.scrollTop;
     }
 
     let rafId = 0;
@@ -60,20 +59,19 @@ export const FlashDealsMarquee: React.FC<FlashDealsMarqueeProps> = ({
       lastTime = now;
 
       const setH = getSetHeight();
-      if (setH > 0) {
-        if (!isUserHoldingRef.current && now >= pausedUntilRef.current) {
-          subPixelRef.current += (speedPxPerSec * dt) / 1000;
-          const wholePx = Math.floor(subPixelRef.current);
-          if (wholePx >= 1) {
-            subPixelRef.current -= wholePx;
-            isProgrammaticScrollRef.current = true;
-            let nextTop = el.scrollTop + wholePx;
-            if (nextTop >= setH * 2) {
-              nextTop -= setH;
-            }
-            el.scrollTop = nextTop;
-            isProgrammaticScrollRef.current = false;
+      if (setH > 0 && !isUserHoldingRef.current && now >= pausedUntilRef.current) {
+        subPixelRef.current += (speedPxPerSec * dt) / 1000;
+        const wholePx = Math.floor(subPixelRef.current);
+        if (wholePx >= 1) {
+          subPixelRef.current -= wholePx;
+          let nextTop = el.scrollTop + wholePx;
+          if (nextTop >= setH * 2) {
+            nextTop -= setH;
           }
+          expectedScrollTopRef.current = nextTop;
+          el.scrollTop = nextTop;
+          // Sync actual rounded scrollTop back (handles HiDPI / subpixel clamping)
+          expectedScrollTopRef.current = el.scrollTop;
         }
       }
 
@@ -92,19 +90,23 @@ export const FlashDealsMarquee: React.FC<FlashDealsMarqueeProps> = ({
     const setH = setEl.offsetHeight;
     if (setH <= 0) return;
 
-    if (!isProgrammaticScrollRef.current) {
+    // Only treat as user-initiated scroll if scrollTop diverged from our programmatic target
+    if (Math.abs(el.scrollTop - expectedScrollTopRef.current) > 2) {
       pauseAutoScroll();
+      expectedScrollTopRef.current = el.scrollTop;
     }
 
     // Seamless infinite wrap in both directions
     if (el.scrollTop >= setH * 2) {
-      isProgrammaticScrollRef.current = true;
-      el.scrollTop -= setH;
-      isProgrammaticScrollRef.current = false;
+      const wrapped = el.scrollTop - setH;
+      expectedScrollTopRef.current = wrapped;
+      el.scrollTop = wrapped;
+      expectedScrollTopRef.current = el.scrollTop;
     } else if (el.scrollTop < setH * 0.25) {
-      isProgrammaticScrollRef.current = true;
-      el.scrollTop += setH;
-      isProgrammaticScrollRef.current = false;
+      const wrapped = el.scrollTop + setH;
+      expectedScrollTopRef.current = wrapped;
+      el.scrollTop = wrapped;
+      expectedScrollTopRef.current = el.scrollTop;
     }
   };
 
@@ -117,6 +119,7 @@ export const FlashDealsMarquee: React.FC<FlashDealsMarqueeProps> = ({
         isUserHoldingRef.current = true;
         pauseAutoScroll();
       }}
+      onTouchMove={pauseAutoScroll}
       onTouchEnd={() => {
         isUserHoldingRef.current = false;
         pauseAutoScroll();
