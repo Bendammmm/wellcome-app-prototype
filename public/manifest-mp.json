@@ -4,12 +4,18 @@
   "start_url": "/mp",
   "scope": "/mp",
   "display": "standalone",
-  "background_color": "#28443C",
+  "background_color": "#000000",
   "theme_color": "#28443C",
   "icons": [
     {
       "src": "/apple-touch-icon-mp.png",
       "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-mp-512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
