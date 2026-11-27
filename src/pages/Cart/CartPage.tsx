@@ -180,7 +180,7 @@ export const CartPage: React.FC = () => {
 
   const handleCheckoutPress = () => {
     if (t.isMp) {
-      showToast('当前 MP 演示版仅开放首页、分类、购物车与商品详情');
+      showToast('该功能暂未实现');
       return;
     }
     if (pricing.totalUnits === 0) return;
@@ -427,9 +427,9 @@ export const CartPage: React.FC = () => {
               aria-hidden="true"
               className="block w-[16px] h-[16px] shrink-0"
               style={{
-                backgroundColor: '#1A1A1A',
-                WebkitMaskImage: `url(${isDelivery ? ICONS.truck : ICONS.cncBag})`,
-                maskImage: `url(${isDelivery ? ICONS.truck : ICONS.cncBag})`,
+                backgroundColor: t.isMpOpt1 ? '#28443C' : '#1A1A1A',
+                WebkitMaskImage: `url(${isDelivery ? (t.isMp ? t.icons.truck : ICONS.truck) : ICONS.cncBag})`,
+                maskImage: `url(${isDelivery ? (t.isMp ? t.icons.truck : ICONS.truck) : ICONS.cncBag})`,
                 WebkitMaskRepeat: 'no-repeat',
                 maskRepeat: 'no-repeat',
                 WebkitMaskPosition: 'center',
@@ -562,7 +562,7 @@ export const CartPage: React.FC = () => {
                       type="button"
                       onClick={() => {
                         if (t.isMp) {
-                          showToast('当前 MP 演示版暂不开放二级弹窗');
+                          showToast('该功能暂未实现');
                           return;
                         }
                         setLeadTimeDrawerOpen(true);
@@ -609,7 +609,8 @@ export const CartPage: React.FC = () => {
                   ].map((p) => (
                     <div
                       key={p.id}
-                      className="rounded-[8px] bg-[#FFF8DC] p-2 flex items-center gap-2"
+                      className="rounded-[8px] p-2 flex items-center gap-2"
+                      style={{ backgroundColor: t.isMp ? t.canvasBg : '#F7F7F7' }}
                     >
                       <img src={p.image} alt={p.name} className="w-10 h-10 object-contain shrink-0" />
                       <div className="flex-1 min-w-0 flex flex-col items-start">
@@ -886,7 +887,7 @@ export const CartPage: React.FC = () => {
                 type="button"
                 onClick={() => {
                   if (t.isMp) {
-                    showToast('当前 MP 演示版暂不开放二级弹窗');
+                    showToast('该功能暂未实现');
                     return;
                   }
                   setBreakdownOpen(true);

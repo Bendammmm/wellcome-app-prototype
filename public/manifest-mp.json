@@ -1,0 +1,17 @@
+{
+  "name": "Market Place",
+  "short_name": "Market Place",
+  "start_url": "/mp",
+  "scope": "/mp",
+  "display": "standalone",
+  "background_color": "#28443C",
+  "theme_color": "#28443C",
+  "icons": [
+    {
+      "src": "/apple-touch-icon-mp.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -318,7 +318,7 @@ export const CategoriesPage: React.FC = () => {
           type="button"
           onClick={() => {
             if (t.isMp) {
-              useAppStore.getState().showToast('当前 MP 演示版暂不开放二级弹窗');
+              useAppStore.getState().showToast('该功能暂未实现');
               return;
             }
             setExpandOpen((o) => !o);
@@ -477,7 +477,7 @@ export const CategoriesPage: React.FC = () => {
               type="button"
               onClick={() => {
                 if (t.isMp) {
-                  useAppStore.getState().showToast('当前 MP 演示版暂不开放二级弹窗');
+                  useAppStore.getState().showToast('该功能暂未实现');
                   return;
                 }
                 setFilterDrawerOpen(true);

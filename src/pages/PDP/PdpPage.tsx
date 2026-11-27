@@ -187,7 +187,11 @@ export const PdpPage: React.FC = () => {
             className="w-[36px] h-[36px] rounded-full bg-[#F7F7F7]/90 backdrop-blur-xs shadow-xs flex items-center justify-center active:scale-95"
           >
             {isWishlisted ? (
-              <Heart className="w-[22px] h-[22px] fill-[#E40032] text-[#E40032]" strokeWidth={2} />
+              <Heart
+                className="w-[22px] h-[22px]"
+                style={{ fill: t.primary, color: t.primary }}
+                strokeWidth={2}
+              />
             ) : (
               <img src={ICONS.heartOutline} alt="" className="w-[28px] h-[28px] object-contain" />
             )}
@@ -235,7 +239,7 @@ export const PdpPage: React.FC = () => {
               className="w-8 h-8 flex items-center justify-center"
             >
               {isWishlisted ? (
-                <Heart className="w-5 h-5 fill-[#E40032] text-[#E40032]" />
+                <Heart className="w-5 h-5" style={{ fill: t.primary, color: t.primary }} />
               ) : (
                 <img src={ICONS.heartOutline} alt="" className="w-5 h-5 object-contain" />
               )}
@@ -318,7 +322,7 @@ export const PdpPage: React.FC = () => {
             type="button"
             onClick={() => {
               if (isMp) {
-                showToast('当前 MP 演示版暂不开放二级弹窗');
+                showToast('该功能暂未实现');
                 return;
               }
               setOptionDrawerOpen(true);
@@ -472,7 +476,7 @@ export const PdpPage: React.FC = () => {
             type="button"
             onClick={() => {
               if (isMp) {
-                showToast('当前 MP 演示版暂不开放二级弹窗');
+                showToast('该功能暂未实现');
                 return;
               }
               setDeliveryDrawerOpen(true);
@@ -481,11 +485,47 @@ export const PdpPage: React.FC = () => {
           >
             <div className="flex flex-wrap items-center gap-[8px]">
               <span className="bg-[#F7F7F7] px-[8px] py-[4px] rounded-[4px] inline-flex items-center gap-[4px] text-[12px] leading-[16px] font-normal text-[#1A1A1A]">
-                <img src={ICONS.truckRed} alt="" className="w-[16px] h-[16px] object-contain" />
+                {isMp ? (
+                  <span
+                    aria-hidden="true"
+                    className="block w-[16px] h-[16px] shrink-0"
+                    style={{
+                      backgroundColor: t.primary,
+                      WebkitMaskImage: `url(${ICONS.cncBag})`,
+                      maskImage: `url(${ICONS.cncBag})`,
+                      WebkitMaskRepeat: 'no-repeat',
+                      maskRepeat: 'no-repeat',
+                      WebkitMaskPosition: 'center',
+                      maskPosition: 'center',
+                      WebkitMaskSize: 'contain',
+                      maskSize: 'contain',
+                    }}
+                  />
+                ) : (
+                  <img src={ICONS.truckRed} alt="" className="w-[16px] h-[16px] object-contain" />
+                )}
                 Click &amp; Collect
               </span>
               <span className="bg-[#F7F7F7] px-[8px] py-[4px] rounded-[4px] inline-flex items-center gap-[4px] text-[12px] leading-[16px] font-normal text-[#1A1A1A]">
-                <img src={ICONS.truckRed} alt="" className="w-[16px] h-[16px] object-contain" />
+                {isMp ? (
+                  <span
+                    aria-hidden="true"
+                    className="block w-[16px] h-[16px] shrink-0"
+                    style={{
+                      backgroundColor: t.primary,
+                      WebkitMaskImage: `url(${t.icons.truck})`,
+                      maskImage: `url(${t.icons.truck})`,
+                      WebkitMaskRepeat: 'no-repeat',
+                      maskRepeat: 'no-repeat',
+                      WebkitMaskPosition: 'center',
+                      maskPosition: 'center',
+                      WebkitMaskSize: 'contain',
+                      maskSize: 'contain',
+                    }}
+                  />
+                ) : (
+                  <img src={ICONS.truckRed} alt="" className="w-[16px] h-[16px] object-contain" />
+                )}
                 Delivery
               </span>
             </div>
@@ -592,8 +632,8 @@ export const PdpPage: React.FC = () => {
                       />
                     )}
                     <div
-                      className={`flex-1 min-w-0 overflow-hidden bg-white flex flex-col ${
-                        isMp ? '' : 'rounded-[8px] border border-[#E0E0E0]'
+                      className={`flex-1 min-w-0 overflow-hidden bg-white border border-[#E0E0E0] flex flex-col ${
+                        isMp ? 'rounded-none' : 'rounded-[8px]'
                       }`}
                     >
                       <div className="w-full h-[80px] flex items-center justify-center bg-white">
@@ -885,9 +925,36 @@ export const PdpPage: React.FC = () => {
           aria-label="Open Cart"
           className="relative w-[36px] h-[40px] flex items-center justify-center shrink-0"
         >
-          <img src={ICONS.tabCart} alt="Cart" className="w-[28px] h-[28px] object-contain" />
+          {isMp ? (
+            <span
+              aria-hidden="true"
+              className="block w-[26px] h-[26px]"
+              style={{
+                backgroundColor: t.isMpOpt1 ? '#28443C' : '#1A1A1A',
+                WebkitMaskImage: `url(${t.icons.tabCart})`,
+                maskImage: `url(${t.icons.tabCart})`,
+                WebkitMaskRepeat: 'no-repeat',
+                maskRepeat: 'no-repeat',
+                WebkitMaskPosition: 'center',
+                maskPosition: 'center',
+                WebkitMaskSize: 'contain',
+                maskSize: 'contain',
+              }}
+            />
+          ) : (
+            <img src={ICONS.tabCart} alt="Cart" className="w-[28px] h-[28px] object-contain" />
+          )}
           {totalCartCount > 0 && (
-            <span className="absolute top-[2px] right-0 min-w-[14px] h-[14px] px-[3px] rounded-full bg-[#FFCF00] text-[#1A1A1A] text-[10px] leading-[12px] font-normal flex items-center justify-center border border-white">
+            <span
+              className="absolute top-[2px] right-0 min-w-[14px] h-[14px] px-[3px] rounded-full text-[10px] leading-[12px] font-medium flex items-center justify-center border border-white"
+              style={
+                t.isMpOpt1
+                  ? { backgroundColor: '#DDB97D', color: '#1A1A1A' }
+                  : t.isMpBefore
+                    ? { backgroundColor: '#155D2D', color: '#FFFFFF' }
+                    : { backgroundColor: '#FFCF00', color: '#1A1A1A' }
+              }
+            >
               {totalCartCount}
             </span>
           )}

@@ -8,9 +8,25 @@
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Wellcome" />
-    <meta name="theme-color" content="#E40032" />
-    <link rel="manifest" href="/manifest.json" />
+    <meta id="app-apple-title" name="apple-mobile-web-app-title" content="Wellcome" />
+    <meta id="app-theme-color" name="theme-color" content="#E40032" />
+    <link id="app-manifest" rel="manifest" href="/manifest.json" />
+    <link id="app-touch-icon" rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-mp.png" />
+    <script>
+      (function () {
+        if (window.location.pathname.toLowerCase().startsWith('/mp')) {
+          document.title = 'Market Place';
+          var titleMeta = document.getElementById('app-apple-title');
+          if (titleMeta) titleMeta.setAttribute('content', 'Market Place');
+          var themeMeta = document.getElementById('app-theme-color');
+          if (themeMeta) themeMeta.setAttribute('content', '#28443C');
+          var manifestLink = document.getElementById('app-manifest');
+          if (manifestLink) manifestLink.setAttribute('href', '/manifest-mp.json');
+          var iconLink = document.getElementById('app-touch-icon');
+          if (iconLink) iconLink.setAttribute('href', '/apple-touch-icon-mp.png');
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

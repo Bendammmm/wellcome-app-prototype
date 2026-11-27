@@ -334,7 +334,7 @@ export const useAppStore = create<AppState>()(
       navigate: (page, productId) => {
         const state = get();
         if (state.appTheme !== 'we' && !MP_ALLOWED_PAGES.has(page)) {
-          state.showToast('当前 MP 演示版仅开放首页、分类、购物车与商品详情');
+          state.showToast('该功能暂未实现');
           return;
         }
         const nextHistory = [
@@ -367,7 +367,7 @@ export const useAppStore = create<AppState>()(
       openFulfillmentSheet: () => {
         const state = get();
         if (state.appTheme !== 'we') {
-          state.showToast('当前 MP 演示版暂不开放二级弹窗');
+          state.showToast('该功能暂未实现');
           return;
         }
         set({ fulfillmentSheetOpen: true });
@@ -590,7 +590,7 @@ export const useAppStore = create<AppState>()(
       submitSearch: (query) => {
         const state = get();
         if (state.appTheme !== 'we') {
-          state.showToast('当前 MP 演示版仅开放首页、分类、购物车与商品详情');
+          state.showToast('该功能暂未实现');
           return;
         }
         const cleaned = query.trim();
