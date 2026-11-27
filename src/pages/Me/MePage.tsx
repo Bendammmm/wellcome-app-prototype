@@ -37,18 +37,20 @@ export const MePage: React.FC = () => {
 
   return (
     <div className="min-h-dvh bg-[#F7F7F7] pb-[118px]">
-      {/* Top Navigation Bar (Figma 6860:81578) */}
-      <header className="sticky top-0 z-30 bg-[#F7F7F7]/95 backdrop-blur-xs px-[12px] pt-[max(12px,env(safe-area-inset-top))] pb-[8px] flex items-center justify-between">
-        <div className="w-[32px]" />
-        <h1 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Me</h1>
-        <button
-          type="button"
-          onClick={() => navigate('login')}
-          aria-label="Settings"
-          className="w-[32px] h-[32px] flex items-center justify-center active:opacity-70"
-        >
-          <img src={ME_ASSETS.settings} alt="Settings" className="w-[24px] h-[24px] object-contain" />
-        </button>
+      {/* Top Navigation Bar (Figma 6860:81578 — exact 48px row) */}
+      <header className="sticky top-0 z-30 bg-[#F7F7F7]/95 backdrop-blur-xs pt-[env(safe-area-inset-top)]">
+        <div className="h-[48px] px-[12px] flex items-center justify-between">
+          <div className="w-[36px]" />
+          <h1 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Me</h1>
+          <button
+            type="button"
+            onClick={() => navigate('login')}
+            aria-label="Settings"
+            className="w-[36px] h-[36px] flex items-center justify-center active:opacity-70"
+          >
+            <img src={ME_ASSETS.settings} alt="Settings" className="w-[24px] h-[24px] object-contain" />
+          </button>
+        </div>
       </header>
 
       <div className="px-[12px] space-y-[12px]">

@@ -44,7 +44,7 @@
   min-height: 100dvh;
   background: var(--color-surface-page);
   position: relative;
-  overflow-x: hidden;
+  overflow-x: clip;
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.14);
 }
 

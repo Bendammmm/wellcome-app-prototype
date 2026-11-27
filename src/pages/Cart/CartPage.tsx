@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   BadgePercent,
   Check,
@@ -64,9 +64,50 @@ export const CartPage: React.FC = () => {
   const [checkoutDrawerOpen, setCheckoutDrawerOpen] = useState(false);
   const [minOrderWarnOpen, setMinOrderWarnOpen] = useState(false);
   const [confirmedOrder, setConfirmedOrder] = useState<OrderRecord | null>(null);
+  const [activeBasket, setActiveBasket] = useState<'main' | 'preorder' | null>('main');
 
-  const pricing = computePricingSummary(cartItems, fulfillmentMode, promoCodeDiscount);
+  const mainBasketRef = useRef<HTMLElement | null>(null);
+  const preorderBasketRef = useRef<HTMLElement | null>(null);
+
+  const mainItems = cartItems.filter((i) => i.section === 'main');
+  const preorderItems = cartItems.filter((i) => i.section === 'preorder');
+
+  const mainPricing = computePricingSummary(mainItems, fulfillmentMode, promoCodeDiscount);
+  const preorderPricing = computePricingSummary(preorderItems, fulfillmentMode, 0);
+  const pricing = activeBasket === 'preorder' ? preorderPricing : mainPricing;
   const isDelivery = fulfillmentMode === 'delivery';
+
+  useEffect(() => {
+    const updateActiveBasket = () => {
+      if (cartItems.length === 0) {
+        setActiveBasket(null);
+        return;
+      }
+      const headerBottom = 56;
+      const vh = window.innerHeight;
+      const mainRect = mainBasketRef.current?.getBoundingClientRect();
+      const preRect = preorderBasketRef.current?.getBoundingClientRect();
+
+      const mainVisible = !!mainRect && mainRect.bottom > headerBottom + 40 && mainRect.top < vh - 120;
+      const preVisible = !!preRect && preRect.bottom > headerBottom + 40 && preRect.top < vh - 120;
+
+      // Switch to Pre-order once its top enters upper half of viewport or Main basket has scrolled off
+      if (preVisible && (!mainVisible || (preRect && preRect.top <= vh * 0.45))) {
+        setActiveBasket('preorder');
+      } else if (mainVisible) {
+        setActiveBasket('main');
+      } else {
+        setActiveBasket(null);
+      }
+    };
+    updateActiveBasket();
+    window.addEventListener('scroll', updateActiveBasket, { passive: true });
+    window.addEventListener('resize', updateActiveBasket);
+    return () => {
+      window.removeEventListener('scroll', updateActiveBasket);
+      window.removeEventListener('resize', updateActiveBasket);
+    };
+  }, [cartItems.length, mainItems.length, preorderItems.length]);
 
   const currentAddr =
     DELIVERY_ADDRESSES.find((a) => a.id === selectedAddressId) ?? DELIVERY_ADDRESSES[0];
@@ -77,9 +118,25 @@ export const CartPage: React.FC = () => {
     ? `to ${currentAddr.shortNavLabel}`
     : `· ${currentStore.shortNavLabel}`;
 
-  const mainItems = cartItems.filter((i) => i.section === 'main');
-  const preorderItems = cartItems.filter((i) => i.section === 'preorder');
-  const allSelected = cartItems.length > 0 && cartItems.every((i) => i.selected);
+  const activeBasketItems = activeBasket === 'preorder' ? preorderItems : mainItems;
+  const allSelected =
+    activeBasketItems.length > 0 && activeBasketItems.every((i) => i.selected);
+
+  const handleToggleBasketAll = () => {
+    if (activeBasket === 'preorder') {
+      const allPreSelected = preorderItems.every((i) => i.selected);
+      preorderItems.forEach((i) => {
+        if (i.selected === allPreSelected) toggleItemSelected(i.key);
+      });
+    } else if (activeBasket === 'main') {
+      const allMainSelected = mainItems.every((i) => i.selected);
+      mainItems.forEach((i) => {
+        if (i.selected === allMainSelected) toggleItemSelected(i.key);
+      });
+    } else {
+      toggleSelectAll();
+    }
+  };
 
   const extraLeadTimeItems = cartItems.filter((i) => {
     const meta = getEffectiveItemMeta(i.productId, i.variantId);
@@ -239,56 +296,58 @@ export const CartPage: React.FC = () => {
 
   return (
     <div className="min-h-dvh bg-[#F7F7F7] pb-[196px]">
-      {/* Sticky Top NavigationBar (Figma 7939:416968) */}
-      <header className="sticky top-0 z-30 bg-white border-b border-[#EFEFEF] px-3 pt-[max(12px,env(safe-area-inset-top))] pb-2.5 flex items-center justify-between gap-2">
-        <button
-          type="button"
-          onClick={goBack}
-          aria-label="Back"
-          className="w-[36px] h-[36px] flex items-center justify-center shrink-0"
-        >
-          <img src={ICONS.chevronLeft} alt="" className="w-[28px] h-[28px] object-contain" />
-        </button>
+      {/* Sticky Top NavigationBar (Figma 8585:133872 — exact 48px row) */}
+      <header className="sticky top-0 z-30 bg-white border-b border-[#EFEFEF] pt-[env(safe-area-inset-top)]">
+        <div className="h-[48px] px-[12px] flex items-center justify-between gap-[8px]">
+          <button
+            type="button"
+            onClick={goBack}
+            aria-label="Back"
+            className="w-[36px] h-[36px] flex items-center justify-center shrink-0"
+          >
+            <img src={ICONS.chevronLeft} alt="" className="w-[28px] h-[28px] object-contain" />
+          </button>
 
-        <button
-          type="button"
-          onClick={openFulfillmentSheet}
-          className="flex items-center gap-[4px] text-[14px] leading-[20px] text-[#1A1A1A] min-w-0 flex-1 justify-start"
-        >
-          <span
-            aria-hidden="true"
-            className="block w-[16px] h-[16px] shrink-0"
-            style={{
-              backgroundColor: '#1A1A1A',
-              WebkitMaskImage: `url(${isDelivery ? ICONS.truck : ICONS.cncBag})`,
-              maskImage: `url(${isDelivery ? ICONS.truck : ICONS.cncBag})`,
-              WebkitMaskRepeat: 'no-repeat',
-              maskRepeat: 'no-repeat',
-              WebkitMaskPosition: 'center',
-              maskPosition: 'center',
-              WebkitMaskSize: 'contain',
-              maskSize: 'contain',
-            }}
-          />
-          <span className="font-semibold shrink-0">
-            {isDelivery ? 'Delivery' : 'Click & Collect'}
-          </span>
-          <span className="truncate text-[#3D3D3D]">{navLocation}</span>
-          <img src={ICONS.chevronDown} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
-        </button>
+          <button
+            type="button"
+            onClick={openFulfillmentSheet}
+            className="flex items-center gap-[4px] text-[14px] leading-[20px] text-[#1A1A1A] min-w-0 flex-1 justify-start"
+          >
+            <span
+              aria-hidden="true"
+              className="block w-[16px] h-[16px] shrink-0"
+              style={{
+                backgroundColor: '#1A1A1A',
+                WebkitMaskImage: `url(${isDelivery ? ICONS.truck : ICONS.cncBag})`,
+                maskImage: `url(${isDelivery ? ICONS.truck : ICONS.cncBag})`,
+                WebkitMaskRepeat: 'no-repeat',
+                maskRepeat: 'no-repeat',
+                WebkitMaskPosition: 'center',
+                maskPosition: 'center',
+                WebkitMaskSize: 'contain',
+                maskSize: 'contain',
+              }}
+            />
+            <span className="font-semibold shrink-0">
+              {isDelivery ? 'Delivery' : 'Click & Collect'}
+            </span>
+            <span className="truncate text-[#3D3D3D]">{navLocation}</span>
+            <img src={ICONS.chevronDown} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setIsEditMode((e) => !e)}
-          aria-label={isEditMode ? 'Done editing' : 'Edit cart'}
-          className="w-[36px] h-[36px] flex items-center justify-center shrink-0"
-        >
-          {isEditMode ? (
-            <Check className="w-5 h-5 text-[#1A1A1A]" strokeWidth={2.4} />
-          ) : (
-            <img src={ICONS.edit} alt="Edit" className="w-[24px] h-[24px] object-contain" />
-          )}
-        </button>
+          <button
+            type="button"
+            onClick={() => setIsEditMode((e) => !e)}
+            aria-label={isEditMode ? 'Done editing' : 'Edit cart'}
+            className="w-[36px] h-[36px] flex items-center justify-center shrink-0"
+          >
+            {isEditMode ? (
+              <Check className="w-5 h-5 text-[#1A1A1A]" strokeWidth={2.4} />
+            ) : (
+              <img src={ICONS.edit} alt="Edit" className="w-[24px] h-[24px] object-contain" />
+            )}
+          </button>
+        </div>
       </header>
 
       <div className="px-[8px] pt-[8px] space-y-[8px]">
@@ -331,10 +390,10 @@ export const CartPage: React.FC = () => {
           </section>
         ) : (
           <>
-            {/* Main Fulfillment Cart Card (Figma 8585:131777) */}
+            {/* Main Fulfillment Cart Card (Figma 8585:131777) — per-basket sticky header */}
             {mainItems.length > 0 && (
-              <section className="bg-white rounded-[12px] p-[12px]">
-                <div className="border-b border-[#E0E0E0] pb-[12px] space-y-[12px]">
+              <section ref={mainBasketRef} className="bg-white rounded-[12px] px-[12px] pb-[12px]">
+                <div className="sticky top-[48px] z-20 bg-white pt-[12px] pb-[12px] border-b border-[#E0E0E0] space-y-[12px] rounded-t-[12px]">
                   <div className="flex items-center justify-between gap-[4px]">
                     <button
                       type="button"
@@ -349,13 +408,13 @@ export const CartPage: React.FC = () => {
                         Earliest
                       </span>
                       <span className="text-[12px] leading-[16px] font-normal text-[#3D3D3D]">
-                        {pricing.earliestDateLabel}
+                        {mainPricing.earliestDateLabel}
                       </span>
                     </div>
                   </div>
 
                   {/* Extra Lead Time Banner (Figma 8585:131788) -> opens 6514:77679 drawer */}
-                  {pricing.hasExtraLeadTimeSelected && (
+                  {mainPricing.hasExtraLeadTimeSelected && (
                     <button
                       type="button"
                       onClick={() => setLeadTimeDrawerOpen(true)}
@@ -485,10 +544,10 @@ export const CartPage: React.FC = () => {
               )}
             </section>
 
-            {/* Pre-order section (Figma 7939:425539) */}
+            {/* Pre-order section (Figma 7939:425539) — per-basket sticky header */}
             {preorderItems.length > 0 && (
-              <section className="bg-white rounded-[12px] p-[12px]">
-                <div className="flex items-center justify-between border-b border-[#E0E0E0] pb-[12px]">
+              <section ref={preorderBasketRef} className="bg-white rounded-[12px] px-[12px] pb-[12px]">
+                <div className="sticky top-[48px] z-20 bg-white pt-[12px] pb-[12px] flex items-center justify-between border-b border-[#E0E0E0] rounded-t-[12px]">
                   <span className="inline-flex items-center gap-[2px] text-[16px] leading-[24px] font-bold text-[#1A1A1A]">
                     <span>Pre-order</span>
                     <img src={ICONS.chevronRightRed} alt="" className="w-[16px] h-[16px] object-contain" />
@@ -543,18 +602,31 @@ export const CartPage: React.FC = () => {
         </section>
       </div>
 
-      {/* Sticky Bottom Checkout Bar (Figma 5207:218568 & 8585:131773) */}
-      <footer className="app-fixed-bar bottom-0 z-30 bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)]">
-        <ThresholdProgressBar
-          variant="compact"
-          onClick={() => navigate('smart-tips')}
-        />
+      {/* Sticky Bottom Checkout Bar — contextual to active basket in viewport, slides out when scrolled past all baskets */}
+      <footer
+        className={`app-fixed-bar bottom-0 z-30 bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] transition-transform duration-200 ${
+          activeBasket === null && !isEditMode
+            ? 'translate-y-full pointer-events-none'
+            : 'translate-y-0'
+        }`}
+      >
+        {activeBasket === 'preorder' ? (
+          <div className="bg-[#FFF6F5] px-[12px] py-[8px] flex items-center justify-between text-[12px] leading-[16px] text-[#3D3D3D] border-b border-[#F2E4E6]">
+            <span className="font-semibold text-[#1A1A1A]">Pre-order Basket</span>
+            <span className="text-[#666666]">Earliest 15 Jun 18:00</span>
+          </div>
+        ) : (
+          <ThresholdProgressBar
+            variant="compact"
+            onClick={() => navigate('smart-tips')}
+          />
+        )}
 
         {isEditMode ? (
           <div className="px-[12px] pt-[12px] pb-[max(14px,env(safe-area-inset-bottom))] flex items-center justify-between">
             <button
               type="button"
-              onClick={toggleSelectAll}
+              onClick={handleToggleBasketAll}
               className="inline-flex items-center gap-[4px] text-[14px] leading-[20px] text-[#3D3D3D]"
             >
               <img
@@ -581,7 +653,7 @@ export const CartPage: React.FC = () => {
             <div className="flex items-center justify-between">
               <button
                 type="button"
-                onClick={toggleSelectAll}
+                onClick={handleToggleBasketAll}
                 className="inline-flex items-center gap-[4px] text-[14px] leading-[20px] text-[#3D3D3D]"
               >
                 <img
@@ -626,7 +698,9 @@ export const CartPage: React.FC = () => {
               onClick={handleCheckoutPress}
               className="w-full h-[46px] rounded-[10px] bg-[#E40032] text-white text-[15px] font-bold active:opacity-90 disabled:opacity-40 transition-opacity"
             >
-              Check out ({pricing.totalUnits})
+              {activeBasket === 'preorder'
+                ? `Check out Pre-order (${pricing.totalUnits})`
+                : `Check out (${pricing.totalUnits})`}
             </button>
           </div>
         )}

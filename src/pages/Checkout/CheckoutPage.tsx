@@ -140,8 +140,8 @@ export const CheckoutPage: React.FC = () => {
   return (
     <div className="min-h-dvh bg-[#F7F7F7] pb-[96px]">
       {/* Sticky Top Header (Figma 2329:198483 / 7953:77299) */}
-      <header className="sticky top-0 z-30 bg-[#F7F7F7]/95 backdrop-blur-sm pt-[max(8px,env(safe-area-inset-top))]">
-        <div className="h-[44px] flex items-center justify-between px-[16px]">
+      <header className="sticky top-0 z-30 bg-[#F7F7F7]/95 backdrop-blur-sm pt-[env(safe-area-inset-top)]">
+        <div className="h-[48px] flex items-center justify-between px-[16px]">
           <button
             type="button"
             onClick={goBack}

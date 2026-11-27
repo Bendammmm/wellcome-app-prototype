@@ -40,32 +40,34 @@ export const SmartTipsPage: React.FC = () => {
 
   return (
     <div className="min-h-dvh bg-[#F7F7F7] pb-8">
-      {/* Top NavigationBar (Figma 7406:228212) */}
-      <header className="sticky top-0 z-30 bg-white border-b border-[#EFEFEF] px-3 pt-[max(12px,env(safe-area-inset-top))] pb-2.5 flex items-center justify-between">
-        <button
-          type="button"
-          onClick={goBack}
-          aria-label="Back"
-          className="w-8 h-8 flex items-center justify-center"
-        >
-          <img src={ICONS.chevronLeft} alt="" className="w-6 h-6 object-contain" />
-        </button>
+      {/* Top NavigationBar (Figma 7406:228212 — 48px row) */}
+      <header className="sticky top-0 z-30 bg-white border-b border-[#EFEFEF] pt-[env(safe-area-inset-top)]">
+        <div className="h-[48px] px-[12px] flex items-center justify-between">
+          <button
+            type="button"
+            onClick={goBack}
+            aria-label="Back"
+            className="w-[36px] h-[36px] flex items-center justify-center"
+          >
+            <img src={ICONS.chevronLeft} alt="" className="w-[28px] h-[28px] object-contain" />
+          </button>
 
-        <h1 className="text-[16px] font-bold text-[#1A1A1A]">Smart Tips</h1>
+          <h1 className="text-[16px] leading-[24px] font-bold text-[#1A1A1A]">Smart Tips</h1>
 
-        <button
-          type="button"
-          onClick={() => navigate('cart')}
-          aria-label="Go to cart"
-          className="relative w-8 h-8 flex items-center justify-center"
-        >
-          <img src={ICONS.tabCart} alt="Cart" className="w-5 h-5 object-contain" />
-          {cartCount > 0 && (
-            <span className="absolute -top-0.5 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E40032] text-white text-[10px] font-bold flex items-center justify-center border border-white">
-              {cartCount}
-            </span>
-          )}
-        </button>
+          <button
+            type="button"
+            onClick={() => navigate('cart')}
+            aria-label="Go to cart"
+            className="relative w-[36px] h-[36px] flex items-center justify-center"
+          >
+            <img src={ICONS.tabCart} alt="Cart" className="w-[24px] h-[24px] object-contain" />
+            {cartCount > 0 && (
+              <span className="absolute top-0.5 right-0 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E40032] text-white text-[10px] font-bold flex items-center justify-center border border-white">
+                {cartCount}
+              </span>
+            )}
+          </button>
+        </div>
       </header>
 
       {/* Expanded 3-Milestone Progress Card */}

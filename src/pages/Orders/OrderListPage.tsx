@@ -146,8 +146,8 @@ export const OrderListPage: React.FC = () => {
   return (
     <div className="min-h-dvh bg-[#F7F7F7] pb-[28px]">
       {/* Sticky Top Search Header (Figma 5981:285511) */}
-      <header className="sticky top-0 z-30 bg-white">
-        <div className="px-[12px] pt-[max(10px,env(safe-area-inset-top))] pb-[8px] flex items-center gap-[8px]">
+      <header className="sticky top-0 z-30 bg-white pt-[env(safe-area-inset-top)]">
+        <div className="h-[48px] px-[12px] flex items-center gap-[8px]">
           <button
             type="button"
             onClick={goBack}

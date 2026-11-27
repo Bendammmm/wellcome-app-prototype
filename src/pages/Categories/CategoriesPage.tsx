@@ -214,24 +214,26 @@ export const CategoriesPage: React.FC = () => {
 
   return (
     <div className="min-h-dvh bg-[#F7F7F7] pb-[118px] relative">
-      {/* 1. Sticky Top Search Bar (Figma 6877:108276) */}
-      <header className="sticky top-0 z-30 bg-white px-[12px] pt-[max(10px,env(safe-area-inset-top))] pb-[8px]">
-        <div className="h-[36px] rounded-[8px] border border-[#E0E0E0] bg-white flex items-center pl-[12px] pr-[4px] gap-[8px]">
-          <img src={ICONS.search} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search products"
-            className="flex-1 min-w-0 text-[14px] leading-[20px] text-[#1A1A1A] placeholder:text-[#858585] bg-transparent outline-none"
-          />
-          <button
-            type="button"
-            onClick={() => setSearchQuery((q) => q.trim())}
-            className="h-[28px] px-[12px] rounded-[4px] bg-[#FFF6F5] text-[#E40032] text-[12px] leading-[16px] font-semibold shrink-0 active:opacity-80"
-          >
-            Search
-          </button>
+      {/* 1. Sticky Top Search Bar (Figma 6877:108276 — exact 48px row) */}
+      <header className="sticky top-0 z-30 bg-white pt-[env(safe-area-inset-top)]">
+        <div className="h-[48px] px-[12px] flex items-center">
+          <div className="h-[36px] w-full rounded-[8px] border border-[#E0E0E0] bg-white flex items-center pl-[12px] pr-[4px] gap-[8px]">
+            <img src={ICONS.search} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search products"
+              className="flex-1 min-w-0 text-[14px] leading-[20px] text-[#1A1A1A] placeholder:text-[#858585] bg-transparent outline-none"
+            />
+            <button
+              type="button"
+              onClick={() => setSearchQuery((q) => q.trim())}
+              className="h-[28px] px-[12px] rounded-[4px] bg-[#FFF6F5] text-[#E40032] text-[12px] leading-[16px] font-semibold shrink-0 active:opacity-80"
+            >
+              Search
+            </button>
+          </div>
         </div>
       </header>
 
@@ -341,7 +343,7 @@ export const CategoriesPage: React.FC = () => {
       <div className="flex items-stretch bg-white min-h-[calc(100dvh-220px)]">
         {/* Sticky Left Sidebar (88px) — full height grey rail */}
         <div className="w-[88px] shrink-0 bg-[#F7F7F7]">
-          <aside className="sticky top-[54px] max-h-[calc(100dvh-165px)] overflow-y-auto no-scrollbar">
+          <aside className="sticky top-[48px] max-h-[calc(100dvh-160px)] overflow-y-auto no-scrollbar">
             {activeTopCat.subCategories.map((sub) => {
               const active = sub === activeSubCat;
               return (
@@ -384,7 +386,7 @@ export const CategoriesPage: React.FC = () => {
           </div>
 
           {/* Sticky Quick Filter Row (Sticky per Figma 8499:117743) */}
-          <div className="sticky top-[54px] z-20 bg-white px-[10px] py-[10px] flex items-center justify-between gap-[6px]">
+          <div className="sticky top-[48px] z-20 bg-white px-[10px] py-[10px] flex items-center justify-between gap-[6px]">
             <div className="flex items-center gap-[6px] overflow-x-auto no-scrollbar flex-1 min-w-0">
               {(['Bestsellers', 'Offers', 'SeasonalPick'] as const).map((chip) => {
                 const active = activeChip === chip;

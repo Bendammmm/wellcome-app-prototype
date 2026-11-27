@@ -31,7 +31,8 @@ export const PriceBlock: React.FC<PriceBlockProps> = ({
   }[size];
 
   const mainColor = inverse ? 'text-white' : 'text-[#E40032]';
-  const subColor = inverse ? 'text-white/80' : 'text-[#666666]';
+  const unitColor = inverse ? 'text-white/80' : 'text-[#666666]';
+  const origColor = inverse ? 'text-white/75' : 'text-[#858585]';
 
   return (
     <div className={`inline-flex flex-wrap items-baseline gap-1 ${className}`}>
@@ -42,9 +43,9 @@ export const PriceBlock: React.FC<PriceBlockProps> = ({
       </span>
 
       {unitPriceText ? (
-        <span className={`${sizeMap.sub} font-normal ${subColor}`}>{unitPriceText}</span>
+        <span className={`${sizeMap.sub} font-normal ${unitColor}`}>{unitPriceText}</span>
       ) : originalPrice && originalPrice > price ? (
-        <span className={`${sizeMap.sub} font-normal line-through ${subColor}`}>
+        <span className={`${sizeMap.sub} font-normal line-through ${origColor}`}>
           &#36;{originalPrice.toFixed(2)}
         </span>
       ) : null}
