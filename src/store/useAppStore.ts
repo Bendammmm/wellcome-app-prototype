@@ -266,16 +266,13 @@ export function computePricingSummary(
 
 let toastTimer: ReturnType<typeof setTimeout> | null = null;
 
+const MP_ALLOWED_PAGES = new Set<RoutePage>(['home', 'categories', 'cart', 'pdp']);
+
 function getInitialThemeFromUrl(): AppTheme {
   if (typeof window === 'undefined') return 'we';
   const pathname = window.location.pathname.toLowerCase();
   if (pathname.startsWith('/mp-before')) return 'mp-before';
   if (pathname.startsWith('/mp')) return 'mp-opt1';
-
-  const params = new URLSearchParams(window.location.search);
-  const raw = params.get('theme') ?? params.get('brand');
-  if (raw === 'mp-opt1' || raw === 'mp' || raw === 'opt1') return 'mp-opt1';
-  if (raw === 'mp-before' || raw === 'before') return 'mp-before';
   return 'we';
 }
 
@@ -305,6 +302,10 @@ export const useAppStore = create<AppState>()(
     (set, get) => ({
       appTheme: INITIAL_APP_THEME,
       setAppTheme: (theme) => {
+        const current = get().appTheme;
+        // Strict WE vs MP isolation: disallow cross-brand switching
+        if (current === 'we' && theme !== 'we') return;
+        if (current !== 'we' && theme === 'we') return;
         set({ appTheme: theme });
         syncBrowserThemeMeta(theme);
       },
@@ -332,6 +333,10 @@ export const useAppStore = create<AppState>()(
 
       navigate: (page, productId) => {
         const state = get();
+        if (state.appTheme !== 'we' && !MP_ALLOWED_PAGES.has(page)) {
+          state.showToast('当前 MP 演示版仅开放首页、分类、购物车与商品详情');
+          return;
+        }
         const nextHistory = [
           ...state.history.slice(-15),
           { page: state.activePage, productId: state.activeProductId },
@@ -576,9 +581,13 @@ export const useAppStore = create<AppState>()(
       setSearchQuery: (query) => set({ searchQuery: query }),
 
       submitSearch: (query) => {
+        const state = get();
+        if (state.appTheme !== 'we') {
+          state.showToast('当前 MP 演示版仅开放首页、分类、购物车与商品详情');
+          return;
+        }
         const cleaned = query.trim();
         if (!cleaned) return;
-        const state = get();
         const deduped = [
           cleaned,
           ...state.searchHistory.filter((item) => item.toLowerCase() !== cleaned.toLowerCase()),

@@ -3,16 +3,14 @@ import { Palette, X } from 'lucide-react';
 import type { AppTheme } from '../../types';
 import { useAppStore } from '../../store/useAppStore';
 
-const THEME_OPTIONS: { id: AppTheme; label: string; dot: string }[] = [
-  { id: 'we', label: 'WE', dot: '#E40032' },
+const MP_THEME_OPTIONS: { id: AppTheme; label: string; dot: string }[] = [
   { id: 'mp-before', label: 'MP Before', dot: '#155D2D' },
   { id: 'mp-opt1', label: 'MP Opt 1', dot: '#28443C' },
 ];
 
 /**
- * Floating live theme switcher pill so stakeholders can toggle
- * WE / MP Before / MP Option 1 instantaneously on any page (Home, PDP, Cart, Checkout).
- * Collapsible to a small icon button when capturing clean screenshots.
+ * Floating live theme switcher pill — ONLY shown on Market Place URLs (/mp, /mp-before)
+ * to toggle between MP Before and MP Option 1. Completely hidden on WE (/).
  */
 export const ThemeSwitcherPill: React.FC = () => {
   const appTheme = useAppStore((s) => s.appTheme);
@@ -20,7 +18,10 @@ export const ThemeSwitcherPill: React.FC = () => {
   const activePage = useAppStore((s) => s.activePage);
   const [collapsed, setCollapsed] = useState(false);
 
-  const currentOpt = THEME_OPTIONS.find((t) => t.id === appTheme) ?? THEME_OPTIONS[0];
+  // Strict brand isolation: never show theme switcher on WE (/)
+  if (appTheme === 'we') return null;
+
+  const currentOpt = MP_THEME_OPTIONS.find((t) => t.id === appTheme) ?? MP_THEME_OPTIONS[1];
   const bottomOffsetClass =
     activePage === 'cart'
       ? 'bottom-[174px]'
@@ -51,7 +52,7 @@ export const ThemeSwitcherPill: React.FC = () => {
   return (
     <div className={`app-fixed-bar ${bottomOffsetClass} z-50 pointer-events-none flex justify-center px-2`}>
       <div className="pointer-events-auto inline-flex items-center gap-1 p-1 rounded-full bg-[#1A1A1A]/92 backdrop-blur-md shadow-[0_6px_22px_rgba(0,0,0,0.28)] border border-white/15">
-        {THEME_OPTIONS.map((opt) => {
+        {MP_THEME_OPTIONS.map((opt) => {
           const active = appTheme === opt.id;
           return (
             <button
