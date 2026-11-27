@@ -81,12 +81,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         isCompact ? '' : 'shadow-[0_1px_3px_rgba(0,0,0,0.04)]'
       } active:scale-[0.99] transition-transform ${className}`}
     >
-      {/* Square Product Image (width determines image height) + New Badge at top-[4px] right-[4px] */}
+      {/* Square Product Image (full-bleed edge-to-edge, zero extra inner padding) */}
       <div className="w-full aspect-square relative rounded-[4px] bg-white flex items-center justify-center overflow-hidden shrink-0">
         <img
           src={product.image}
           alt={product.name}
-          className="w-[90%] h-[90%] object-contain"
+          className="w-full h-full object-contain"
           loading="lazy"
         />
         {product.badge === 'New' && (

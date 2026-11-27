@@ -42,15 +42,15 @@ export const PriceBlock: React.FC<PriceBlockProps> = ({
   return (
     <div className={`inline-flex flex-wrap items-baseline gap-1 ${className}`}>
       <span
-        className="inline-flex items-baseline font-bold tracking-tight"
+        className="inline-flex items-start font-bold tracking-tight"
         style={{
           color: mainColor,
           fontFamily: t.isMp ? t.heroFont : undefined,
         }}
       >
-        <span className={`${sizeMap.sym} mr-[0.5px]`}>&#36;</span>
+        <span className={`${sizeMap.sym} leading-[12px] mr-[0.5px]`}>&#36;</span>
         <span className={sizeMap.main}>{intPart}</span>
-        <span className={sizeMap.dec}>.{decPart}</span>
+        <span className={`${sizeMap.dec} leading-[12px]`}>.{decPart}</span>
       </span>
 
       {unitPriceText ? (
