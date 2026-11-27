@@ -910,12 +910,7 @@ export const MpHomePage: React.FC = () => {
                     alt={b.name}
                     className="w-full h-[96px] object-cover"
                   />
-                  <span
-                    className="text-[12px] font-bold"
-                    style={{ color: t.primary, fontFamily: t.heroFont }}
-                  >
-                    &#36;{b.price.toFixed(2)}
-                  </span>
+                  <PriceBlock price={b.price} size="sm" />
                 </div>
               </div>
             ))}
