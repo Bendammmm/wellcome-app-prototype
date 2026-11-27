@@ -268,6 +268,10 @@ let toastTimer: ReturnType<typeof setTimeout> | null = null;
 
 function getInitialThemeFromUrl(): AppTheme {
   if (typeof window === 'undefined') return 'we';
+  const pathname = window.location.pathname.toLowerCase();
+  if (pathname.startsWith('/mp-before')) return 'mp-before';
+  if (pathname.startsWith('/mp')) return 'mp-opt1';
+
   const params = new URLSearchParams(window.location.search);
   const raw = params.get('theme') ?? params.get('brand');
   if (raw === 'mp-opt1' || raw === 'mp' || raw === 'opt1') return 'mp-opt1';
@@ -275,18 +279,34 @@ function getInitialThemeFromUrl(): AppTheme {
   return 'we';
 }
 
+function syncBrowserThemeMeta(theme: AppTheme) {
+  if (typeof window === 'undefined') return;
+  document.title =
+    theme === 'we' ? 'Wellcome App Prototype' : 'Market Place App Prototype';
+  const targetPath =
+    theme === 'mp-opt1' ? '/mp' : theme === 'mp-before' ? '/mp-before' : '/';
+  const url = new URL(window.location.href);
+  url.pathname = targetPath;
+  url.searchParams.delete('theme');
+  url.searchParams.delete('brand');
+  window.history.replaceState({}, '', url.toString());
+}
+
+const INITIAL_APP_THEME = getInitialThemeFromUrl();
+if (typeof document !== 'undefined') {
+  document.title =
+    INITIAL_APP_THEME === 'we'
+      ? 'Wellcome App Prototype'
+      : 'Market Place App Prototype';
+}
+
 export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
-      appTheme: getInitialThemeFromUrl(),
+      appTheme: INITIAL_APP_THEME,
       setAppTheme: (theme) => {
         set({ appTheme: theme });
-        if (typeof window !== 'undefined') {
-          const url = new URL(window.location.href);
-          if (theme === 'we') url.searchParams.delete('theme');
-          else url.searchParams.set('theme', theme);
-          window.history.replaceState({}, '', url.toString());
-        }
+        syncBrowserThemeMeta(theme);
       },
 
       activePage: 'home',
