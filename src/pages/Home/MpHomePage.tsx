@@ -259,9 +259,9 @@ export const MpHomePage: React.FC = () => {
                   className="flex items-center gap-1 text-[14px] leading-[20px] text-white max-w-full"
                 >
                   <img
-                    src={isDelivery ? ICONS.truck : ICONS.cncBag}
+                    src={isDelivery ? t.icons.truck : ICONS.cncBag}
                     alt=""
-                    className="w-[16px] h-[16px] object-contain brightness-0 invert shrink-0"
+                    className="w-[15px] h-[15px] object-contain shrink-0"
                   />
                   <span className="font-bold shrink-0">
                     {isDelivery ? 'Delivery' : 'Click & Collect'}
@@ -282,9 +282,9 @@ export const MpHomePage: React.FC = () => {
                   className="flex flex-col items-center"
                 >
                   <img
-                    src={ICONS.bellNotice}
+                    src={t.icons.bellNotice}
                     alt="Notice"
-                    className="w-[22px] h-[22px] object-contain brightness-0 invert"
+                    className="w-[22px] h-[22px] object-contain"
                   />
                   <span className="text-[10px] leading-[13px] text-white/90">Notice</span>
                 </button>
@@ -294,9 +294,9 @@ export const MpHomePage: React.FC = () => {
                   className="flex flex-col items-center"
                 >
                   <img
-                    src={ICONS.store}
+                    src={t.icons.store}
                     alt="Store"
-                    className="w-[22px] h-[22px] object-contain brightness-0 invert"
+                    className="w-[22px] h-[22px] object-contain"
                   />
                   <span className="text-[10px] leading-[13px] text-white/90">Store</span>
                 </button>
@@ -309,10 +309,10 @@ export const MpHomePage: React.FC = () => {
               onClick={() => navigate('search')}
               className="w-full h-[40px] bg-white rounded-[2px] pl-3 pr-1 flex items-center gap-2 shadow-sm"
             >
-              <img src={ICONS.search} alt="" className="w-[16px] h-[16px] object-contain shrink-0" />
+              <img src={t.icons.search} alt="" className="w-[15px] h-[15px] object-contain shrink-0" />
               <span className="text-[14px] leading-[20px] text-[#858585]">Coca-Cola</span>
               <div className="flex-1" />
-              <img src={ICONS.qrScan} alt="" className="w-[22px] h-[22px] object-contain shrink-0 mr-1" />
+              <img src={t.icons.qrScan} alt="" className="w-[20px] h-[20px] object-contain shrink-0 mr-1" />
               <span className="h-[32px] px-4 rounded-[2px] bg-[#F2F4F3] text-[#1A1A1A] text-[13px] leading-[18px] font-medium inline-flex items-center justify-center">
                 Search
               </span>

@@ -39,8 +39,8 @@ export const ThresholdProgressBar: React.FC<ThresholdProgressBarProps> = ({
 
   const accentTextColor = t.isMpOpt1 ? '#28443C' : t.isMpBefore ? '#155D2D' : '#E40032';
   const barColor = t.isMpOpt1 ? '#28443C' : t.isMpBefore ? '#155D2D' : '#FF5800';
-  const bgColor = t.isMpOpt1 ? '#F7F5F0' : '#FFF2EB';
-  const borderColor = t.isMpOpt1 ? '#E6E2D8' : '#FFE4D6';
+  const bgColor = t.isMpOpt1 ? '#F7F5F0' : t.isMpBefore ? '#FFFFFF' : '#FFF2EB';
+  const borderColor = t.isMpOpt1 ? '#E6E2D8' : t.isMpBefore ? '#EAEAEA' : '#FFE4D6';
 
   const renderMessage = () => {
     if (!meetsMinimum) {
@@ -81,7 +81,7 @@ export const ThresholdProgressBar: React.FC<ThresholdProgressBarProps> = ({
             style={{ backgroundColor: barColor }}
           >
             <img
-              src={ICONS.addmoreCart}
+              src={t.icons.addmoreCart}
               alt=""
               className="w-full h-full object-contain"
             />
@@ -167,7 +167,7 @@ export const ThresholdProgressBar: React.FC<ThresholdProgressBarProps> = ({
         style={{ backgroundColor: barColor }}
       >
         <img
-          src={ICONS.addmoreCart}
+          src={t.icons.addmoreCart}
           alt=""
           className="w-[15px] h-[15px] object-contain"
         />

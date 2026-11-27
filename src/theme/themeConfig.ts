@@ -38,6 +38,21 @@ export interface BrandThemeTokens {
   tabBarInactive: string;
   /** CTA button border radius */
   ctaRadius: string;
+  /** Theme-specific SVG icon set (WE vs MP Before vs MP Option 1) */
+  icons: {
+    tabHome: string;
+    tabCategories: string;
+    tabYuuId: string;
+    tabAi: string;
+    tabCart: string;
+    tabMe: string;
+    addmoreCart: string;
+    bellNotice: string;
+    store: string;
+    truck: string;
+    qrScan: string;
+    search: string;
+  };
 }
 
 export function getThemeTokens(theme: AppTheme): BrandThemeTokens {
@@ -63,7 +78,21 @@ export function getThemeTokens(theme: AppTheme): BrandThemeTokens {
       tabBarBg: '#000000',
       tabBarActive: '#FFFFFF',
       tabBarInactive: 'rgba(255, 255, 255, 0.58)',
-      ctaRadius: '4px',
+      ctaRadius: '0px',
+      icons: {
+        tabHome: '/assets/figma/icons-mp-before/tab-home.svg',
+        tabCategories: '/assets/figma/icons-mp-before/tab-categories.svg',
+        tabYuuId: '/assets/figma/icons-mp-before/tab-yuuid.svg',
+        tabAi: '/assets/figma/icons-mp-before/tab-ai.svg',
+        tabCart: '/assets/figma/icons-mp-before/tab-cart.svg',
+        tabMe: '/assets/figma/icons-mp-before/tab-me.svg',
+        addmoreCart: '/assets/figma/icons-mp-before/addmore-cart.svg',
+        bellNotice: '/assets/figma/icons-mp-before/bell-notice.svg',
+        store: '/assets/figma/icons-mp-before/store.svg',
+        truck: '/assets/figma/icons-mp-before/truck.svg',
+        qrScan: '/assets/figma/icons-mp-before/qr-scan.svg',
+        search: '/assets/figma/icons-mp-before/search.svg',
+      },
     };
   }
 
@@ -88,8 +117,22 @@ export function getThemeTokens(theme: AppTheme): BrandThemeTokens {
       thresholdAccent: '#28443C',
       tabBarBg: '#28443C',
       tabBarActive: '#DDB97D',
-      tabBarInactive: 'rgba(255, 255, 255, 0.68)',
-      ctaRadius: '4px',
+      tabBarInactive: 'rgba(255, 255, 255, 0.6)',
+      ctaRadius: '0px',
+      icons: {
+        tabHome: '/assets/figma/icons-mp-opt1/tab-home.svg',
+        tabCategories: '/assets/figma/icons-mp-opt1/tab-categories.svg',
+        tabYuuId: '/assets/figma/icons-mp-opt1/tab-yuuid.svg',
+        tabAi: '/assets/figma/icons-mp-opt1/tab-ai.svg',
+        tabCart: '/assets/figma/icons-mp-opt1/tab-cart.svg',
+        tabMe: '/assets/figma/icons-mp-opt1/tab-me.svg',
+        addmoreCart: '/assets/figma/icons-mp-opt1/addmore-cart.svg',
+        bellNotice: '/assets/figma/icons-mp-opt1/bell-notice.svg',
+        store: '/assets/figma/icons-mp-opt1/store.svg',
+        truck: '/assets/figma/icons-mp-opt1/truck.svg',
+        qrScan: '/assets/figma/icons-mp-opt1/qr-scan.svg',
+        search: '/assets/figma/icons-mp-opt1/search.svg',
+      },
     };
   }
 
@@ -115,5 +158,19 @@ export function getThemeTokens(theme: AppTheme): BrandThemeTokens {
     tabBarActive: '#E40032',
     tabBarInactive: '#858585',
     ctaRadius: '8px',
+    icons: {
+      tabHome: '/assets/figma/tab-home.svg',
+      tabCategories: '/assets/figma/tab-categories.svg',
+      tabYuuId: '/assets/figma/tab-yuuid.svg',
+      tabAi: '/assets/figma/tab-ai.svg',
+      tabCart: '/assets/figma/tab-cart.svg',
+      tabMe: '/assets/figma/tab-me.svg',
+      addmoreCart: '/assets/figma/addmore-cart.svg',
+      bellNotice: '/assets/figma/bell-notice.svg',
+      store: '/assets/figma/store.svg',
+      truck: '/assets/figma/truck.svg',
+      qrScan: '/assets/figma/qr-scan.svg',
+      search: '/assets/figma/search.svg',
+    },
   };
 }

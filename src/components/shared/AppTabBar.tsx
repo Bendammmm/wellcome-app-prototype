@@ -1,5 +1,4 @@
 import React from 'react';
-import { ICONS } from '../../data/catalog';
 import { getTotalCartCount, useAppStore } from '../../store/useAppStore';
 import { getThemeTokens } from '../../theme/themeConfig';
 
@@ -12,12 +11,12 @@ export const AppTabBar: React.FC = () => {
   const t = getThemeTokens(appTheme);
 
   const tabs = [
-    { id: 'home', label: 'Home', icon: ICONS.tabHome, active: activePage === 'home' },
-    { id: 'categories', label: 'Categories', icon: ICONS.tabCategories, active: activePage === 'categories' },
-    { id: 'yuuid', label: 'yuuID', icon: ICONS.tabYuuId, active: activePage === 'yuu-id' },
-    { id: 'ai', label: 'AI', icon: ICONS.tabAi, active: false },
-    { id: 'cart', label: 'Cart', icon: ICONS.tabCart, active: activePage === 'cart', badge: cartCount },
-    { id: 'me', label: 'Me', icon: ICONS.tabMe, active: activePage === 'me' || activePage === 'order-list' || activePage === 'order-detail' },
+    { id: 'home', label: 'Home', icon: t.icons.tabHome, active: activePage === 'home' },
+    { id: 'categories', label: 'Categories', icon: t.icons.tabCategories, active: activePage === 'categories' },
+    { id: 'yuuid', label: t.isMp ? 'yuu ID' : 'yuuID', icon: t.icons.tabYuuId, active: activePage === 'yuu-id' },
+    { id: 'ai', label: 'AI', icon: t.icons.tabAi, active: false },
+    { id: 'cart', label: 'Cart', icon: t.icons.tabCart, active: activePage === 'cart', badge: cartCount },
+    { id: 'me', label: 'Me', icon: t.icons.tabMe, active: activePage === 'me' || activePage === 'order-list' || activePage === 'order-detail' },
   ] as const;
 
   return (
@@ -43,11 +42,11 @@ export const AppTabBar: React.FC = () => {
             }}
             className="flex flex-col items-center justify-center gap-0.5 py-0.5 relative active:opacity-75"
           >
-            <div className="relative w-[28px] h-[28px] flex items-center justify-center">
+            <div className={`relative flex items-center justify-center ${t.isMp ? 'w-[24px] h-[24px]' : 'w-[28px] h-[28px]'}`}>
               <span
                 role="img"
                 aria-label={tab.label}
-                className="block w-[28px] h-[28px] transition-colors"
+                className={`block transition-colors ${t.isMp ? 'w-[20px] h-[20px]' : 'w-[28px] h-[28px]'}`}
                 style={{
                   backgroundColor: tab.active ? t.tabBarActive : t.tabBarInactive,
                   WebkitMaskImage: `url(${tab.icon})`,
